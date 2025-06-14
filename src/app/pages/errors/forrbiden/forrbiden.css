@@ -1,0 +1,81 @@
+.forbidden-page {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #0099cc, #66d9ff);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin-bottom: 15px;
+      animation: pulse 2s infinite;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    a {
+      text-decoration: none;
+      background-color: #ffffff;
+      color: #0099cc;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      background-color: #e6f7ff;
+      transform: scale(1.05);
+    }
+
+    .tower {
+      position: absolute;
+      bottom: 0;
+      right: -80px;
+      width: 200px;
+      opacity: 0.5;
+      animation: bounce 6s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 4rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .tower {
+        width: 120px;
+        right: -40px;
+      }
+    }

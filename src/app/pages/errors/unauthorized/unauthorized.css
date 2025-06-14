@@ -1,0 +1,84 @@
+.unauthorized-page {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #00aaff, #66ccff);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      max-width: 600px;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin-bottom: 20px;
+      animation: shake 2s infinite;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    a {
+      text-decoration: none;
+      background-color: #ffffff;
+      color: #00aaff;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      background-color: #e6f7ff;
+      transform: scale(1.05);
+    }
+
+    .passport {
+      position: absolute;
+      top: 10%;
+      left: -100px;
+      width: 120px;
+      opacity: 0.7;
+      animation: slideIn 10s infinite linear;
+    }
+
+    @keyframes slideIn {
+      0% { left: -120px; transform: rotate(-10deg); }
+      50% { top: 15%; }
+      100% { left: 110%; transform: rotate(10deg); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(1deg); }
+      50% { transform: rotate(-1deg); }
+      75% { transform: rotate(1deg); }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 4rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+      }
+      .passport {
+        width: 80px;
+        top: 15%;
+      }
+    }
