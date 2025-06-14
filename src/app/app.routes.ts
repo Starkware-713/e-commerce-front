@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { Products } from './pages/products/products';
@@ -8,7 +9,6 @@ import { Privacy } from './pages/privacy/privacy';
 import { Terms } from './pages/terms/terms';
 import { NotFound } from './pages/errors/not-found/not-found';
 import { Forrbiden } from './pages/errors/forrbiden/forrbiden';
-import { Unauthorized } from './pages/errors/unauthorized/unauthorized';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -21,6 +21,5 @@ export const routes: Routes = [
     {path: 'terms', component: Terms},
     {path: '404', component: NotFound},
     {path: '403', component: Forrbiden},
-    {path:'401', component: Unauthorized},
-    {path: '', redirectTo: '/home'}
+    {path: '**', redirectTo: '/home'}
 ];
