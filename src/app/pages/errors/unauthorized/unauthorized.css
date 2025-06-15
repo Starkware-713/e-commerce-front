@@ -1,15 +1,15 @@
-.forbidden-page {
+.unauthorized-page {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom right, #0099cc, #66d9ff);
+      background: linear-gradient(to right, #00aaff, #66ccff);
       color: #fff;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       text-align: center;
       padding: 20px;
-      position: relative;
       overflow: hidden;
+      position: relative;
     }
 
     .container {
@@ -19,8 +19,8 @@
 
     h1 {
       font-size: 6rem;
-      margin-bottom: 15px;
-      animation: pulse 2s infinite;
+      margin-bottom: 20px;
+      animation: shake 2s infinite;
     }
 
     h2 {
@@ -36,7 +36,7 @@
     a {
       text-decoration: none;
       background-color: #ffffff;
-      color: #0099cc;
+      color: #00aaff;
       padding: 12px 25px;
       border-radius: 30px;
       font-weight: bold;
@@ -48,23 +48,26 @@
       transform: scale(1.05);
     }
 
-    .tower {
+    .passport {
       position: absolute;
-      bottom: 0;
-      right: -80px;
-      width: 200px;
-      opacity: 0.5;
-      animation: bounce 6s infinite;
+      top: 10%;
+      left: -100px;
+      width: 120px;
+      opacity: 0.7;
+      animation: slideIn 10s infinite linear;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    @keyframes slideIn {
+      0% { left: -120px; transform: rotate(-10deg); }
+      50% { top: 15%; }
+      100% { left: 110%; transform: rotate(10deg); }
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+    @keyframes shake {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(1deg); }
+      50% { transform: rotate(-1deg); }
+      75% { transform: rotate(1deg); }
     }
 
     @media (max-width: 600px) {
@@ -74,8 +77,8 @@
       h2 {
         font-size: 1.4rem;
       }
-      .tower {
-        width: 120px;
-        right: -40px;
+      .passport {
+        width: 80px;
+        top: 15%;
       }
     }
