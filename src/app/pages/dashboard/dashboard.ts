@@ -22,52 +22,6 @@ interface UserProfile extends User {
   imports: [CommonModule, Client, Seller, SellerBoss],
   styleUrls: ['./dashboard.css']
 })
-export class Dashboard implements OnInit {
-  userRole?: UserRole;
-  UserRole = UserRole;
-  userProfile: UserProfile = {
-    email: '',
-    password: '',
-    loading: true
-  };
-  orders: Order[] = [];
+export class Dashboard {
 
-  constructor(
-    private dashboardService: DashboardService,
-    private authService: AuthService,
-    private orderService: OrderService
-  ) {}
-
-  ngOnInit() {
-    this.userRole = this.authService.getUserRole();
-    this.loadUserProfile();
-    this.loadOrders();
-  }
-
-  private loadUserProfile() {
-    this.userProfile.loading = true;
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userProfile = { ...user, loading: false };
-      },
-      error: (error) => {
-        this.userProfile.error = 'Error loading profile';
-        this.userProfile.loading = false;
-        console.error('Error loading user profile:', error);
-      }
-    });
-  }
-
-  private loadOrders() {
-    if (this.userRole === UserRole.CLIENT) {
-      this.orderService.getOrders().subscribe({
-        next: (orders) => {
-          this.orders = orders;
-        },
-        error: (error) => {
-          console.error('Error loading orders:', error);
-        }
-      });
-    }
-  }
 }

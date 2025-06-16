@@ -1,4 +1,3 @@
-
 <div class="register-container">
     <div class="container">
         <h2>Registro de Usuario</h2>
@@ -61,9 +60,8 @@
                     Este correo electrónico ya está registrado.
                 </div>
                 }
-            </div>
-
-            <div class="margin">                <label for="password">Contraseña</label>
+            </div>            <div class="margin">
+                <label for="password">Contraseña</label>
                 <input 
                     type="password" 
                     id="password" 
@@ -90,11 +88,10 @@
                     {{ getConfirmPasswordErrorMessage() }}
                 </div>
                 }
-            </div>
-
-            <button 
+            </div>            <div class="error-message" *ngIf="!registerForm.valid">
+                <pre>{{ getFormValidationStatus() }}</pre>
+            </div>            <button 
                 type="submit" 
-                [disabled]="!registerForm.valid || submitted"
                 class="submit-button"
             >
                 {{ submitted ? 'Registrando...' : 'Registrarse' }}

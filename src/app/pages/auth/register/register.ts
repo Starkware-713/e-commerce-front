@@ -1,14 +1,14 @@
-
 import { Component } from '@angular/core';
-import { AuthService } from '../../../services';
+import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -39,6 +39,13 @@ export class Register {
     });
   }
 
+  ngOnInit() {
+    // Inicializar la API al cargar el componente
+    this.authService.initializeAPI().subscribe({
+      error: (error) => console.error('Error al inicializar la API:', error)
+    });
+  }
+
   // Validador personalizado para confirmar contraseña
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
@@ -53,32 +60,45 @@ export class Register {
   }
 
   onSubmit() {
+    console.log('Iniciando envío del formulario');
     this.submitted = true;
 
-    if (this.registerForm.valid) {
-      const userData = {
-        name: this.registerForm.value.name,
-        lastname: this.registerForm.value.lastname,
-        email: this.registerForm.value.email,
-        password: this.registerForm.value.password
-      };
+    const userData = {
+      name: this.registerForm.value.name || '',
+      lastname: this.registerForm.value.lastname || '',
+      email: this.registerForm.value.email || '',
+      password: this.registerForm.value.password || '',
+      confirm_password: this.registerForm.value.confirmPassword || '',
+      rol: "comprador" // Por defecto, todos los registros son como compradores
+    };
 
-      this.authService.register(userData).subscribe({
-        next: (response) => {
-          console.log('Registro exitoso', response);
-          this.router.navigate(['/auth/login']);
-        },
-        error: (error) => {
-          console.error('Error en el registro', error);
-          // Aquí puedes manejar diferentes tipos de errores
-          if (error.status === 409) {
-            this.registerForm.get('email')?.setErrors({ alreadyExists: true });
+    console.log('Datos a enviar:', userData);
+
+    this.authService.register(userData).subscribe({
+      next: (response: any) => {
+        console.log('Registro exitoso', response);
+        
+        // Iniciar sesión automáticamente después del registro
+        this.authService.login({
+          email: userData.email,
+          password: userData.password
+        }).subscribe({
+          next: () => {
+            // Redirigir al dashboard correspondiente según el rol
+            const dashboardUrl = this.authService.getDashboardUrl();
+            this.router.navigate([dashboardUrl]);
+          },
+          error: (error) => {            console.error('Error al iniciar sesión después del registro:', error);
+            alert('Registro exitoso. Por favor, inicia sesión.');
+            this.router.navigate(['/login']);
           }
-        }
-      });
-    } else {
-      this.markFormGroupTouched(this.registerForm);
-    }
+        });
+      },
+      error: (error: any) => {
+        console.error('Error detallado en el registro:', error);
+        alert('Error en el registro: ' + (error.error?.message || 'Error desconocido'));
+      }
+    });
   }
 
   // Helper method to mark all controls as touched
@@ -91,33 +111,57 @@ export class Register {
     });
   }
 
-  // Getter methods for form controls
-  get name() { return this.registerForm.get('name'); }
-  get lastname() { return this.registerForm.get('lastname'); }
-  get email() { return this.registerForm.get('email'); }
-  get password() { return this.registerForm.get('password'); }
-  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
-
   // Helper methods for error messages
   getPasswordErrorMessage(): string {
-    const control = this.password;
-    if (control?.hasError('required')) {
+    const password = this.registerForm.get('password');
+    if (password?.hasError('required')) {
       return 'La contraseña es requerida';
     }
-    if (control?.hasError('pattern')) {
-      return 'La contraseña debe contener al menos 8 caracteres, una mayúscula, un número y un carácter especial';
+    if (password?.hasError('pattern')) {
+      return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial';
     }
     return '';
   }
 
   getConfirmPasswordErrorMessage(): string {
-    const control = this.confirmPassword;
-    if (control?.hasError('required')) {
-      return 'La confirmación de contraseña es requerida';
+    const confirmPassword = this.registerForm.get('confirmPassword');
+    if (confirmPassword?.hasError('required')) {
+      return 'Debe confirmar la contraseña';
     }
-    if (control?.hasError('passwordMismatch')) {
+    if (confirmPassword?.hasError('passwordMismatch')) {
       return 'Las contraseñas no coinciden';
     }
     return '';
   }
+
+  // Método para mostrar el estado de validación del formulario
+  getFormValidationStatus(): string {
+    const controls = this.registerForm.controls;
+    let status = '';
+
+    if (controls['name'].errors) {
+      status += 'Nombre: ' + JSON.stringify(controls['name'].errors) + '\n';
+    }
+    if (controls['lastname'].errors) {
+      status += 'Apellido: ' + JSON.stringify(controls['lastname'].errors) + '\n';
+    }
+    if (controls['email'].errors) {
+      status += 'Email: ' + JSON.stringify(controls['email'].errors) + '\n';
+    }
+    if (controls['password'].errors) {
+      status += 'Contraseña: ' + JSON.stringify(controls['password'].errors) + '\n';
+    }
+    if (controls['confirmPassword'].errors) {
+      status += 'Confirmar Contraseña: ' + JSON.stringify(controls['confirmPassword'].errors) + '\n';
+    }
+
+    return status || 'Todos los campos son válidos';
+  }
+
+  // Helper method to access form controls in the template
+  get name() { return this.registerForm.get('name'); }
+  get lastname() { return this.registerForm.get('lastname'); }
+  get email() { return this.registerForm.get('email'); }
+  get password() { return this.registerForm.get('password'); }
+  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
 }

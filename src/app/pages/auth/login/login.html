@@ -1,19 +1,25 @@
+<div class="login-container">
     <div class="container">
         <h2>Iniciar Sesión</h2>
-        <form>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="margin">
                 <label for="email">Correo Electrónico</label>
                 <input 
                     type="email" 
                     id="email" 
-                    name="email" 
+                    formControlName="email" 
                     placeholder="Ingrese su correo electrónico"
-                    required
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                 >
-                <div class="error-message" id="email-error">
+                @if(email?.touched && email?.errors?.['required']){
+                <div class="error-message">
+                    El correo electrónico es requerido.
+                </div>
+                }
+                @if(email?.touched && email?.errors?.['email']){
+                <div class="error-message">
                     Por favor, ingrese un correo electrónico válido.
                 </div>
+                }
             </div>
 
             <div class="margin">
@@ -21,40 +27,29 @@
                 <input 
                     type="password" 
                     id="password" 
-                    name="password" 
+                    formControlName="password" 
                     placeholder="Ingrese su contraseña"
-                    required
-                    minlength="8"
                 >
-                <div class="error-message" id="password-error">
-                    La contraseña debe tener al menos 8 caracteres.
+                @if(password?.touched && password?.errors?.['required']){
+                <div class="error-message">
+                    La contraseña es requerida.
                 </div>
+                }
             </div>
 
-            <button type="submit">Iniciar Sesión</button>
+            @if(errorMessage){
+            <div class="error-message">
+                {{ errorMessage }}
+            </div>
+            }
+
+            <button 
+                type="submit" 
+                class="submit-button"
+                [disabled]="submitted"
+            >
+                {{ submitted ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+            </button>
         </form>
     </div>
-
-    <script>
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const emailError = document.getElementById('email-error');
-        const passwordError = document.getElementById('password-error');
-
-        emailInput.addEventListener('input', () => {
-            const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-            if (!emailPattern.test(emailInput.value) && emailInput.value !== '') {
-                emailError.style.display = 'block';
-            } else {
-                emailError.style.display = 'none';
-            }
-        });
-
-        passwordInput.addEventListener('input', () => {
-            if (passwordInput.value.length < 8 && passwordInput.value !== '') {
-                passwordError.style.display = 'block';
-            } else {
-                passwordError.style.display = 'none';
-            }
-        });
-    </script>
+</div>
