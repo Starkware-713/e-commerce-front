@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
+<<<<<<< HEAD
 import { AuthService, UserRole, User } from '../../services/auth.service';
 import { OrderService, Order } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
@@ -14,10 +15,13 @@ interface UserProfile extends User {
   loading?: boolean;
   error?: string;
 }
+=======
+>>>>>>> 0fe94ab42982e7d6a3bf627bf0d10b563b303851
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
+<<<<<<< HEAD
   standalone: true,
   imports: [CommonModule, Client, Seller, SellerBoss],
   styleUrls: ['./dashboard.css']
@@ -69,5 +73,15 @@ export class Dashboard implements OnInit {
         }
       });
     }
+=======
+  styleUrls: ['./dashboard.css']
+})
+export class Dashboard implements OnInit {
+  constructor(private dashboardService: DashboardService) {}
+
+  ngOnInit() {
+    // This will automatically redirect to the appropriate dashboard based on user role
+    this.dashboardService.navigateToDashboard();
+>>>>>>> 0fe94ab42982e7d6a3bf627bf0d10b563b303851
   }
 }
