@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
-<<<<<<< HEAD
 import { AuthService, UserRole, User } from '../../services/auth.service';
 import { OrderService, Order } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
@@ -15,13 +14,10 @@ interface UserProfile extends User {
   loading?: boolean;
   error?: string;
 }
-=======
->>>>>>> 0fe94ab42982e7d6a3bf627bf0d10b563b303851
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
-<<<<<<< HEAD
   standalone: true,
   imports: [CommonModule, Client, Seller, SellerBoss],
   styleUrls: ['./dashboard.css']
@@ -50,38 +46,31 @@ export class Dashboard implements OnInit {
 
   private loadUserProfile() {
     this.userProfile.loading = true;
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        this.userProfile = { ...user, loading: false };
-      },
-      error: (error) => {
-        this.userProfile.error = 'Error loading profile';
-        this.userProfile.loading = false;
-        console.error('Error loading user profile:', error);
-      }
-    });
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userProfile = {
+        ...user,
+        email: user.email ?? '',
+        password: user.password ?? '',
+        loading: false
+      };
+    } else {
+      this.userProfile.error = 'Error loading profile';
+      this.userProfile.loading = false;
+      console.error('Error loading user profile: usuario no autenticado');
+    }
   }
 
   private loadOrders() {
     if (this.userRole === UserRole.CLIENT) {
       this.orderService.getOrders().subscribe({
-        next: (orders) => {
+        next: (orders: Order[]) => {
           this.orders = orders;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error loading orders:', error);
         }
       });
     }
-=======
-  styleUrls: ['./dashboard.css']
-})
-export class Dashboard implements OnInit {
-  constructor(private dashboardService: DashboardService) {}
-
-  ngOnInit() {
-    // This will automatically redirect to the appropriate dashboard based on user role
-    this.dashboardService.navigateToDashboard();
->>>>>>> 0fe94ab42982e7d6a3bf627bf0d10b563b303851
   }
 }
