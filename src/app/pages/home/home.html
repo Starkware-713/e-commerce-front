@@ -1,1 +1,158 @@
-<p>home works!</p>
+<section class="home-container">
+  <div class="home-hero">
+    <h1>Bienvenido a TuEmpresa</h1>
+    <p>Una plataforma moderna, segura y hecha para vos.</p>
+    <a routerLink="/register" class="home-btn">Comenzar</a>
+  </div>
+
+  <!-- Estado de carga y errores -->
+  @if (loading) {
+    <div class="loading-spinner">Cargando productos...</div>
+  }
+
+  @if (error) {
+    <div class="error-message">
+      {{ error }}
+    </div>
+  }
+
+  <!-- Lista de productos -->
+  @if (!loading && !error && products.length > 0) {
+    <div class="products-grid">
+      @for (product of products; track product.id) {
+        <div class="product-card">
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <p class="price">{{ product.price | currency:'USD' }}</p>
+          <p class="stock">Stock disponible: {{ product.stock }}</p>
+        </div>
+      }
+    </div>
+  } @else if (!loading && !error) {
+    <div class="no-products">
+      <p>No hay productos disponibles en este momento.</p>
+    </div>
+  }
+
+  <div class="home-features">
+    <div class="feature-card">
+      <h3>Fácil de usar</h3>
+      <p>Interfaz intuitiva para que te sientas cómodo desde el primer momento.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Seguridad primero</h3>
+      <p>Tus datos están protegidos con los más altos estándares.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Accesible</h3>
+      <p>Compatible con todos los dispositivos y totalmente responsiva.</p>
+    </div>
+  </div>
+</section>
+
+<div class="carousel-home">
+  <div class="carousel-image"></div>
+  <div class="reserva-container">
+    <div class="tabs">
+      <span class="active">✈ VUELOS</span>
+      <span>🧳 CHECK IN</span>
+      <span>⏱ ESTADO DE VUELO</span>
+      <span>🏷 MI RESERVA</span>
+    </div>
+
+    <div class="form-vuelos">
+      <div class="tipo-viaje">
+        <label><input type="radio" name="tipo" checked> Ida</label>
+        <label><input type="radio" name="tipo"> Ida y vuelta</label>
+        <label><input type="radio" name="tipo"> Multidestinos</label>
+      </div>
+
+      <div class="campos">
+        <input type="text" placeholder="Origen">
+        <input type="text" placeholder="Destino">
+        <input type="date" placeholder="Partida">
+        <input type="date" placeholder="Regreso">
+        <select>
+          <option>1 Pasajero/a, Economy</option>
+          <option>2 Pasajeros/as, Business</option>
+        </select>
+      </div>
+
+      <div class="opciones">
+        <label><input type="checkbox"> Búsqueda en millas</label>
+        <label><input type="checkbox" checked> Tengo fechas flexibles</label>
+      </div>
+
+      <button>BUSCAR VUELOS</button>
+    </div>
+  </div>
+</div>
+
+<h2 class="tituloHosp">Hospedajes para nuestros clientes</h2>
+<section class="hospedajes-container">
+  
+<div class="hospedaje-card">
+  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Hotel 1">
+  <div>
+    <h3>Hotel Central</h3>
+    <p class="hospedaje-ubicacion">Buenos Aires, Argentina</p>
+    <p class="hospedaje-desc">Ubicado en el corazón de la ciudad, cerca de los principales atractivos turísticos.</p>
+    <div class="hospedaje-estrellas">
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9734;</span>
+      <span class="hospedaje-fecha">Reserva: 12/06/2025</span>
+    </div>
+  </div>
+</div>
+<div class="hospedaje-card">
+  <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=400&q=80" alt="Hotel 2">
+  <div>
+    <h3>Bariloche Suites</h3>
+    <p class="hospedaje-ubicacion">Bariloche, Argentina</p>
+    <p class="hospedaje-desc">Disfruta de la vista al lago y la comodidad de nuestras habitaciones modernas.</p>
+    <div class="hospedaje-estrellas">
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="hospedaje-fecha">Reserva: 20/07/2025</span>
+    </div>
+  </div>
+</div>
+<div class="hospedaje-card">
+  <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Hotel 3">
+  <div>
+    <h3>Hostel Patagonia</h3>
+    <p class="hospedaje-ubicacion">El Calafate, Argentina</p>
+    <p class="hospedaje-desc">Ideal para aventureros, con excursiones y ambiente juvenil.</p>
+    <div class="hospedaje-estrellas">
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9734;</span>
+      <span class="estrella">&#9734;</span>
+      <span class="hospedaje-fecha">Reserva: 05/08/2025</span>
+    </div>
+  </div>
+</div>
+<div class="hospedaje-card">
+  <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80" alt="Hotel 4">
+  <div>
+    <h3>Mar del Plata Resort</h3>
+    <p class="hospedaje-ubicacion">Mar del Plata, Argentina</p>
+    <p class="hospedaje-desc">Resort familiar con pileta, spa y acceso directo a la playa.</p>
+    <div class="hospedaje-estrellas">
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9733;</span>
+      <span class="estrella">&#9734;</span>
+      <span class="hospedaje-fecha">Reserva: 18/09/2025</span>
+    </div>
+  </div>
+</div>
+</section>

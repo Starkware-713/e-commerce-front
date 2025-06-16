@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrls: ['./dashboard.css']
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
+  constructor(private dashboardService: DashboardService) {}
 
+  ngOnInit() {
+    // This will automatically redirect to the appropriate dashboard based on user role
+    this.dashboardService.navigateToDashboard();
+  }
 }
