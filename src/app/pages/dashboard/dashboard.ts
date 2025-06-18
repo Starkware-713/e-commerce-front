@@ -5,7 +5,6 @@ import { OrderService, Order } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { Client } from './client/client';
 import { Seller } from './seller/seller';
-import { SellerBoss } from './seller-boss/seller-boss';
 
 interface UserProfile {
   id?: number;
@@ -22,7 +21,7 @@ interface UserProfile {
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   standalone: true,
-  imports: [CommonModule, Client, Seller, SellerBoss],
+  imports: [CommonModule, Client, Seller],
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {

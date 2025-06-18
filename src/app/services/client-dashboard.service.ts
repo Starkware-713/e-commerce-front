@@ -24,6 +24,6 @@ export class ClientDashboardService {
   }
 
   getUserOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.apiUrl}/orders/user`);
+    return this.http.get<Order[]>(`${this.apiUrl}/orders`);
   }
 }
