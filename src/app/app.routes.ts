@@ -14,13 +14,15 @@ import { Seller } from './pages/dashboard/seller/seller';
 import { SellerBoss } from './pages/dashboard/seller-boss/seller-boss';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
-
+import { SellerBossDashboard } from './pages/dashboard/seller-boss-dashboard/seller-boss-dashboard';
 export const routes: Routes = [    {path: '', redirectTo: '/home', pathMatch: 'full'},    {path: 'home', component: Home},
     {path: 'products', component: Products},
     {path: 'cart', component: Cart},
     {path: 'register', component: Register},
     {path: 'login', component: Login},
+    {path: 'seller-boss-dashboard', component: SellerBossDashboard, canActivate: [DashboardGuard], data: { role: UserRole.SELLER_BOSS }},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
+    
         {
             path: 'client',
             component: Client,
