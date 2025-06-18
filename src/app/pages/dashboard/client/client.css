@@ -49,6 +49,47 @@
   margin-top: 10px;
   transition: background 0.2s;
 }
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #007bff;
+  font-size: 1.2rem;
+}
+
+.error {
+  background: #ffe6e6;
+  color: #d63031;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.status-entregado {
+  background: #2ecc71;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-pendiente {
+  background: #f1c40f;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-cancelado {
+  background: #e74c3c;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
 .cliente-perfil button:hover {
   background: #0056b3;
 }

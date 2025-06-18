@@ -279,9 +279,7 @@ button:hover {
   margin-left: 10px;
 }
 
-<<<<<<< HEAD
 /* Estilos para la sección de productos */
-
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -338,8 +336,6 @@ button:hover {
   color: #718096;
 }
 
-=======
->>>>>>> f9d22d3319aaf841bd9313da75d160cb294a08b7
 @media (max-width: 1200px) {
   .hospedajes-list {
      grid-template-columns: repeat(2, 1fr);

@@ -5,38 +5,6 @@
     <a routerLink="/register" class="home-btn">Comenzar</a>
   </div>
 
-<<<<<<< HEAD
-  <!-- Estado de carga y errores -->
-  @if (loading) {
-    <div class="loading-spinner">Cargando productos...</div>
-  }
-
-  @if (error) {
-    <div class="error-message">
-      {{ error }}
-    </div>
-  }
-
-  <!-- Lista de productos -->
-  @if (!loading && !error && products.length > 0) {
-    <div class="products-grid">
-      @for (product of products; track product.id) {
-        <div class="product-card">
-          <h3>{{ product.name }}</h3>
-          <p>{{ product.description }}</p>
-          <p class="price">{{ product.price | currency:'USD' }}</p>
-          <p class="stock">Stock disponible: {{ product.stock }}</p>
-        </div>
-      }
-    </div>
-  } @else if (!loading && !error) {
-    <div class="no-products">
-      <p>No hay productos disponibles en este momento.</p>
-    </div>
-  }
-
-=======
->>>>>>> f9d22d3319aaf841bd9313da75d160cb294a08b7
   <div class="home-features">
     <div class="feature-card">
       <h3>Fácil de usar</h3>

@@ -1,1 +1,19 @@
-<p>dashboard works!</p>
+<div class="role-based-content">
+    @switch (userRole) {
+    @case (UserRole.CLIENT) {
+    <app-client />
+    }
+    @case (UserRole.SELLER) {
+    <app-seller />
+    }
+    @case (UserRole.SELLER_BOSS) {
+    <app-seller-boss />
+    }
+    @default {
+    <div class="error-message">
+        <h2>Upsss...</h2>
+        <p>no tenes acceso a algun dashboard, por favor <a routerLink="/login">inicia sesión</a> </p>
+    </div>
+    }
+    }
+</div>
