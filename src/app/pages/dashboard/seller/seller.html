@@ -1,22 +1,20 @@
 <div class="dashboard-container">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>📊 Sales Manager</h2>
-            <p class="user-role">Sales Director</p>
+            <h2>📊 Jefe de ventas</h2>
         </div>
-        
         <nav class="sidebar-nav">
             <button [class.active]="activeTab === 'dashboard'" (click)="changeTab('dashboard')" class="nav-item">
                 <i class="fas fa-chart-line"></i> Dashboard
             </button>
             <button [class.active]="activeTab === 'products'" (click)="changeTab('products')" class="nav-item">
-                <i class="fas fa-box"></i> Products
+                <i class="fas fa-box"></i> Productos
             </button>
             <button [class.active]="activeTab === 'sales'" (click)="changeTab('sales')" class="nav-item">
-                <i class="fas fa-shopping-cart"></i> Sales
+                <i class="fas fa-shopping-cart"></i> Ventas
             </button>
             <button [class.active]="activeTab === 'customers'" (click)="changeTab('customers')" class="nav-item">
-                <i class="fas fa-users"></i> Customers
+                <i class="fas fa-users"></i> Clientes
             </button>
             <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing')" class="nav-item">
                 <i class="fas fa-bullhorn"></i> Marketing
@@ -32,11 +30,11 @@
                 <div class="stat-card">
                     <div class="stat-icon revenue">💰</div>
                     <div class="stat-info">
-                        <h3>Total Sales</h3>
+                        <h3>Total ventas</h3>
                         @if (statistics$ | async; as stats) {
                             <p class="stat-value">${{ stats.totalSales | number:'1.0-0' }}</p>
                             <p class="stat-change" [class.positive]="stats.salesGrowth > 0">
-                                {{ stats.salesGrowth | number:'1.1-1' }}% vs last period
+                                {{ stats.salesGrowth | number:'1.1-1' }}% 
                             </p>
                         }
                     </div>
@@ -45,7 +43,7 @@
                 <div class="stat-card">
                     <div class="stat-icon products">📦</div>
                     <div class="stat-info">
-                        <h3>Active Products</h3>
+                        <h3>Productos activos</h3>
                         <p class="stat-value">{{ (statistics$ | async)?.activeProducts }}</p>
                     </div>
                 </div>
@@ -53,7 +51,7 @@
                 <div class="stat-card">
                     <div class="stat-icon customers">👥</div>
                     <div class="stat-info">
-                        <h3>Total Customers</h3>
+                        <h3>Total clientes</h3>
                         <p class="stat-value">{{ (statistics$ | async)?.registeredCustomers }}</p>
                     </div>
                 </div>
@@ -61,7 +59,7 @@
                 <div class="stat-card">
                     <div class="stat-icon orders">📋</div>
                     <div class="stat-info">
-                        <h3>Pending Orders</h3>
+                        <h3>Ordenes pendientes</h3>
                         <p class="stat-value">{{ (statistics$ | async)?.pendingOrders }}</p>
                     </div>
                 </div>
@@ -69,13 +67,13 @@
 
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h3>Sales Trend</h3>
+                    <h3>Tendencia de ventas</h3>
                     <!-- Add your preferred charting component here -->
-                    <div class="chart-placeholder">Sales Chart</div>
+                    <div class="chart-placeholder">Grafico de ventas</div>
                 </div>
 
                 <div class="chart-card">
-                    <h3>Top Products</h3>
+                    <h3>Productos en tendencia</h3>
                     <div class="top-products-list">
                         @for (product of chartData.topProducts; track product.id) {
                             <div class="top-product-item">
@@ -93,9 +91,9 @@
         @if (activeTab === 'products') {
         <section class="products-section">
             <div class="section-header">
-                <h2>Products Management</h2>
+                <h2>Administracion de productos </h2>
                 <div class="search-box">
-                    <input type="text" placeholder="Search products..." #productSearch
+                    <input type="text" placeholder="Buscar producto..." #productSearch
                            (input)="getFilteredProducts(productSearch.value)">
                 </div>
             </div>
@@ -103,11 +101,11 @@
             <div class="data-grid">
                     <thead>
                         <tr>
-                            <th class="texto">Product</th>
-                            <th class="texto">Stock</th>
-                            <th class="texto">Price</th>
-                            <th class="texto">Sales</th>
-                            <th class="texto">Status</th>
+                            <th class="texto">Productos</th>
+                            <th class="texto">Cantidad</th>
+                            <th class="texto">Precio</th>
+                            <th class="texto">Ventas</th>
+                            <th class="texto">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -140,7 +138,7 @@
         @if (activeTab === 'sales') {
         <section class="sales-section">
             <div class="section-header">
-                <h2>Sales Overview</h2>
+                <h2>Vistas general de ventas</h2>
                 <div class="search-box">
                     <input type="text" placeholder="Search orders..." #salesSearch
                            (input)="getFilteredSales(salesSearch.value)">
@@ -151,11 +149,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="texto">Order ID</th>
-                            <th class="texto">Customer</th>
-                            <th class="texto">Date</th>
-                            <th class="texto">Amount</th>
-                            <th class="texto">Status</th>
+                            <th class="texto">ID de orden</th>
+                            <th class="texto">CLiente</th>
+                            <th class="texto">Info</th>
+                            <th class="texto">Cantidad</th>
+                            <th class="texto">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -184,7 +182,7 @@
         @if (activeTab === 'customers') {
         <section class="customers-section">
             <div class="section-header">
-                <h2>Customer Management</h2>
+                <h2>Administracion de clientes</h2>
                 <div class="search-box">
                     <input type="text" placeholder="Search customers..." #customerSearch
                            (input)="getFilteredCustomers(customerSearch.value)">
@@ -195,11 +193,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="texto">Customer</th>
+                            <th class="texto">Cliente</th>
                             <th class="texto">Email</th>
-                            <th class="texto">Orders</th>
-                            <th class="texto">Total Spent</th>
-                            <th class="texto">Last Order</th>
+                            <th class="texto">Orden</th>
+                            <th class="texto">Total costos</th>
+                            <th class="texto">Ultimo pedido</th>
                         </tr>
                     </thead>
                     <tbody>
