@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../services/product.service';
 import { OrderService } from '../../../services/order.service';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
+import { SellerService } from '../../../services/seller.service';
 import { BehaviorSubject, Observable, Subject, Subscription, catchError, firstValueFrom, interval, map, of, startWith, takeUntil } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -103,6 +104,16 @@ interface MonthlyData {
   value: number;
 }
 
+// Interfaz para usuario según el formato solicitado
+export interface SellerUser {
+  email: string;
+  name: string;
+  lastname: string;
+  id: number;
+  is_active: boolean;
+  rol: string;
+}
+
 @Component({
   selector: 'app-seller',
   standalone: true,
@@ -118,6 +129,12 @@ export class Seller implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly orderService = inject(OrderService);
   private readonly clientService = inject(ClientDashboardService);
+
+  // Inyectar SellerService correctamente por propiedad
+  constructor(
+    // ...otros servicios...
+    private sellerService: SellerService
+  ) {}
 
   // State
   activeTab: string = 'dashboard';
@@ -158,9 +175,15 @@ export class Seller implements OnInit, OnDestroy {
     customerGrowth: []
   };
 
+  // Usuarios
+  users: SellerUser[] = [];
+  usersLoading = false;
+  usersError: string | null = null;
+
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();
+    this.loadUsers(); // Cargar usuarios al iniciar
   }
 
   ngOnDestroy() {
@@ -256,19 +279,39 @@ export class Seller implements OnInit, OnDestroy {
     }
   }
 
+  loadUsers() {
+    this.usersLoading = true;
+    this.usersError = null;
+    this.sellerService.getUsers().subscribe({
+      next: (users: any) => {
+        // Mostrar todos los usuarios sin filtrar
+        this.users = Array.isArray(users) ? users : [];
+        this.usersLoading = false;
+      },
+      error: (err) => {
+        this.usersError = 'Error al cargar usuarios';
+        this.usersLoading = false;
+      }
+    });
+  }
+
   private async loadCustomers(): Promise<void> {
     try {
       const customers = await firstValueFrom(
         this.clientService.getUserProfile().pipe(
           map((response: any) => {
             if (!Array.isArray(response)) return [];
-            return response.map(item => ({
-              id: item.id || '',
-              name: item.name || '',
-              email: item.email || '',
-              orders: Array.isArray(item.orders) ? item.orders : [],
-              createdAt: item.createdAt || new Date().toISOString()
-            } as ServiceCustomer));
+            // Filtrar solo clientes con rol 'comprador' o 'cliente'
+            return response
+              .filter((item: any) =>
+                item.rol?.toLowerCase() === 'comprador' || item.rol?.toLowerCase() === 'cliente')
+              .map(item => ({
+                id: item.id || '',
+                name: item.name || '',
+                email: item.email || '',
+                orders: Array.isArray(item.orders) ? item.orders : [],
+                createdAt: item.createdAt || new Date().toISOString()
+              } as ServiceCustomer));
           }),
           map(serviceCustomers => this.mapServiceCustomersToCustomers(serviceCustomers)),
           catchError(() => of([]))

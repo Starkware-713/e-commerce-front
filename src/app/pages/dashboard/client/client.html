@@ -1,8 +1,6 @@
 <section class="cliente-container">
   @if (loading) {
     <div class="loading">Cargando...</div>
-  } @else if (error) {
-    <div class="error">{{ error }}</div>
   } @else {
     <h1>¡Bienvenido, {{ user?.name }}!</h1>
     <div class="cliente-perfil">
@@ -13,12 +11,14 @@
         <button class="edit-button">Editar perfil</button>
       </div>
     </div>
-
-    <div class="cliente-historial">
+    @if (ordersError) {
+      <div class="error" style="margin-bottom: 1rem;">{{ ordersError }}</div>
+    } @else{
+      <div class="cliente-historial">
       <h3>Últimas compras</h3>
-      @if (orders.length === 0) {
+        @if (orders.length === 0 && !ordersError) {
         <p>No hay compras registradas</p>
-      } @else {
+        } @else if (orders.length > 0) {
         <table>
           <thead>
             <tr>
@@ -46,4 +46,5 @@
       }
     </div>
   }
+}
 </section>

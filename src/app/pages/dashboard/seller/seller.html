@@ -16,6 +16,9 @@
             <button [class.active]="activeTab === 'customers'" (click)="changeTab('customers')" class="nav-item">
                 <i class="fas fa-users"></i> Clientes
             </button>
+            <button [class.active]="activeTab === 'users'" (click)="changeTab('users')" class="nav-item">
+                <i class="fas fa-user-cog"></i> Usuarios
+            </button>
             <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing')" class="nav-item">
                 <i class="fas fa-bullhorn"></i> Marketing
             </button>
@@ -32,10 +35,10 @@
                     <div class="stat-info">
                         <h3>Total ventas</h3>
                         @if (statistics$ | async; as stats) {
-                            <p class="stat-value">${{ stats.totalSales | number:'1.0-0' }}</p>
-                            <p class="stat-change" [class.positive]="stats.salesGrowth > 0">
-                                {{ stats.salesGrowth | number:'1.1-1' }}% 
-                            </p>
+                        <p class="stat-value">${{ stats.totalSales | number:'1.0-0' }}</p>
+                        <p class="stat-change" [class.positive]="stats.salesGrowth > 0">
+                            {{ stats.salesGrowth | number:'1.1-1' }}%
+                        </p>
                         }
                     </div>
                 </div>
@@ -76,10 +79,10 @@
                     <h3>Productos en tendencia</h3>
                     <div class="top-products-list">
                         @for (product of chartData.topProducts; track product.id) {
-                            <div class="top-product-item">
-                                <span class="product-name">{{ product.name }}</span>
-                                <span class="product-sales">${{ product.sales | number:'1.0-0' }}</span>
-                            </div>
+                        <div class="top-product-item">
+                            <span class="product-name">{{ product.name }}</span>
+                            <span class="product-sales">${{ product.sales | number:'1.0-0' }}</span>
+                        </div>
                         }
                     </div>
                 </div>
@@ -94,88 +97,107 @@
                 <h2>Administracion de productos </h2>
                 <div class="search-box">
                     <input type="text" placeholder="Buscar producto..." #productSearch
-                           (input)="getFilteredProducts(productSearch.value)">
+                        (input)="getFilteredProducts(productSearch.value)">
                 </div>
             </div>
 
             <div class="data-grid">
-                    <thead>
-                        <tr>
-                            <th class="texto">Productos</th>
-                            <th class="texto">Cantidad</th>
-                            <th class="texto">Precio</th>
-                            <th class="texto">Ventas</th>
-                            <th class="texto">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (products$ | async; as products) {
-                            @for (product of products; track product.id) {
-                                <tr>
-                                    <td>
-                                        <div class="product-info">
-                                            <img [src]="product.image" [alt]="product.name">
-                                            <span>{{ product.name }}</span>
-                                        </div>
-                                    </td>
-                                    <td>{{ product.stock }}</td>
-                                    <td>${{ product.price }}</td>
-                                    <td>{{ product.sales }}</td>
-                                    <td>
-                                        <span [class]="'status-badge ' + product.status.toLowerCase()">
-                                            {{ product.status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
+                <thead>
+                    <tr>
+                        <th class="texto">Productos</th>
+                        <th class="texto">Cantidad</th>
+                        <th class="texto">Precio</th>
+                        <th class="texto">Ventas</th>
+                        <th class="texto">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (products$ | async; as products) {
+                    @for (product of products; track product.id) {
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <img [src]="product.image" [alt]="product.name">
+                                <span>{{ product.name }}</span>
+                            </div>
+                        </td>
+                        <td>{{ product.stock }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{{ product.sales }}</td>
+                        <td>
+                            <span [class]="'status-badge ' + product.status.toLowerCase()">
+                                {{ product.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
             </div>
         </section>
         }
 
         <!-- Sales Section -->
         @if (activeTab === 'sales') {
-        <section class="sales-section">
+        <section class="users-section">
             <div class="section-header">
-                <h2>Vistas general de ventas</h2>
-                <div class="search-box">
-                    <input type="text" placeholder="Search orders..." #salesSearch
-                           (input)="getFilteredSales(salesSearch.value)">
-                </div>
+                <h2>Administración de usuarios</h2>
             </div>
 
+            @if (usersLoading) {
+            <p>Cargando usuarios...</p>
+            }
+
+            @if (usersError) {
+            <div class="error-message">Error al cargar los usuarios: {{ usersError }}</div>
+            }
+
             <div class="data-grid">
-                <table>
+                <table class="users-table">
                     <thead>
                         <tr>
-                            <th class="texto">ID de orden</th>
-                            <th class="texto">CLiente</th>
-                            <th class="texto">Info</th>
-                            <th class="texto">Cantidad</th>
-                            <th class="texto">Estado</th>
+                            <th>Email</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>ID</th>
+                            <th>Activo</th>
+                            <th>Rol</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (sales$ | async; as sales) {
-                            @for (sale of sales; track sale.id) {
-                                <tr>
-                                    <td>#{{ sale.id }}</td>
-                                    <td>{{ sale.customerName }}</td>
-                                    <td>{{ sale.date | date:'short' }}</td>
-                                    <td>${{ sale.total | number:'1.2-2' }}</td>
-                                    <td>
-                                        <span [class]="'status-badge ' + sale.status.toLowerCase()">
-                                            {{ sale.status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            }
+                        @if (users.length > 0) {
+                        @for (user of users; track user.id) {
+                        <tr>
+                            <td>{{ user.email || 'N/A' }}</td>
+                            <td>{{ user.name || 'N/A' }}</td>
+                            <td>{{ user.lastname || 'N/A' }}</td>
+                            <td>{{ user.id || 'N/A' }}</td>
+                            <td>
+                                <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
+                                    {{ user.is_active ? 'Sí' : 'No' }}
+                                </span>
+                            </td>
+                            <td>
+                                @if (user.rol === 'vendedor') {
+                                <span class="rol-badge vendedor">Vendedor</span>
+                                }
+                                @else {
+                                <span>{{ user.rol || 'N/A' }}</span>
+                                }
+                            </td>
+                        </tr>
+                        }
+                        }
+                        @else {
+                        <tr>
+                            <td colspan="6" class="no-data">No hay usuarios disponibles</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </section>
+
         }
 
         <!-- Customers Section -->
@@ -185,7 +207,7 @@
                 <h2>Administracion de clientes</h2>
                 <div class="search-box">
                     <input type="text" placeholder="Search customers..." #customerSearch
-                           (input)="getFilteredCustomers(customerSearch.value)">
+                        (input)="getFilteredCustomers(customerSearch.value)">
                 </div>
             </div>
 
@@ -202,21 +224,80 @@
                     </thead>
                     <tbody>
                         @if (customers$ | async; as customers) {
-                            @for (customer of customers; track customer.id) {
-                                <tr>
-                                    <td>
-                                        <div class="customer-info">
-                                            <span class="customer-avatar">{{ customer.name[0] }}</span>
-                                            <span>{{ customer.name }}</span>
-                                        </div>
-                                    </td>
-                                    <td>{{ customer.email }}</td>
-                                    <td>{{ customer.orderCount }}</td>
-                                    <td>${{ customer.totalSpent | number:'1.2-2' }}</td>
-                                    <td>{{ customer.lastOrderDate | date:'mediumDate' }}</td>
-                                </tr>
-                            }
+                        @for (customer of customers; track customer.id) {
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <span class="customer-avatar">{{ customer.name[0] }}</span>
+                                    <span>{{ customer.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.orderCount }}</td>
+                            <td>${{ customer.totalSpent | number:'1.2-2' }}</td>
+                            <td>{{ customer.lastOrderDate | date:'mediumDate' }}</td>
+                        </tr>
                         }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        }
+
+        <!-- Users Section -->
+        @if (activeTab === 'users') {
+        <section class="users-section">
+            <div class="section-header">
+                <h2>Administración de usuarios</h2>
+            </div>
+            @if (usersLoading){
+            Cargando Usuarios
+            }
+            @if (usersError){
+            <div class="error-message">Error al cargar los usuarios: {{ usersError }}</div>
+            }
+            <div class="data-grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>ID</th>
+                            <th>Activo</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @for( user of users; track user.id) {
+                        <tr [class.vendedor-row]="user.rol === 'vendedor'">
+                            <td>{{ user.email || 'N/A' }}</td>
+                            <td>{{ user.name || 'N/A' }}</td>
+                            <td>{{ user.lastname || 'N/A' }}</td>
+                            <td>{{ user.id || 'N/A' }}</td>
+                            <td>
+                                <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
+                                    {{ user.is_active ? 'Sí' : 'No' }}
+                                </span>
+                            </td>
+                            <td>
+                                @if(user.rol === 'vendedor'){
+                                <span class="rol-badge vendedor">Vendedor</span>
+                                }
+                                @if(user.rol !== 'vendedor'){
+                                <span>{{ user.rol || 'N/A' }}</span>
+                                }
+                            </td>
+                        </tr>
+                        }
+                        @if (users.length === 0) {
+                        <tr>
+                            <td colspan="6" class="no-data">No hay usuarios disponibles</td>
+                        </tr>
+                        }
+                        </tr>
                     </tbody>
                 </table>
             </div>

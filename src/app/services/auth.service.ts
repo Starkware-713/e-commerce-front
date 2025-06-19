@@ -235,7 +235,16 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.isAuthenticated;
+    // Verifica el token en localStorage y su validez
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const decodedToken = jwtDecode(token) as DecodedToken;
+      const currentTime = Date.now() / 1000;
+      return !!token && decodedToken.exp > currentTime;
+    } catch {
+      return false;
+    }
   }  getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/user/profile`).pipe(
       tap(user => {
