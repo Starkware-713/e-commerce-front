@@ -2,6 +2,11 @@
   @if (loading) {
     <div class="loading">Cargando...</div>
   } @else {
+    <div class="dashboard-icons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+      <i class="fas fa-user-circle fa-2x" title="Perfil"></i>
+      <i class="fas fa-shopping-bag fa-2x" title="Compras"></i>
+      <i class="fas fa-cog fa-2x" title="Configuración"></i>
+    </div>
     <h1>¡Bienvenido, {{ user?.name }}!</h1>
     <div class="cliente-perfil">
       <img src="https://ui-avatars.com/api/?name={{user?.name}}+{{user?.lastname}}&background=random" alt="Foto de perfil" />

@@ -26,6 +26,7 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css",
               "src/styles.css"
             ]
           },
@@ -83,6 +84,7 @@
               }
             ],
             "styles": [
+              "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css",
               "src/styles.css"
             ]
           }
