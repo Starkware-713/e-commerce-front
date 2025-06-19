@@ -1,4 +1,4 @@
- import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
@@ -78,10 +78,21 @@ export class Home implements OnInit {
     }
   ];
 
+  reservas: any[] = [];
+  reservarHospedaje: boolean = false;
+  hospedajesFiltrados: Hospedaje[] = [];
+  paises: string[] = ['Argentina', 'Brasil', 'Chile', 'Uruguay'];
+  showOrigenList = false;
+  showDestinoList = false;
+  paisesFiltradosOrigen: string[] = [];
+  paisesFiltradosDestino: string[] = [];
+
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
     this.loadProducts();
+    this.paisesFiltradosOrigen = this.paises;
+    this.paisesFiltradosDestino = this.paises;
   }
 
   private loadProducts() {
@@ -119,18 +130,56 @@ export class Home implements OnInit {
       return;
     }
     this.error = null;
-    this.hospedajesDisponibles = this.hospedajes.filter(h =>
-      h.destino.toLowerCase().includes(this.destino.trim().toLowerCase())
-    );
-    this.mostrarHospedajes = true;
-    this.reservaRealizada = {
+    // Filtrar hospedajes según el país de origen si se selecciona
+    if (this.reservarHospedaje) {
+      this.hospedajesDisponibles = this.hospedajes.filter(h =>
+        h.destino.toLowerCase().includes(this.destino.trim().toLowerCase())
+      );
+    } else {
+      this.hospedajesDisponibles = [];
+    }
+    this.mostrarHospedajes = this.reservarHospedaje && this.hospedajesDisponibles.length > 0;
+    // Agregar reserva
+    const nuevaReserva = {
       origen: this.origen,
       destino: this.destino,
       partida: this.partida,
       regreso: this.regreso,
       pasajeros: this.pasajeros,
-      clase: this.clase
+      clase: this.clase,
+      hospedaje: this.reservarHospedaje ? this.hospedajesDisponibles[0]?.nombre : null
     };
+    this.reservas.push(nuevaReserva);
+    this.reservaRealizada = nuevaReserva;
+  }
+
+  eliminarReserva(idx: number) {
+    this.reservas.splice(idx, 1);
+    if (this.reservas.length > 0) {
+      this.reservaRealizada = this.reservas[this.reservas.length - 1];
+    } else {
+      this.reservaRealizada = null;
+    }
+  }
+
+  agregarReserva() {
+    this.origen = '';
+    this.destino = '';
+    this.partida = '';
+    this.regreso = '';
+    this.pasajeros = 1;
+    this.clase = 'Economy';
+    this.reservarHospedaje = false;
+    this.mostrarHospedajes = false;
+    this.hospedajesDisponibles = [];
+    this.error = null;
+  }
+
+  onOrigenChange() {
+    // Filtrar hospedajes según el país de origen
+    this.hospedajesFiltrados = this.hospedajes.filter(h =>
+      h.destino.toLowerCase().includes(this.origen.trim().toLowerCase())
+    );
   }
 
   hacerCheckin() {
@@ -147,5 +196,33 @@ export class Home implements OnInit {
     } else {
       this.estadoVuelo = 'Tu vuelo a ' + this.reservaRealizada.destino + ' está programado y a horario.';
     }
+  }
+
+  filterPaises(tipo: 'origen' | 'destino') {
+    const filtro = (tipo === 'origen' ? this.origen : this.destino).toLowerCase();
+    if (tipo === 'origen') {
+      this.paisesFiltradosOrigen = this.paises.filter(p => p.toLowerCase().includes(filtro));
+    } else {
+      this.paisesFiltradosDestino = this.paises.filter(p => p.toLowerCase().includes(filtro));
+    }
+  }
+
+  selectPais(pais: string, tipo: 'origen' | 'destino') {
+    if (tipo === 'origen') {
+      this.origen = pais;
+      this.showOrigenList = false;
+      this.filterPaises('origen');
+    } else {
+      this.destino = pais;
+      this.showDestinoList = false;
+      this.filterPaises('destino');
+    }
+  }
+
+  hideList(tipo: 'origen' | 'destino') {
+    setTimeout(() => {
+      if (tipo === 'origen') this.showOrigenList = false;
+      else this.showDestinoList = false;
+    }, 150);
   }
 }

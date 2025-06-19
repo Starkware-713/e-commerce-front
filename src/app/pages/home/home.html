@@ -52,93 +52,109 @@
 </section>
 
 <div class="carousel-home">
-    <div class="carousel-image"></div>
-    <div class="reserva-container">
-      <div class="tabs">
-        <span [class.active]="tabSeleccionado === 0" (click)="seleccionarTab(0)">✈ VUELOS</span>
-        <span [class.active]="tabSeleccionado === 1" (click)="seleccionarTab(1)">🧳 CHECK IN</span>
-        <span [class.active]="tabSeleccionado === 2" (click)="seleccionarTab(2)">⏱ ESTADO DE VUELO</span>
-        <span [class.active]="tabSeleccionado === 3" (click)="seleccionarTab(3)">🏷 MI RESERVA</span>
-      </div>
+  <div class="carousel-image"></div>
+  <div class="reserva-container">
+    <div class="tabs">
+      <span [class.active]="tabSeleccionado === 0" (click)="seleccionarTab(0)">✈ VUELOS</span>
+      <span [class.active]="tabSeleccionado === 1" (click)="seleccionarTab(1)">🧳 CHECK IN</span>
+      <span [class.active]="tabSeleccionado === 2" (click)="seleccionarTab(2)">⏱ ESTADO DE VUELO</span>
+      <span [class.active]="tabSeleccionado === 3" (click)="seleccionarTab(3)">🏷 MI RESERVA</span>
+    </div>
 
-      <!-- TAB 0: Vuelos -->
-      <div *ngIf="tabSeleccionado === 0" class="form-vuelos">
-        <div class="tipo-viaje">
-          <label><input type="radio" name="tipo" checked> Ida</label>
-          <label><input type="radio" name="tipo"> Ida y vuelta</label>
-          <label><input type="radio" name="tipo"> Multidestinos</label>
+    <!-- TAB 0: Vuelos -->
+    <div *ngIf="tabSeleccionado === 0" class="form-vuelos">
+      <div class="tipo-viaje">
+        <label><input type="radio" name="tipo" checked> Ida</label>
+        <label><input type="radio" name="tipo"> Ida y vuelta</label>
+        <label><input type="radio" name="tipo"> Multidestinos</label>
+      </div>
+      <div class="campos">
+        <div class="autocomplete-group">
+          <input type="text" placeholder="Origen" [(ngModel)]="origen" (focus)="showOrigenList = true" (input)="filterPaises('origen')" (blur)="hideList('origen')" [readonly]="true">
+          <ul *ngIf="showOrigenList" class="autocomplete-list">
+            <li *ngFor="let pais of paisesFiltradosOrigen" (mousedown)="selectPais(pais, 'origen')">{{ pais }}</li>
+          </ul>
         </div>
-        <div class="campos">
-          <input type="text" placeholder="Origen" [(ngModel)]="origen">
-          <input type="text" placeholder="Destino" [(ngModel)]="destino">
-          <input type="date" placeholder="Partida" [(ngModel)]="partida">
-          <input type="date" placeholder="Regreso" [(ngModel)]="regreso">
-          <select [(ngModel)]="pasajeros">
-            <option [value]="1">1 Pasajero/a, Economy</option>
-            <option [value]="2">2 Pasajeros/as, Business</option>
-          </select>
+        <div class="autocomplete-group">
+          <input type="text" placeholder="Destino" [(ngModel)]="destino" (focus)="showDestinoList = true" (input)="filterPaises('destino')" (blur)="hideList('destino')" [readonly]="true">
+          <ul *ngIf="showDestinoList" class="autocomplete-list">
+            <li *ngFor="let pais of paisesFiltradosDestino" (mousedown)="selectPais(pais, 'destino')">{{ pais }}</li>
+          </ul>
         </div>
-        <div class="opciones">
-          <label><input type="checkbox"> Búsqueda en millas</label>
-          <label><input type="checkbox" [(ngModel)]="flexible"> Tengo fechas flexibles</label>
-        </div>
-        <button (click)="buscarVuelos()">BUSCAR VUELOS</button>
-        <div *ngIf="error" class="error-message">{{ error }}</div>
+        <input type="date" placeholder="Partida" [(ngModel)]="partida">
+        <input type="date" placeholder="Regreso" [(ngModel)]="regreso">
+        <select [(ngModel)]="pasajeros">
+          <option [value]="1">1 Pasajero/a, Economy</option>
+          <option [value]="2">2 Pasajeros/as, Business</option>
+        </select>
       </div>
-
-      <!-- TAB 1: Check-in -->
-      <div *ngIf="tabSeleccionado === 1" class="form-vuelos">
-        <button (click)="hacerCheckin()">Realizar Check-in</button>
-        <div *ngIf="mensajeCheckin" class="loading-spinner">{{ mensajeCheckin }}</div>
+      <div class="opciones">
+        <label><input type="checkbox" [(ngModel)]="reservarHospedaje"> ¿Deseas reservar hospedaje?</label>
+        <label><input type="checkbox"> Búsqueda en millas</label>
+        <label><input type="checkbox" [(ngModel)]="flexible"> Tengo fechas flexibles</label>
       </div>
+      <button (click)="buscarVuelos()">BUSCAR VUELOS</button>
+      <button (click)="agregarReserva()" type="button">Agregar otra reserva</button>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+    </div>
 
-      <!-- TAB 2: Estado de vuelo -->
-      <div *ngIf="tabSeleccionado === 2" class="form-vuelos">
-        <button (click)="consultarEstadoVuelo()">Consultar Estado de Vuelo</button>
-        <div *ngIf="estadoVuelo" class="loading-spinner">{{ estadoVuelo }}</div>
-      </div>
+    <!-- TAB 1: Check-in -->
+    <div *ngIf="tabSeleccionado === 1" class="form-vuelos">
+      <button (click)="hacerCheckin()">Realizar Check-in</button>
+      <div *ngIf="mensajeCheckin" class="loading-spinner">{{ mensajeCheckin }}</div>
+    </div>
 
-      <!-- TAB 3: Mi reserva -->
-      <div *ngIf="tabSeleccionado === 3" class="form-vuelos">
-        <div *ngIf="reservaRealizada; else noReserva">
+    <!-- TAB 2: Estado de vuelo -->
+    <div *ngIf="tabSeleccionado === 2" class="form-vuelos">
+      <button (click)="consultarEstadoVuelo()">Consultar Estado de Vuelo</button>
+      <div *ngIf="estadoVuelo" class="loading-spinner">{{ estadoVuelo }}</div>
+    </div>
+
+    <!-- TAB 3: Mi reserva -->
+    <div *ngIf="tabSeleccionado === 3" class="form-vuelos">
+      <div *ngIf="reservas.length > 0; else noReserva">
+        <div *ngFor="let reserva of reservas; let i = index" class="reserva-item">
           <h3>Reserva realizada</h3>
-          <p><strong>Origen:</strong> {{ reservaRealizada.origen }}</p>
-          <p><strong>Destino:</strong> {{ reservaRealizada.destino }}</p>
-          <p><strong>Partida:</strong> {{ reservaRealizada.partida }}</p>
-          <p *ngIf="reservaRealizada.regreso"><strong>Regreso:</strong> {{ reservaRealizada.regreso }}</p>
-          <p><strong>Pasajeros:</strong> {{ reservaRealizada.pasajeros }}</p>
-          <p><strong>Clase:</strong> {{ reservaRealizada.clase }}</p>
+          <p><strong>Origen:</strong> {{ reserva.origen }}</p>
+          <p><strong>Destino:</strong> {{ reserva.destino }}</p>
+          <p><strong>Partida:</strong> {{ reserva.partida }}</p>
+          <p *ngIf="reserva.regreso"><strong>Regreso:</strong> {{ reserva.regreso }}</p>
+          <p><strong>Pasajeros:</strong> {{ reserva.pasajeros }}</p>
+          <p><strong>Clase:</strong> {{ reserva.clase }}</p>
+          <p *ngIf="reserva.hospedaje"><strong>Hospedaje:</strong> {{ reserva.hospedaje }}</p>
+          <button (click)="eliminarReserva(i)" type="button">Eliminar</button>
         </div>
-        <ng-template #noReserva>
-          <div class="loading-spinner">No tienes reservas realizadas aún.</div>
-        </ng-template>
+      </div>
+      <ng-template #noReserva>
+        <div class="loading-spinner">No tienes reservas realizadas aún.</div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<h2 class="tituloHosp" *ngIf="mostrarHospedajes && hospedajesDisponibles.length > 0">
+  Hospedajes disponibles en {{ destino }}
+</h2>
+<section class="hospedajes-container" *ngIf="mostrarHospedajes">
+  <div *ngIf="hospedajesDisponibles.length === 0" class="no-products">
+    <p>No hay hospedajes disponibles para este destino.</p>
+  </div>
+  <div class="hospedaje-card" *ngFor="let h of hospedajesDisponibles">
+    <img [src]="h.imagen" [alt]="h.nombre">
+    <div>
+      <h3>{{ h.nombre }}</h3>
+      <p class="hospedaje-ubicacion">{{ h.destino }}, Argentina</p>
+      <p class="hospedaje-desc">{{ h.descripcion }}</p>
+      <div class="hospedaje-estrellas">
+        <span class="estrella" *ngFor="let e of [].constructor(h.estrellas)">&#9733;</span>
+        <span class="estrella" *ngFor="let e of [].constructor(5-h.estrellas)">&#9734;</span>
+        <span class="hospedaje-fecha">Reserva: {{ h.fecha }}</span>
       </div>
     </div>
   </div>
+</section>
 
-  <h2 class="tituloHosp" *ngIf="mostrarHospedajes && hospedajesDisponibles.length > 0">
-    Hospedajes disponibles en {{ destino }}
-  </h2>
-  <section class="hospedajes-container" *ngIf="mostrarHospedajes">
-    <div *ngIf="hospedajesDisponibles.length === 0" class="no-products">
-      <p>No hay hospedajes disponibles para este destino.</p>
-    </div>
-    <div class="hospedaje-card" *ngFor="let h of hospedajesDisponibles">
-      <img [src]="h.imagen" [alt]="h.nombre">
-      <div>
-        <h3>{{ h.nombre }}</h3>
-        <p class="hospedaje-ubicacion">{{ h.destino }}, Argentina</p>
-        <p class="hospedaje-desc">{{ h.descripcion }}</p>
-        <div class="hospedaje-estrellas">
-          <span class="estrella" *ngFor="let e of [].constructor(h.estrellas)">&#9733;</span>
-          <span class="estrella" *ngFor="let e of [].constructor(5-h.estrellas)">&#9734;</span>
-          <span class="hospedaje-fecha">Reserva: {{ h.fecha }}</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="home-features">
-    <!-- Aquí puedes agregar más contenido o features de tu home -->
-  </div>
+<div class="home-features">
+  <!-- Aquí puedes agregar más contenido o features de tu home -->
+</div>
 </section>

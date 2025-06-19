@@ -43,7 +43,7 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
 
-  .feature-card {
+.feature-card {
     background-color: #f7fafc;
     padding: 2rem;
     border-radius: 1rem;
@@ -67,137 +67,28 @@
   }
 }
 
-/* --- CAROUSEL Y RESERVA CONTAINER MEJORADOS Y RESPONSIVE --- */
+@media (max-width: 600px) {
+  .home-hero h1 {
+    font-size: 2rem;
+  }
+
+  .home-hero p {
+    font-size: 1rem;
+  }
+}
+
 .carousel-home {
   position: relative;
-  width: 100vw;
-  min-width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  height: 60vh;
-  min-height: 260px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 90vh;
+  width: 100%;
 }
 
 .carousel-image {
   background-image: url('https://images.unsplash.com/photo-1534850336045-c6c6d287f89e');
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   height: 100%;
-  width: 100vw;
-  min-width: 100vw;
   filter: brightness(0.65);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.reserva-container {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 95vw;
-  max-width: 420px;
-  background: rgba(255,255,255,0.97);
-  padding: 32px 18px 24px 18px;
-  border-radius: 22px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-  z-index: 2;
-}
-
-@media (max-width: 900px) {
-  .carousel-home {
-    height: 40vh;
-  }
-  .reserva-container {
-    max-width: 98vw;
-    border-radius: 16px;
-    padding: 18px 4vw 14px 4vw;
-  }
-}
-
-@media (max-width: 600px) {
-  .carousel-home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: auto;
-    min-height: 320px;
-    position: relative;
-    overflow: visible;
-    margin-bottom: 0;
-    background: none;
-  }
-  .carousel-image {
-    position: relative;
-    width: 100vw;
-    min-width: 100vw;
-    height: 140px;
-    min-height: 100px;
-    left: 0;
-    top: 0;
-    z-index: 0;
-    border-radius: 0 0 18px 18px;
-  }
-  .reserva-container {
-    position: relative;
-    top: -40px;
-    left: 0;
-    transform: none;
-    margin: 0 auto;
-    max-width: 98vw;
-    width: 98vw;
-    padding: 16px 2vw 18px 2vw;
-    border-radius: 16px;
-    z-index: 2;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-    background: rgba(255,255,255,0.96);
-  }
-  .campos input,
-  .campos select {
-    height: 34px;
-    min-height: unset;
-    padding: 5px 10px;
-    font-size: 1rem;
-    border-width: 2px;
-  }
-  .campos {
-    gap: 0.3rem;
-  }
-  app-footer {
-    display: block;
-    position: static;
-    width: 100vw;
-    margin: 0 auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-  }
-}
-
-@media (max-width: 400px) {
-  .carousel-home, .carousel-image {
-    height: 140px;
-    min-height: 80px;
-  }
-  .reserva-container {
-    top: 60px;
-    padding: 6px 1vw 10px 1vw;
-    border-radius: 10px;
-  }
 }
 
 /* Caja blanca con el formulario */
@@ -206,167 +97,80 @@
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 90vw;
-  max-width: 700px;
-  background: rgba(255,255,255,0.97);
-  padding: 32px 28px 24px 28px;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-  z-index: 2;
+  width: 85%;
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  max-width: 1100px;
 }
 
+/* Tabs superiores */
 .tabs {
   display: flex;
-  gap: 2.2rem;
-  border-bottom: 2px solid #e0e0e0;
-  margin-bottom: 18px;
+  gap: 30px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 25px;
   font-weight: bold;
-  font-size: 1.08rem;
-  justify-content: center;
-  width: 100%;
 }
+
 .tabs span {
   padding-bottom: 8px;
   cursor: pointer;
-  transition: color 0.2s, border 0.2s;
 }
+
 .tabs .active {
   color: #007bff;
-  border-bottom: 2.5px solid #007bff;
+  border-bottom: 2px solid #007bff;
 }
 
+/* Opciones tipo de viaje */
 .tipo-viaje {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 0.5rem;
-  justify-content: center;
-  width: 100%;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
+/* Campos de origen, destino, fechas y pasajeros */
 .campos {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  width: 100%;
-  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
 }
+
 .campos input,
 .campos select {
-  padding: 10px 12px;
+  padding: 10px;
   flex: 1 1 180px;
-  border: 1.5px solid #b3e0ff;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #f8fbff;
-  transition: border 0.2s;
-}
-.campos input:focus,
-.campos select:focus {
-  border-color: #007bff;
-  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
 }
 
+/* Checkbox flexibles */
 .opciones {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.98rem;
-  justify-content: center;
-  width: 100%;
+  gap: 20px;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
+/* Botón */
 button {
   background-color: #1a65b8;
   color: white;
   padding: 12px 30px;
   border: none;
-  border-radius: 8px;
-  font-size: 1.08rem;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
   width: 100%;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.07);
-  transition: background 0.2s, box-shadow 0.2s;
-  margin-top: 0.5rem;
 }
+
 button:hover {
   background-color: #004a99;
-  box-shadow: 0 4px 16px rgba(0, 123, 255, 0.13);
-}
-
-@media (max-width: 900px) {
-  .reserva-container {
-    padding: 18px 8px 14px 8px;
-    max-width: 98vw;
-    border-radius: 14px;
-  }
-  .tabs {
-    gap: 1.2rem;
-    font-size: 1rem;
-  }
-  .tipo-viaje {
-    gap: 0.7rem;
-  }
-  .campos {
-    gap: 0.5rem;
-  }
-  .opciones {
-    gap: 0.7rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .reserva-container {
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
-    margin: 0 auto;
-    max-width: 98vw;
-    width: 98vw;
-    padding: 16px 2vw 18px 2vw;
-    border-radius: 16px;
-    z-index: 2;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-    background: rgba(255,255,255,0.96);
-  }
-  .campos input,
-  .campos select {
-    height: 34px;
-    min-height: unset;
-    padding: 5px 10px;
-    font-size: 1rem;
-    border-width: 2px;
-  }
-  .campos {
-    gap: 0.3rem;
-  }
-  app-footer {
-    display: block;
-    position: static;
-    width: 100vw;
-    margin: 0 auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-  }
-}
-
-@media (max-width: 400px) {
-  .carousel-home, .carousel-image {
-    height: 140px;
-    min-height: 80px;
-  }
-  .reserva-container {
-    top: 60px;
-    padding: 6px 1vw 10px 1vw;
-    border-radius: 10px;
-  }
 }
 
 /* Estilos para la sección de hospedajes */
@@ -393,8 +197,8 @@ button:hover {
 
 .hospedajes-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
   justify-items: center;
 }
 
@@ -534,51 +338,24 @@ button:hover {
 
 @media (max-width: 1200px) {
   .hospedajes-list {
-    grid-template-columns: repeat(2, 1fr);
+     grid-template-columns: repeat(2, 1fr);
     gap: 1.2rem;
   }
   .hospedaje-card {
     width: 45vw;
-    min-width: 180px;
+    min-width: 220px;
     max-width: 350px;
   }
 }
 
 @media (max-width: 900px) {
   .hospedajes-list {
-    grid-template-columns: 1fr;
+    flex-wrap: wrap;
     gap: 1rem;
   }
   .hospedaje-card {
     width: 90vw;
     min-width: 0;
     max-width: 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  .campos input,
-  .campos select {
-    height: 34px;
-    min-height: unset;
-    padding: 5px 10px;
-    font-size: 1rem;
-    border-width: 2px;
-  }
-  .campos {
-    gap: 0.3rem;
-  }
-  .reserva-container {
-    padding-bottom: 16px;
-  }
-  app-footer {
-    display: block;
-    position: static;
-    width: 100vw;
-    margin: 0 auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
   }
 }
