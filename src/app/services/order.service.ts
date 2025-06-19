@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
@@ -27,15 +27,20 @@ export class OrderService {
     private authService: AuthService
   ) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   private checkAuth() {
     if (!this.authService.isLoggedIn()) {
       throw new Error('Authentication required');
     }
   }
 
-  createOrder(): Observable<Order> {
+  createOrder(order: Order): Observable<Order> {
     this.checkAuth();
-    return this.http.post<Order>(`${this.apiUrl}/orders`, {})
+    return this.http.post<Order>(`${this.apiUrl}/orders`, order, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -48,7 +53,7 @@ export class OrderService {
 
   getOrders(): Observable<Order[]> {
     this.checkAuth();
-    return this.http.get<Order[]>(`${this.apiUrl}/orders`)
+    return this.http.get<Order[]>(`${this.apiUrl}/orders`, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -61,7 +66,7 @@ export class OrderService {
 
   getOrder(id: string): Observable<Order> {
     this.checkAuth();
-    return this.http.get<Order>(`${this.apiUrl}/orders/${id}`)
+    return this.http.get<Order>(`${this.apiUrl}/orders/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -70,5 +75,15 @@ export class OrderService {
           return throwError(() => error);
         })
       );
+  }
+
+  updateOrderStatus(orderId: string, status: string): Observable<Order> {
+    this.checkAuth();
+    return this.http.put<Order>(`${this.apiUrl}/orders/${orderId}/status`, { status }, { headers: this.getHeaders() });
+  }
+
+  cancelOrder(orderId: string): Observable<Order> {
+    this.checkAuth();
+    return this.http.put<Order>(`${this.apiUrl}/orders/${orderId}/cancel`, {}, { headers: this.getHeaders() });
   }
 }

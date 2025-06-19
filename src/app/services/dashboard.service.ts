@@ -26,9 +26,6 @@ export class DashboardService {
       case UserRole.SELLER:
         this.router.navigate(['/dashboard/seller']);
         break;
-      case UserRole.SELLER_BOSS:
-        this.router.navigate(['/dashboard/seller-boss']);
-        break;
       default:
         this.router.navigate(['/auth/login']);
     }

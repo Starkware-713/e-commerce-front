@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
@@ -22,6 +22,11 @@ export class SalesService {
     private authService: AuthService
   ) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   private checkAuth() {
     if (!this.authService.isLoggedIn()) {
       throw new Error('Authentication required');
@@ -30,7 +35,7 @@ export class SalesService {
 
   getSales(): Observable<Sale[]> {
     this.checkAuth();
-    return this.http.get<Sale[]>(`${this.apiUrl}/sales`)
+    return this.http.get<Sale[]>(`${this.apiUrl}/sales`, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -43,7 +48,7 @@ export class SalesService {
 
   getSale(id: string): Observable<Sale> {
     this.checkAuth();
-    return this.http.get<Sale>(`${this.apiUrl}/sales/${id}`)
+    return this.http.get<Sale>(`${this.apiUrl}/sales/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -52,5 +57,16 @@ export class SalesService {
           return throwError(() => error);
         })
       );
+  }
+
+  getSalesReport(startDate: Date, endDate: Date): Observable<Sale[]> {
+    this.checkAuth();
+    return this.http.get<Sale[]>(`${this.apiUrl}/sales/report`, {
+      params: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString()
+      },
+      headers: this.getHeaders()
+    });
   }
 }

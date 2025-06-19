@@ -16,8 +16,7 @@ export interface User {
 
 export enum UserRole {
   CLIENT = 'comprador',
-  SELLER = 'vendedor',
-  SELLER_BOSS = 'jefe_ventas'
+  SELLER = 'vendedor'
 }
 
 interface DecodedToken {
@@ -34,7 +33,6 @@ interface DecodedToken {
 export const ROLE_DASHBOARD_MAP: { [key: string]: string } = {
   'comprador': '/dashboard/client',
   'vendedor': '/dashboard/seller',
-  'jefe_ventas': '/dashboard/seller-boss',
 };
 
 @Injectable({
@@ -239,7 +237,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.isAuthenticated;
   }  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user/my-profile`).pipe(
+    return this.http.get<User>(`${this.apiUrl}/user/profile`).pipe(
       tap(user => {
         this.currentUser = user;
       })

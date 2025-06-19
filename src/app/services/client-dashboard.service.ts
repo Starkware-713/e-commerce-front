@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from './auth.service';
 
@@ -19,11 +19,20 @@ export class ClientDashboardService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   getUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user/profile`);
+    return this.http.get<User>(`${this.apiUrl}/user/profile`, {
+      headers: this.getHeaders()
+    });
   }
 
   getUserOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.apiUrl}/orders`);
+    return this.http.get<Order[]>(`${this.apiUrl}/orders`, {
+      headers: this.getHeaders()
+    });
   }
 }

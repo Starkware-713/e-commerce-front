@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
@@ -20,6 +20,11 @@ export class CartService {
     private authService: AuthService
   ) { }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
   private checkAuth() {
     if (!this.authService.isLoggedIn()) {
       throw new Error('Authentication required');
@@ -28,7 +33,7 @@ export class CartService {
 
   createCart(): Observable<any> {
     this.checkAuth();
-    return this.http.post(`${this.apiUrl}/carts`, {})
+    return this.http.post(`${this.apiUrl}/carts`, {}, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -41,7 +46,7 @@ export class CartService {
 
   getCart(): Observable<any> {
     this.checkAuth();
-    return this.http.get(`${this.apiUrl}/carts`)
+    return this.http.get(`${this.apiUrl}/carts`, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -54,7 +59,7 @@ export class CartService {
 
   addItem(item: CartItem): Observable<any> {
     this.checkAuth();
-    return this.http.post(`${this.apiUrl}/carts/items`, item)
+    return this.http.post(`${this.apiUrl}/carts/items`, item, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -67,7 +72,7 @@ export class CartService {
 
   removeItem(item: CartItem): Observable<any> {
     this.checkAuth();
-    return this.http.delete(`${this.apiUrl}/carts/items`, { body: item })
+    return this.http.delete(`${this.apiUrl}/carts/items`, { body: item, headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {
@@ -80,7 +85,7 @@ export class CartService {
 
   updateItemQuantity(item: CartItem): Observable<any> {
     this.checkAuth();
-    return this.http.put(`${this.apiUrl}/carts/items`, item)
+    return this.http.put(`${this.apiUrl}/carts/items`, item, { headers: this.getHeaders() })
       .pipe(
         catchError(error => {
           if (error.message === 'Authentication required') {

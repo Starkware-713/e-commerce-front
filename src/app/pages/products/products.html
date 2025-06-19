@@ -1,1 +1,47 @@
-<p>products works!</p>
+<div class="container">
+        <div class="breadcrumbs">
+            <a href="#">INICIO</a>
+        </div>
+
+        <div class="product-content">
+            <div class="product-images">
+
+            </div>
+
+            <div class="product-details">
+                <h1 class="product-title">viajes por bariloche</h1>
+                <p class="product-price"></p>
+
+                <div class="payment-options">
+                    <p class="installments">12 installments </p>
+                    <p>Accepted payment methods:</p>
+                    <div class="payment-icons">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="Mastercard">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1280px-American_Express_logo_%282018%29.svg.png" alt="Amex">
+                    </div>
+                </div>
+
+                <div class="quantity-selector">
+                    <label for="quantity">cuantas personass:</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1">
+                </div>
+
+                <button class="add-to-cart-btn">Add to Cart</button>
+
+                <div class="shipping-calculator">
+                    <form id="shippingForm">
+                        <input type="text" id="postalCode" placeholder="ingrese codigo de descuento" required>
+                        <button type="submit">Calculate</button>
+                    </form>
+                    <div id="shipping-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-description">
+            <h2>Product Description</h2>
+            <p></p>
+        </div>
+    </div>
+

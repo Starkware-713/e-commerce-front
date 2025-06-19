@@ -19,6 +19,7 @@ export const routes: Routes = [
     {path: 'products', component: Products},
     {path: 'cart', component: Cart},
     {path: 'register', component: Register},
+    {path: 'Products', component: Products},
     {path: 'login', component: Login},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
     
