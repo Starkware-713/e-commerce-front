@@ -499,4 +499,9 @@ export class Seller implements OnInit, OnDestroy {
     )[0];
     return new Date(lastOrder.createdAt);
   }
+
+  onAddProduct() {
+    // Aquí puedes abrir un modal, navegar a un formulario o implementar la lógica para agregar un producto
+    alert('Funcionalidad para agregar producto (implementa aquí el formulario/modal)');
+  }
 }
