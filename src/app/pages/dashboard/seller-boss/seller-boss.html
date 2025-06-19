@@ -15,21 +15,21 @@
       <i class="fas fa-dollar-sign"></i>
       <div>
         <span class="ventas-card-title">Total Ventas</span>
-        <span class="ventas-card-value">$1.200.000</span>
+        <span class="ventas-card-value">${{ totalVentas | number:'1.0-0' }}</span>
       </div>
     </div>
     <div class="ventas-card">
       <i class="fas fa-users"></i>
       <div>
         <span class="ventas-card-title">Clientes</span>
-        <span class="ventas-card-value">320</span>
+        <span class="ventas-card-value">{{ totalClientes }}</span>
       </div>
     </div>
     <div class="ventas-card">
       <i class="fas fa-box"></i>
       <div>
         <span class="ventas-card-title">Pedidos Pendientes</span>
-        <span class="ventas-card-value">8</span>
+        <span class="ventas-card-value">{{ pedidosPendientes }}</span>
       </div>
     </div>
   </div>
@@ -47,25 +47,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>PKG001</td>
-        <td>Paquete turístico a Iguazú</td>
-        <td>$150.000</td>
-        <td><span class="estado entregado">Entregado</span></td>
-        <td>Juan Pérez</td>
-        <td>10/06/2025</td>
+      <tr *ngFor="let pedido of pedidos">
+        <td>{{ pedido.codigo }}</td>
+        <td>{{ pedido.descripcion }}</td>
+        <td>${{ pedido.precio | number:'1.0-0' }}</td>
         <td>
-          <button class="btn-ver"><i class="fas fa-eye"></i></button>
-          <button class="btn-editar"><i class="fas fa-edit"></i></button>
+          <span class="estado" [ngClass]="{'entregado': pedido.estado === 'Entregado', 'pendiente': pedido.estado === 'Pendiente'}">
+            {{ pedido.estado }}
+          </span>
         </td>
-      </tr>
-      <tr>
-        <td>PKG002</td>
-        <td>Vuelo a Bariloche</td>
-        <td>$120.000</td>
-        <td><span class="estado pendiente">Pendiente</span></td>
-        <td>María López</td>
-        <td>12/06/2025</td>
+        <td>{{ pedido.cliente }}</td>
+        <td>{{ pedido.fecha }}</td>
         <td>
           <button class="btn-ver"><i class="fas fa-eye"></i></button>
           <button class="btn-editar"><i class="fas fa-edit"></i></button>

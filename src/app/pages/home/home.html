@@ -5,7 +5,6 @@
     <a routerLink="/register" class="home-btn">Comenzar</a>
   </div>
 
-<<<<<<< HEAD
   <!-- Estado de carga y errores -->
   @if (loading) {
     <div class="loading-spinner">Cargando productos...</div>
@@ -35,8 +34,7 @@
     </div>
   }
 
-=======
->>>>>>> f9d22d3319aaf841bd9313da75d160cb294a08b7
+<section>
   <div class="home-features">
     <div class="feature-card">
       <h3>Fácil de usar</h3>
@@ -50,112 +48,97 @@
       <h3>Accesible</h3>
       <p>Compatible con todos los dispositivos y totalmente responsiva.</p>
     </div>
-  </div>
+ </div>
 </section>
 
 <div class="carousel-home">
-  <div class="carousel-image"></div>
-  <div class="reserva-container">
-    <div class="tabs">
-      <span class="active">✈ VUELOS</span>
-      <span>🧳 CHECK IN</span>
-      <span>⏱ ESTADO DE VUELO</span>
-      <span>🏷 MI RESERVA</span>
-    </div>
-
-    <div class="form-vuelos">
-      <div class="tipo-viaje">
-        <label><input type="radio" name="tipo" checked> Ida</label>
-        <label><input type="radio" name="tipo"> Ida y vuelta</label>
-        <label><input type="radio" name="tipo"> Multidestinos</label>
+    <div class="carousel-image"></div>
+    <div class="reserva-container">
+      <div class="tabs">
+        <span [class.active]="tabSeleccionado === 0" (click)="seleccionarTab(0)">✈ VUELOS</span>
+        <span [class.active]="tabSeleccionado === 1" (click)="seleccionarTab(1)">🧳 CHECK IN</span>
+        <span [class.active]="tabSeleccionado === 2" (click)="seleccionarTab(2)">⏱ ESTADO DE VUELO</span>
+        <span [class.active]="tabSeleccionado === 3" (click)="seleccionarTab(3)">🏷 MI RESERVA</span>
       </div>
 
-      <div class="campos">
-        <input type="text" placeholder="Origen">
-        <input type="text" placeholder="Destino">
-        <input type="date" placeholder="Partida">
-        <input type="date" placeholder="Regreso">
-        <select>
-          <option>1 Pasajero/a, Economy</option>
-          <option>2 Pasajeros/as, Business</option>
-        </select>
+      <!-- TAB 0: Vuelos -->
+      <div *ngIf="tabSeleccionado === 0" class="form-vuelos">
+        <div class="tipo-viaje">
+          <label><input type="radio" name="tipo" checked> Ida</label>
+          <label><input type="radio" name="tipo"> Ida y vuelta</label>
+          <label><input type="radio" name="tipo"> Multidestinos</label>
+        </div>
+        <div class="campos">
+          <input type="text" placeholder="Origen" [(ngModel)]="origen">
+          <input type="text" placeholder="Destino" [(ngModel)]="destino">
+          <input type="date" placeholder="Partida" [(ngModel)]="partida">
+          <input type="date" placeholder="Regreso" [(ngModel)]="regreso">
+          <select [(ngModel)]="pasajeros">
+            <option [value]="1">1 Pasajero/a, Economy</option>
+            <option [value]="2">2 Pasajeros/as, Business</option>
+          </select>
+        </div>
+        <div class="opciones">
+          <label><input type="checkbox"> Búsqueda en millas</label>
+          <label><input type="checkbox" [(ngModel)]="flexible"> Tengo fechas flexibles</label>
+        </div>
+        <button (click)="buscarVuelos()">BUSCAR VUELOS</button>
+        <div *ngIf="error" class="error-message">{{ error }}</div>
       </div>
 
-      <div class="opciones">
-        <label><input type="checkbox"> Búsqueda en millas</label>
-        <label><input type="checkbox" checked> Tengo fechas flexibles</label>
+      <!-- TAB 1: Check-in -->
+      <div *ngIf="tabSeleccionado === 1" class="form-vuelos">
+        <button (click)="hacerCheckin()">Realizar Check-in</button>
+        <div *ngIf="mensajeCheckin" class="loading-spinner">{{ mensajeCheckin }}</div>
       </div>
 
-      <button>BUSCAR VUELOS</button>
-    </div>
-  </div>
-</div>
+      <!-- TAB 2: Estado de vuelo -->
+      <div *ngIf="tabSeleccionado === 2" class="form-vuelos">
+        <button (click)="consultarEstadoVuelo()">Consultar Estado de Vuelo</button>
+        <div *ngIf="estadoVuelo" class="loading-spinner">{{ estadoVuelo }}</div>
+      </div>
 
-<h2 class="tituloHosp">Hospedajes para nuestros clientes</h2>
-<section class="hospedajes-container">
-  
-<div class="hospedaje-card">
-  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Hotel 1">
-  <div>
-    <h3>Hotel Central</h3>
-    <p class="hospedaje-ubicacion">Buenos Aires, Argentina</p>
-    <p class="hospedaje-desc">Ubicado en el corazón de la ciudad, cerca de los principales atractivos turísticos.</p>
-    <div class="hospedaje-estrellas">
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9734;</span>
-      <span class="hospedaje-fecha">Reserva: 12/06/2025</span>
+      <!-- TAB 3: Mi reserva -->
+      <div *ngIf="tabSeleccionado === 3" class="form-vuelos">
+        <div *ngIf="reservaRealizada; else noReserva">
+          <h3>Reserva realizada</h3>
+          <p><strong>Origen:</strong> {{ reservaRealizada.origen }}</p>
+          <p><strong>Destino:</strong> {{ reservaRealizada.destino }}</p>
+          <p><strong>Partida:</strong> {{ reservaRealizada.partida }}</p>
+          <p *ngIf="reservaRealizada.regreso"><strong>Regreso:</strong> {{ reservaRealizada.regreso }}</p>
+          <p><strong>Pasajeros:</strong> {{ reservaRealizada.pasajeros }}</p>
+          <p><strong>Clase:</strong> {{ reservaRealizada.clase }}</p>
+        </div>
+        <ng-template #noReserva>
+          <div class="loading-spinner">No tienes reservas realizadas aún.</div>
+        </ng-template>
+      </div>
     </div>
   </div>
-</div>
-<div class="hospedaje-card">
-  <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=400&q=80" alt="Hotel 2">
-  <div>
-    <h3>Bariloche Suites</h3>
-    <p class="hospedaje-ubicacion">Bariloche, Argentina</p>
-    <p class="hospedaje-desc">Disfruta de la vista al lago y la comodidad de nuestras habitaciones modernas.</p>
-    <div class="hospedaje-estrellas">
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="hospedaje-fecha">Reserva: 20/07/2025</span>
+
+  <h2 class="tituloHosp" *ngIf="mostrarHospedajes && hospedajesDisponibles.length > 0">
+    Hospedajes disponibles en {{ destino }}
+  </h2>
+  <section class="hospedajes-container" *ngIf="mostrarHospedajes">
+    <div *ngIf="hospedajesDisponibles.length === 0" class="no-products">
+      <p>No hay hospedajes disponibles para este destino.</p>
     </div>
-  </div>
-</div>
-<div class="hospedaje-card">
-  <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Hotel 3">
-  <div>
-    <h3>Hostel Patagonia</h3>
-    <p class="hospedaje-ubicacion">El Calafate, Argentina</p>
-    <p class="hospedaje-desc">Ideal para aventureros, con excursiones y ambiente juvenil.</p>
-    <div class="hospedaje-estrellas">
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9734;</span>
-      <span class="estrella">&#9734;</span>
-      <span class="hospedaje-fecha">Reserva: 05/08/2025</span>
+    <div class="hospedaje-card" *ngFor="let h of hospedajesDisponibles">
+      <img [src]="h.imagen" [alt]="h.nombre">
+      <div>
+        <h3>{{ h.nombre }}</h3>
+        <p class="hospedaje-ubicacion">{{ h.destino }}, Argentina</p>
+        <p class="hospedaje-desc">{{ h.descripcion }}</p>
+        <div class="hospedaje-estrellas">
+          <span class="estrella" *ngFor="let e of [].constructor(h.estrellas)">&#9733;</span>
+          <span class="estrella" *ngFor="let e of [].constructor(5-h.estrellas)">&#9734;</span>
+          <span class="hospedaje-fecha">Reserva: {{ h.fecha }}</span>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <div class="home-features">
+    <!-- Aquí puedes agregar más contenido o features de tu home -->
   </div>
-</div>
-<div class="hospedaje-card">
-  <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80" alt="Hotel 4">
-  <div>
-    <h3>Mar del Plata Resort</h3>
-    <p class="hospedaje-ubicacion">Mar del Plata, Argentina</p>
-    <p class="hospedaje-desc">Resort familiar con pileta, spa y acceso directo a la playa.</p>
-    <div class="hospedaje-estrellas">
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9733;</span>
-      <span class="estrella">&#9734;</span>
-      <span class="hospedaje-fecha">Reserva: 18/09/2025</span>
-    </div>
-  </div>
-</div>
 </section>

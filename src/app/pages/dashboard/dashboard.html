@@ -1,13 +1,17 @@
 <div class="dashboard-container">
-    @if (userProfile.loading) {
-        <div class="loading">
-            <p>Loading user information...</p>
-        </div>
-    } @else if (userProfile.error) {
-        <div class="error-message">
-            <p>{{ userProfile.error }}</p>
-        </div>
-    } @else {
+    <!-- Loading y error -->
+    <div *ngIf="userProfile.loading" class="loading">
+        <p>Loading user information...</p>
+    </div>
+    <div *ngIf="!userProfile.loading && userProfile.error" class="error-message">
+        <p>{{ userProfile.error }}</p>
+    </div>
+
+    <!-- Seller Boss Panel -->
+    <app-seller-boss *ngIf="!userProfile.loading && !userProfile.error && userRole === UserRole.SELLER_BOSS"></app-seller-boss>
+
+    <!-- Otros roles -->
+    <div *ngIf="!userProfile.loading && !userProfile.error && userRole !== UserRole.SELLER_BOSS">
         <div class="user-profile">
             <h2>Welcome, {{ userProfile.firstName || 'User' }}!</h2>
             <div class="profile-details">
@@ -16,25 +20,13 @@
                 <p><strong>Role:</strong> {{ userRole }}</p>
             </div>
         </div>
-
         <div class="role-based-content">
-            @switch (userRole) {
-                @case (UserRole.CLIENT) {
-                    <app-client />
-                }
-                @case (UserRole.SELLER) {
-                    <app-seller />
-                }
-                @case (UserRole.SELLER_BOSS) {
-                    <app-seller-boss />
-                }
-                @default {
-                    <div class="error-message">
-                        <h2>Access Denied</h2>
-                        <p>You don't have permission to access the dashboard. Please log in with appropriate credentials.</p>
-                    </div>
-                }
-            }
+            <app-client *ngIf="userRole === UserRole.CLIENT"></app-client>
+            <app-seller *ngIf="userRole === UserRole.SELLER"></app-seller>
+            <div *ngIf="userRole !== UserRole.CLIENT && userRole !== UserRole.SELLER" class="error-message">
+                <h2>Access Denied</h2>
+                <p>You don't have permission to access the dashboard. Please log in with appropriate credentials.</p>
+            </div>
         </div>
-    }
+    </div>
 </div>

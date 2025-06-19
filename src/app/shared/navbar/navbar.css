@@ -3,8 +3,9 @@
   align-items: center;
   justify-content: space-between;
   background: transparent;
-  padding: 0;
+  padding: 0.5rem 1rem;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .navbar-aa-links {
@@ -78,18 +79,26 @@
   box-shadow: 0 2px 8px rgba(0,123,255,0.07);
 }
 
-@media (max-width: 900px) {
+/* NAVBAR RESPONSIVE */
+@media (max-width: 800px) {
+  .navbar-aa-links {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
   .navbar-aa {
     flex-direction: column;
     align-items: flex-start;
-    padding: 0;
+    gap: 0.5rem;
   }
   .navbar-aa-links {
-    gap: 1rem;
-    margin: 0.5rem 0;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
   }
   .navbar-aa-user {
-    gap: 0.7rem;
-    margin-top: 0.5rem;
+    width: 100%;
+    justify-content: flex-end;
   }
 }

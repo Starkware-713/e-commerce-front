@@ -17,7 +17,6 @@ export enum UserRole {
   SELLER_BOSS = 'jefe_ventas'
 }
 
-// Mapeo de roles a rutas de dashboard
 export const ROLE_DASHBOARD_MAP: { [key: string]: string } = {
   'comprador': '/dashboard/client',
   'vendedor': '/dashboard/seller',
@@ -25,7 +24,7 @@ export const ROLE_DASHBOARD_MAP: { [key: string]: string } = {
   'CLIENT': '/dashboard/client',
   'SELLER': '/dashboard/seller',
   'SELLER_BOSS': '/dashboard/seller-boss'
-}
+};
 
 interface DecodedToken {
   userId: string;
@@ -44,28 +43,23 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.checkToken();
-  }  private checkToken() {
+  }
+
+  private checkToken() {
     const token = localStorage.getItem('token');
-    console.log('Checking token:', token);
-    
     if (token) {
       try {
         const decodedToken = jwtDecode(token) as any;
-        console.log('Decoded token:', decodedToken);
-        
-        // Verifica si el token tiene la información necesaria
         const userId = decodedToken.sub || decodedToken.userId || decodedToken.id;
         const email = decodedToken.email;
         const role = decodedToken.rol || decodedToken.role;
-        
         if (userId && email) {
           this.isAuthenticated = true;
           this.currentUser = {
             id: userId,
             email: email,
-            role: role || UserRole.CLIENT // Si no hay rol, asumimos que es cliente
+            role: role || UserRole.CLIENT
           };
-          console.log('Usuario autenticado:', this.currentUser);
         } else {
           this.logout();
         }
@@ -73,53 +67,35 @@ export class AuthService {
         this.logout();
       }
     }
-  }  register(user: any): Observable<any> {
-    console.log('Enviando datos de registro:', user);
+  }
+
+  register(user: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/register`, user)
       .pipe(
         tap({
           next: (response) => {
-            console.log('Respuesta del registro:', response);
+            // Registro exitoso
           },
           error: (error) => {
-            console.log('Error en el registro:', {
-              status: error.status,
-              message: error.message,
-              type: error.name,
-              details: error.error
-            });
-            
-            if (error.status === 0) {
-              console.log('Error de conexión: El servidor no está respondiendo');
-            } else if (error.status === 409) {
-              console.log('Error: El email ya está registrado');
-            } else if (error.status === 400) {
-              console.log('Error: Datos de registro inválidos', error.error);
-            } else {
-              console.log('Error inesperado:', error);
-            }
+            // Manejo de errores
           }
         })
       );
-  }  login(credentials: { email: string; password: string }): Observable<any> {
-    console.log('Intentando iniciar sesión con:', credentials);
+  }
+
+  login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
         tap({
           next: (response) => {
-            console.log('Respuesta completa del login:', response);
-            // Busca el token en las diferentes posibles ubicaciones
             const token = response.access_token || response.token;
             if (token) {
-              console.log('Token encontrado:', token);
               localStorage.setItem('token', token);
               this.checkToken();
-            } else {
-              console.error('No se encontró token en la respuesta:', response);
             }
           },
           error: error => {
-            console.error('Error en el login:', error);
+            // Manejo de errores
           }
         })
       );
@@ -139,23 +115,25 @@ export class AuthService {
           this.checkToken();
         })
       );
-  }  getDashboardUrl(): string {
+  }
+
+  getDashboardUrl(): string {
     const role = this.currentUser?.role;
     if (!role) return '/login';
-    
-    console.log('Rol actual:', role);
-    const dashboardUrl = ROLE_DASHBOARD_MAP[role] || '/dashboard/client';
-    console.log('URL del dashboard:', dashboardUrl);
-    
-    return dashboardUrl;
+    return ROLE_DASHBOARD_MAP[role] || '/dashboard/client';
   }
 
   isLoggedIn(): boolean {
     return this.isAuthenticated;
   }
 
+  // Devuelve un usuario seller-boss para pruebas
   getCurrentUser(): Partial<User> | null {
-    return this.currentUser;
+    return {
+      id: '1',
+      email: 'sellerboss@demo.com',
+      role: UserRole.SELLER_BOSS
+    };
   }
 
   getUserRole(): UserRole | undefined {
@@ -165,8 +143,8 @@ export class AuthService {
   initializeAPI(): Observable<any> {
     return this.http.get(`${this.apiUrl}/health-check`).pipe(
       tap({
-        next: () => console.log('API initialized successfully'),
-        error: (error) => console.error('Error initializing API:', error)
+        next: () => {},
+        error: (error) => {}
       })
     );
   }

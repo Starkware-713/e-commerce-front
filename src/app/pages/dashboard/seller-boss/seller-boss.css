@@ -5,7 +5,7 @@ body {
 }
 
 .ventas {
-  padding: 40px 20px;
+  padding: 40px 10px;
   background-color: #e9f1f7;
   margin: 40px auto;
   max-width: 1100px;
@@ -123,14 +123,28 @@ tbody tr:hover {
 }
 
 @media (max-width: 900px) {
+  .ventas {
+    padding: 20px 2vw;
+  }
   .ventas-resumen {
-    flex-direction: column;
-    align-items: center;
     gap: 1rem;
   }
+}
+
+@media (max-width: 600px) {
+  .ventas {
+    padding: 8px 1vw;
+  }
+  .ventas-resumen {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
   .ventas-card {
-    min-width: 180px;
+    min-width: unset;
     width: 100%;
-    justify-content: flex-start;
+  }
+  table, th, td {
+    font-size: 0.98rem;
   }
 }

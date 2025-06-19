@@ -1,15 +1,12 @@
- body {
+body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     background-color: #f4f4f9;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
   }
-
+  
   .cart-container {
     max-width: 800px;
     width: 100%;
@@ -17,82 +14,86 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow: hidden;
+    margin: 2rem auto;
+    padding: 1.5rem 1rem;
   }
-
+  
   .cart-header {
     background: #0841bb;
     color: #fff;
     text-align: center;
     padding: 1rem;
     font-size: 1.5rem;
+    border-radius: 8px 8px 0 0;
   }
-
+  
   .cart-table {
     width: 100%;
     border-collapse: collapse;
     margin: 0;
   }
-
+  
   .cart-table th,
   .cart-table td {
     padding: 12px;
     text-align: left;
   }
-
+  
   .cart-table th {
     background: #f4f4f9;
     color: #333;
     font-size: 0.9rem;
     text-transform: uppercase;
   }
-
+  
   .cart-table tbody tr:nth-child(even) {
     background: #f9f9f9;
   }
-
+  
   .cart-table tbody tr:hover {
     background: #e0f2fe;
   }
-
+  
   .btn-remove {
     padding: 6px 12px;
     background: #ef4444;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85rem;
+    transition: background 0.2s;
   }
-
+  
   .btn-remove:hover {
-    background: #dc2626;
+    background: #b91c1c;
   }
-
-  .cart-footer {
-    padding: 1rem;
-    background: #f4f4f9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  
+  @media (max-width: 700px) {
+    .cart-container {
+      padding: 0.5rem 0.2rem;
+    }
+    .cart-header {
+      font-size: 1.1rem;
+      padding: 0.7rem;
+    }
+    .cart-table th,
+    .cart-table td {
+      padding: 8px 4px;
+      font-size: 0.95rem;
+    }
   }
-
-  .total {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-  }
-
-  .btn-create-order {
-    padding: 10px 20px;
-    background: #10b981;
-    color: white;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  .btn-create-order:hover {
-    background: #059669;
+  
+  @media (max-width: 500px) {
+    .cart-container {
+      padding: 0.2rem 0.1rem;
+    }
+    .cart-header {
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+    .cart-table th,
+    .cart-table td {
+      padding: 6px 2px;
+      font-size: 0.9rem;
+    }
   }
