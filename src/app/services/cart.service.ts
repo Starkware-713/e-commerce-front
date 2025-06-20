@@ -95,4 +95,20 @@ export class CartService {
         })
       );
   }
+
+  /**
+   * Elimina un producto específico del carrito usando el endpoint /cart/{cart_id}/product/{product_id}
+   */
+  removeProductFromCart(cartId: string, productId: string): Observable<any> {
+    this.checkAuth();
+    return this.http.delete(`${this.apiUrl}/cart/${cartId}/product/${productId}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
+  }
 }

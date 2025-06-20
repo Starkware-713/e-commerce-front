@@ -1,9 +1,12 @@
 <section class="cliente-container">
   @if (loading) {
     <div class="loading">Cargando...</div>
-  } @else if (error) {
-    <div class="error">{{ error }}</div>
   } @else {
+    <div class="dashboard-icons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+      <i class="fas fa-user-circle fa-2x" title="Perfil"></i>
+      <i class="fas fa-shopping-bag fa-2x" title="Compras"></i>
+      <i class="fas fa-cog fa-2x" title="Configuración"></i>
+    </div>
     <h1>¡Bienvenido, {{ user?.name }}!</h1>
     <div class="cliente-perfil">
       <img src="https://ui-avatars.com/api/?name={{user?.name}}+{{user?.lastname}}&background=random" alt="Foto de perfil" />
@@ -13,12 +16,14 @@
         <button class="edit-button">Editar perfil</button>
       </div>
     </div>
-
-    <div class="cliente-historial">
+    @if (ordersError) {
+      <div class="error" style="margin-bottom: 1rem;">{{ ordersError }}</div>
+    } @else{
+      <div class="cliente-historial">
       <h3>Últimas compras</h3>
-      @if (orders.length === 0) {
+        @if (orders.length === 0 && !ordersError) {
         <p>No hay compras registradas</p>
-      } @else {
+        } @else if (orders.length > 0) {
         <table>
           <thead>
             <tr>
@@ -46,4 +51,5 @@
       }
     </div>
   }
+}
 </section>

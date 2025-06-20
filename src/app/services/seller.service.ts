@@ -62,50 +62,204 @@ export interface User {
   totalSpent: number;
 }
 
+// Interfaz para usuario según el formato solicitado
+export interface SellerUser {
+  email: string;
+  name: string;
+  lastname: string;
+  id: number;
+  is_active: boolean;
+  rol: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SellerService {
-  private apiUrl = 'https://e-comerce-backend-kudw.onrender.com';
-  private router = inject(Router);
+  private readonly apiUrl = 'https://e-comerce-backend-kudw.onrender.com';
+  private readonly router = inject(Router);
 
   constructor(private http: HttpClient) {}
 
+  private checkAuth(): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/auth/login']);
+      throw new Error('Authentication required');
+    }
+  }
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
+  // User Management
+  getUsers(): Observable<User[]> {
+    this.checkAuth();
+    return this.http.get<User[]>(`${this.apiUrl}/user`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  getUserById(userId: string): Observable<User> {
+    this.checkAuth();
+    return this.http.get<User>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Order Management
+  getAllOrders(): Observable<OrderDetail[]> {
+    this.checkAuth();
+    return this.http.get<OrderDetail[]>(`${this.apiUrl}/orders/management`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  getPendingOrders(): Observable<OrderDetail[]> {
+    this.checkAuth();
+    return this.http.get<OrderDetail[]>(`${this.apiUrl}/orders/management/pending`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  getOrderById(orderId: string): Observable<OrderDetail> {
+    this.checkAuth();
+    return this.http.get<OrderDetail>(`${this.apiUrl}/orders/${orderId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  markOrderAsDelivered(orderId: string): Observable<OrderDetail> {
+    this.checkAuth();
+    return this.http.post<OrderDetail>(`${this.apiUrl}/orders/management/${orderId}/deliver`, {}, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  cancelOrder(orderId: string): Observable<OrderDetail> {
+    this.checkAuth();
+    return this.http.post<OrderDetail>(`${this.apiUrl}/orders/management/${orderId}/cancel`, {}, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Order Statistics
+  getOrderStats(): Observable<OrderStats> {
+    this.checkAuth();
+    return this.http.get<OrderStats>(`${this.apiUrl}/orders/stats/summary`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Dashboard Analytics
+  getDashboardStats(): Observable<{
+    recentOrders: OrderDetail[];
+    stats: OrderStats;
+    topCustomers: {
+      customer: CustomerInfo;
+      orderCount: number;
+      totalSpent: number;
+    }[];
+    salesTrend: {
+      date: string;
+      sales: number;
+    }[];
+  }> {
+    this.checkAuth();
+    return this.http.get<any>(`${this.apiUrl}/orders/stats/summary`, { headers: this.getHeaders() }).pipe(
+      tap(response => {
+        if (!response) throw new Error('No data received from the server');
+      }),
+      map(response => ({
+        recentOrders: response.recentOrders || [],
+        stats: response.stats || {
+          totalOrders: 0,
+          pendingOrders: 0,
+          completedOrders: 0,
+          cancelledOrders: 0,
+          totalRevenue: 0,
+          averageOrderValue: 0,
+          dailySales: 0,
+          monthlySales: 0
+        },
+        topCustomers: response.topCustomers || [],
+        salesTrend: response.salesTrend || []
+      })),
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Helper method to handle errors
   private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An error occurred';
+    
     if (error.status === 401) {
-      this.router.navigate(['/login']);
+      localStorage.removeItem('token');
+      this.router.navigate(['/auth/login']);
+      errorMessage = 'Session expired. Please login again.';
+    } else if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      
+      // Additional error details if available
+      if (error.error?.message) {
+        errorMessage += `\nDetail: ${error.error.message}`;
+      }
     }
-    return throwError(() => error);
+    
+    console.error(errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 
-  getDashboardStats(): Observable<OrderStats> {
-    return this.http.get<OrderStats>(`${this.apiUrl}/seller/stats`, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError.bind(this)));
+  // Utility methods for dashboard
+  getOrderStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return '#28a745';
+      case 'pending':
+        return '#ffc107';
+      case 'cancelled':
+        return '#dc3545';
+      default:
+        return '#6c757d';
+    }
   }
 
-  getOrders(status?: string): Observable<OrderDetail[]> {
-    const url = status 
-      ? `${this.apiUrl}/seller/orders?status=${status}`
-      : `${this.apiUrl}/seller/orders`;
-    return this.http.get<OrderDetail[]>(url, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError.bind(this)));
+  getOrderStatusIcon(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return 'check_circle';
+      case 'pending':
+        return 'hourglass_empty';
+      case 'cancelled':
+        return 'cancel';
+      default:
+        return 'info';
+    }
   }
 
-  getOrderDetails(orderId: string): Observable<OrderDetail> {
-    return this.http.get<OrderDetail>(`${this.apiUrl}/seller/orders/${orderId}`, { headers: this.getHeaders() })
-      .pipe(catchError(this.handleError.bind(this)));
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   }
 
-  updateOrderStatus(orderId: string, status: string): Observable<OrderDetail> {
-    return this.http.put<OrderDetail>(
-      `${this.apiUrl}/seller/orders/${orderId}/status`,
-      { status },
-      { headers: this.getHeaders() }
-    ).pipe(catchError(this.handleError.bind(this)));
+  getDateDifference(date: string): string {
+    const now = new Date();
+    const orderDate = new Date(date);
+    const diffTime = Math.abs(now.getTime() - orderDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Hoy';
+    if (diffDays === 1) return 'Ayer';
+    if (diffDays < 7) return `${diffDays} Dias`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} semanas atras`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} meses atras`;
+    return `${Math.floor(diffDays / 365)} años atras`;
   }
 }

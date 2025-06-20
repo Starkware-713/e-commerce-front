@@ -16,6 +16,7 @@ export class Client implements OnInit {
   orders: Order[] = [];
   loading = true;
   error: string | null = null;
+  ordersError: string | null = null; // campo para errores de órdenes
 
   constructor(private clientService: ClientDashboardService) {}
 
@@ -42,9 +43,16 @@ export class Client implements OnInit {
     this.clientService.getUserOrders().subscribe({
       next: (orders) => {
         this.orders = orders;
+        this.ordersError = null;
       },
       error: (error) => {
-        this.error = 'Error al cargar el historial de pedidos';
+        // Manejo específico para 404 con mensaje "No hay órdenes para el usuario"
+        if (error.status === 404 && error.error?.detail === 'No hay órdenes para el usuario') {
+          this.orders = [];
+          this.ordersError = 'No hay órdenes para el usuario';
+        } else {
+          this.ordersError = 'Error al cargar el historial de pedidos';
+        }
         console.error('Error loading orders:', error);
       }
     });

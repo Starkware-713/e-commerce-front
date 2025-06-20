@@ -16,6 +16,7 @@
     "@angular/forms": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@fortawesome/angular-fontawesome": "^2.0.1",
     "bootstrap": "^5.3.6",
     "firebase": "^11.9.1",
     "jwt-decode": "^4.0.0",
