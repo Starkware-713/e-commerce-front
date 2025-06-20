@@ -139,65 +139,45 @@
 
         <!-- Sales Section -->
         @if (activeTab === 'sales') {
-        <section class="users-section">
+        <section class="sales-sect">
             <div class="section-header">
-                <h2>Administración de usuarios</h2>
+                <h2>Administracion de ventas</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar venta..." #saleSearch
+                        (input)="getFilteredSales(saleSearch.value)">
+                </div>
             </div>
-
-            @if (usersLoading) {
-            <p>Cargando usuarios...</p>
-            }
-
-            @if (usersError) {
-            <div class="error-message">Error al cargar los usuarios: {{ usersError }}</div>
-            }
-
             <div class="data-grid">
-                <table class="users-table">
+                <table>
                     <thead>
                         <tr>
-                            <th>Email</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>ID</th>
-                            <th>Activo</th>
-                            <th>Rol</th>
+                            <th class="texto">Venta ID</th>
+                            <th class="texto">Cliente</th>
+                            <th class="texto">Total</th>
+                            <th class="texto">Fecha</th>
+                            <th class="texto">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (users.length > 0) {
-                        @for (user of users; track user.id) {
+                        @if (sales$ | async; as sales) {
+                        @for (sale of sales; track sale.id) {
                         <tr>
-                            <td>{{ user.email || 'N/A' }}</td>
-                            <td>{{ user.name || 'N/A' }}</td>
-                            <td>{{ user.lastname || 'N/A' }}</td>
-                            <td>{{ user.id || 'N/A' }}</td>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.customerName }}</td>
+                            <td>${{ sale.total | number:'1.2-2' }}</td>
+                            <td>{{ sale.date | date:'mediumDate' }}</td>
                             <td>
-                                <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
-                                    {{ user.is_active ? 'Sí' : 'No' }}
+                                <span [class]="'status-badge ' + sale.status.toLowerCase()">
+                                    {{ sale.status }}
                                 </span>
                             </td>
-                            <td>
-                                @if (user.rol === 'vendedor') {
-                                <span class="rol-badge vendedor">Vendedor</span>
-                                }
-                                @else {
-                                <span>{{ user.rol || 'N/A' }}</span>
-                                }
-                            </td>
                         </tr>
                         }
-                        }
-                        @else {
-                        <tr>
-                            <td colspan="6" class="no-data">No hay usuarios disponibles</td>
-                        </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </section>
-
         }
 
         <!-- Customers Section -->
