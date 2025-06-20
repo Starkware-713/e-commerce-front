@@ -99,6 +99,9 @@
                     <input type="text" placeholder="Buscar producto..." #productSearch
                         (input)="getFilteredProducts(productSearch.value)">
                 </div>
+                <div>
+                    <button class="add-product-btn" (click)="onAddProduct()">agregar producto</button>
+                </div>
             </div>
 
             <div class="data-grid">
