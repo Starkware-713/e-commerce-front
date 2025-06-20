@@ -180,6 +180,11 @@ export class Seller implements OnInit, OnDestroy {
   usersLoading = false;
   usersError: string | null = null;
 
+  onEditRol(user: any) {
+    // Aquí puedes abrir un modal, desplegar un select, o cambiar el rol directamente
+    alert('Funcionalidad para editar el rol de: ' + user.email);
+  }
+
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();
@@ -541,5 +546,10 @@ export class Seller implements OnInit, OnDestroy {
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )[0];
     return new Date(lastOrder.createdAt);
+  }
+
+  onAddProduct() {
+    // Aquí puedes abrir un modal, navegar a un formulario o implementar la lógica para agregar un producto
+    alert('Funcionalidad para agregar producto (implementa aquí el formulario/modal)');
   }
 }

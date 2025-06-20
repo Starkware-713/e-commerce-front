@@ -239,46 +239,48 @@
             }
             <div class="data-grid">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>ID</th>
-                            <th>Activo</th>
-                            <th>Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @for( user of users; track user.id) {
-                        <tr [class.vendedor-row]="user.rol === 'vendedor'">
-                            <td>{{ user.email || 'N/A' }}</td>
-                            <td>{{ user.name || 'N/A' }}</td>
-                            <td>{{ user.lastname || 'N/A' }}</td>
-                            <td>{{ user.id || 'N/A' }}</td>
-                            <td>
-                                <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
-                                    {{ user.is_active ? 'Sí' : 'No' }}
-                                </span>
-                            </td>
-                            <td>
-                                @if(user.rol === 'vendedor'){
-                                <span class="rol-badge vendedor">Vendedor</span>
-                                }
-                                @if(user.rol !== 'vendedor'){
-                                <span>{{ user.rol || 'N/A' }}</span>
-                                }
-                            </td>
-                        </tr>
-                        }
-                        @if (users.length === 0) {
-                        <tr>
-                            <td colspan="6" class="no-data">No hay usuarios disponibles</td>
-                        </tr>
-                        }
-                        </tr>
-                    </tbody>
+                   <thead>
+    <tr>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>ID</th>
+        <th>Activo</th>
+        <th>Rol</th>
+        <th>Acciones</th> <!-- Nueva columna -->
+    </tr>
+</thead>
+<tbody>
+    @for( user of users; track user.id) {
+    <tr [class.vendedor-row]="user.rol === 'vendedor'">
+        <td>{{ user.email || 'N/A' }}</td>
+        <td>{{ user.name || 'N/A' }}</td>
+        <td>{{ user.lastname || 'N/A' }}</td>
+        <td>{{ user.id || 'N/A' }}</td>
+        <td>
+            <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
+                {{ user.is_active ? 'Sí' : 'No' }}
+            </span>
+        </td>
+        <td>
+            @if(user.rol === 'vendedor'){
+            <span class="rol-badge vendedor">Vendedor</span>
+            }
+            @if(user.rol !== 'vendedor'){
+            <span>{{ user.rol || 'N/A' }}</span>
+            }
+        </td>
+        <td>
+            <button (click)="onEditRol(user)" class="edit-rol-btn">Editar rol</button>
+        </td>
+    </tr>
+    }
+    @if (users.length === 0) {
+    <tr>
+        <td colspan="7" class="no-data">No hay usuarios disponibles</td>
+    </tr>
+    }
+</tbody>
                 </table>
             </div>
         </section>
