@@ -156,6 +156,9 @@ export class Seller implements OnInit, OnDestroy {
     conversionRate: 0
   });
 
+  // New property for orders
+  readonly orders$ = new BehaviorSubject<Order[]>([]);
+
   // Public observables
   readonly products$ = this.productsSubject.asObservable();
   readonly sales$ = this.salesSubject.asObservable();
@@ -180,15 +183,57 @@ export class Seller implements OnInit, OnDestroy {
   usersLoading = false;
   usersError: string | null = null;
 
-  onEditRol(user: any) {
-    // Aquí puedes abrir un modal, desplegar un select, o cambiar el rol directamente
-    alert('Funcionalidad para editar el rol de: ' + user.email);
+  // Estado para el sidebar responsive
+  sidebarOpen = false;
+
+  // Estado y lógica para agregar productos
+  showAddProduct = false;
+  newProduct: Partial<Product> & { description?: string; sku?: string } = {
+    name: '',
+    price: 0,
+    stock: 0,
+    category: '',
+    image: '',
+    description: '',
+    sku: ''
+  };
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  toggleSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+      this.sidebarOpen = false;
+    }
+  }
+
+  onEditRol(user: SellerUser) {
+    // Pedir el nuevo rol al usuario (prompt simple, puedes reemplazar por modal si lo deseas)
+    const newRole = prompt('Nuevo rol para ' + user.email + ':', user.rol);
+    if (!newRole || newRole === user.rol) return;
+
+    this.usersLoading = true;
+    this.usersError = null;
+    this.sellerService.updateUserRole(user.id, newRole).subscribe({
+      next: () => {
+        alert('Rol actualizado correctamente');
+        this.loadUsers(); // Refresca la lista de usuarios
+        this.usersLoading = false;
+      },
+      error: (err) => {
+        this.usersError = 'Error al actualizar el rol';
+        alert('Error al actualizar el rol: ' + err.message);
+        this.usersLoading = false;
+      }
+    });
   }
 
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();
     this.loadUsers(); // Cargar usuarios al iniciar
+    this.loadOrders(); // Add this line
   }
 
   ngOnDestroy() {
@@ -472,6 +517,25 @@ export class Seller implements OnInit, OnDestroy {
     );
   }
 
+  getFilteredOrders(searchValue: string) {
+    if (!searchValue) {
+      // If no search value, restore original orders
+      this.loadOrders();
+      return;
+    }
+
+    const searchLower = searchValue.toLowerCase();
+    this.orders$.pipe(
+      map(orders => orders.filter(order => 
+        order.id.toLowerCase().includes(searchLower) ||
+        order.customerName.toLowerCase().includes(searchLower) ||
+        order.status.toLowerCase().includes(searchLower)
+      ))
+    ).subscribe(filteredOrders => {
+      this.orders$.next(filteredOrders);
+    });
+  }
+
   // Mapping functions to convert service types to component types
   private mapServiceProductsToProducts(serviceProducts: ServiceProduct[]): Product[] {
     return serviceProducts.map(sp => ({
@@ -551,5 +615,88 @@ export class Seller implements OnInit, OnDestroy {
   onAddProduct() {
     // Aquí puedes abrir un modal, navegar a un formulario o implementar la lógica para agregar un producto
     alert('Funcionalidad para agregar producto (implementa aquí el formulario/modal)');
+  }
+
+  addProduct() {
+    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null) return;
+    this.isLoading.next(true);
+    this.productService.createProduct({
+      name: this.newProduct.name,
+      description: this.newProduct.description || '',
+      price: this.newProduct.price,
+      category: this.newProduct.category || '',
+      stock: this.newProduct.stock,
+      image_url: this.newProduct.image || '/assets/images/products/default.png',
+      sku: this.newProduct.sku || ''
+    } as any).subscribe({
+      next: () => {
+        this.isLoading.next(false);
+        this.showAddProduct = false;
+        this.newProduct = { name: '', price: 0, stock: 0, category: '', image: '', description: '', sku: '' };
+        this.loadProducts();
+      },
+      error: () => {
+        this.isLoading.next(false);
+        alert('Error al agregar producto');
+      }
+    });
+  }
+
+  // Cargar todas las órdenes al iniciar o al limpiar filtro
+  loadOrders() {
+    this.isLoading.next(true);
+    this.orderService.getAllOrders().pipe(
+      takeUntil(this.destroy$),
+      map((response: any) => {
+        if (!Array.isArray(response)) return [];
+        return response.map(item => ({
+          id: item.id || '',
+          userId: item.userId || '',
+          items: Array.isArray(item.items) ? item.items : [],
+          total: Number(item.total) || 0,
+          status: item.status || 'pending',
+          createdAt: item.createdAt || new Date().toISOString()
+        } as ServiceOrder));
+      }),
+      map(serviceOrders => this.mapServiceOrdersToOrders(serviceOrders)),
+      catchError(error => {
+        this.error.next('Error loading orders: ' + error.message);
+        return of([]);
+      })
+    ).subscribe(orders => {
+      this.orders$.next(orders);
+      this.isLoading.next(false);
+    });
+  }
+
+  // Actualizar viewOrders para usar los métodos correctos
+  viewOrders(user: SellerUser, type: 'pending' | 'all') {
+    this.isLoading.next(true);
+    const ordersObservable = type === 'pending' 
+      ? this.orderService.getPendingOrdersForSeller()
+      : this.orderService.getAllOrders();
+
+    ordersObservable.pipe(
+      takeUntil(this.destroy$),
+      map((response: any) => {
+        if (!Array.isArray(response)) return [];
+        return response.map(item => ({
+          id: item.id || '',
+          userId: item.userId || '',
+          items: Array.isArray(item.items) ? item.items : [],
+          total: Number(item.total) || 0,
+          status: item.status || 'pending',
+          createdAt: item.createdAt || new Date().toISOString()
+        } as ServiceOrder));
+      }),
+      map(serviceOrders => this.mapServiceOrdersToOrders(serviceOrders)),
+      catchError(error => {
+        this.error.next('Error loading orders: ' + error.message);
+        return of([]);
+      })
+    ).subscribe(orders => {
+      this.orders$.next(orders);
+      this.isLoading.next(false);
+    });
   }
 }

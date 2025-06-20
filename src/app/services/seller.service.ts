@@ -108,6 +108,18 @@ export class SellerService {
     );
   }
 
+  // Cambiar el rol de un usuario
+  updateUserRole(userId: number, newRole: string): Observable<any> {
+    this.checkAuth();
+    return this.http.put<any>(
+      `${this.apiUrl}/user/update/${userId}`,
+      { rol: newRole },
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
   // Order Management
   getAllOrders(): Observable<OrderDetail[]> {
     this.checkAuth();

@@ -86,4 +86,56 @@ export class OrderService {
     this.checkAuth();
     return this.http.put<Order>(`${this.apiUrl}/orders/${orderId}/cancel`, {}, { headers: this.getHeaders() });
   }
+
+  getAllOrders(): Observable<Order[]> {
+    this.checkAuth();
+    return this.http.get<Order[]>(`${this.apiUrl}/orders/management/`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
+  }
+
+  getPendingOrdersForSeller(): Observable<Order[]> {
+    this.checkAuth();
+    return this.http.get<Order[]>(`${this.apiUrl}/orders/management/pending`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
+  }
+
+  deliverOrder(orderId: string): Observable<Order> {
+    this.checkAuth();
+    return this.http.put<Order>(`${this.apiUrl}/orders/management/${orderId}/deliver`, {}, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
+  }
+
+  cancelOrderManagement(orderId: string): Observable<Order> {
+    this.checkAuth();
+    return this.http.put<Order>(`${this.apiUrl}/orders/management/${orderId}/cancel`, {}, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
+  }
 }
