@@ -180,6 +180,11 @@ export class Seller implements OnInit, OnDestroy {
   usersLoading = false;
   usersError: string | null = null;
 
+  onEditRol(user: any) {
+    // Aquí puedes abrir un modal, desplegar un select, o cambiar el rol directamente
+    alert('Funcionalidad para editar el rol de: ' + user.email);
+  }
+
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();

@@ -1,26 +1,26 @@
 <div class="dashboard-container">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2><i class="fas fa-user-tie"></i> Jefe de ventas</h2>
+            <h2>🤵‍♂️ Jefe de ventas</h2>
         </div>
         <nav class="sidebar-nav">
             <button [class.active]="activeTab === 'dashboard'" (click)="changeTab('dashboard')" class="nav-item">
-                <i class="fas fa-chart-line"></i> Dashboard
+                📈 Dashboard
             </button>
             <button [class.active]="activeTab === 'products'" (click)="changeTab('products')" class="nav-item">
-                <i class="fas fa-box"></i> Productos
+                📦 Productos
             </button>
             <button [class.active]="activeTab === 'sales'" (click)="changeTab('sales')" class="nav-item">
-                <i class="fas fa-shopping-cart"></i> Ventas
+                🛒 Ventas
             </button>
             <button [class.active]="activeTab === 'customers'" (click)="changeTab('customers')" class="nav-item">
-                <i class="fas fa-users"></i> Clientes
+                👥 Clientes
             </button>
             <button [class.active]="activeTab === 'users'" (click)="changeTab('users')" class="nav-item">
-                <i class="fas fa-user-cog"></i> Usuarios
+                🧑‍💼 Usuarios
             </button>
             <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing')" class="nav-item">
-                <i class="fas fa-bullhorn"></i> Marketing
+                📢 Marketing
             </button>
         </nav>
     </aside>
@@ -31,7 +31,7 @@
         <section class="dashboard-overview">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon revenue"><i class="fas fa-coins"></i></div>
+                    <div class="stat-icon revenue">🪙</div>
                     <div class="stat-info">
                         <h3>Total ventas</h3>
                         @if (statistics$ | async; as stats) {
@@ -99,7 +99,6 @@
                     <input type="text" placeholder="Buscar producto..." #productSearch
                         (input)="getFilteredProducts(productSearch.value)">
                 </div>
-                <button class="add-product-btn" (click)="onAddProduct()">Agregar producto</button>
             </div>
 
             <div class="data-grid">
@@ -260,46 +259,48 @@
             }
             <div class="data-grid">
                 <table>
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>ID</th>
-                            <th>Activo</th>
-                            <th>Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @for( user of users; track user.id) {
-                        <tr [class.vendedor-row]="user.rol === 'vendedor'">
-                            <td>{{ user.email || 'N/A' }}</td>
-                            <td>{{ user.name || 'N/A' }}</td>
-                            <td>{{ user.lastname || 'N/A' }}</td>
-                            <td>{{ user.id || 'N/A' }}</td>
-                            <td>
-                                <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
-                                    {{ user.is_active ? 'Sí' : 'No' }}
-                                </span>
-                            </td>
-                            <td>
-                                @if(user.rol === 'vendedor'){
-                                <span class="rol-badge vendedor">Vendedor</span>
-                                }
-                                @if(user.rol !== 'vendedor'){
-                                <span>{{ user.rol || 'N/A' }}</span>
-                                }
-                            </td>
-                        </tr>
-                        }
-                        @if (users.length === 0) {
-                        <tr>
-                            <td colspan="6" class="no-data">No hay usuarios disponibles</td>
-                        </tr>
-                        }
-                        </tr>
-                    </tbody>
+                   <thead>
+    <tr>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>ID</th>
+        <th>Activo</th>
+        <th>Rol</th>
+        <th>Acciones</th> <!-- Nueva columna -->
+    </tr>
+</thead>
+<tbody>
+    @for( user of users; track user.id) {
+    <tr [class.vendedor-row]="user.rol === 'vendedor'">
+        <td>{{ user.email || 'N/A' }}</td>
+        <td>{{ user.name || 'N/A' }}</td>
+        <td>{{ user.lastname || 'N/A' }}</td>
+        <td>{{ user.id || 'N/A' }}</td>
+        <td>
+            <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
+                {{ user.is_active ? 'Sí' : 'No' }}
+            </span>
+        </td>
+        <td>
+            @if(user.rol === 'vendedor'){
+            <span class="rol-badge vendedor">Vendedor</span>
+            }
+            @if(user.rol !== 'vendedor'){
+            <span>{{ user.rol || 'N/A' }}</span>
+            }
+        </td>
+        <td>
+            <button (click)="onEditRol(user)" class="edit-rol-btn">Editar rol</button>
+        </td>
+    </tr>
+    }
+    @if (users.length === 0) {
+    <tr>
+        <td colspan="7" class="no-data">No hay usuarios disponibles</td>
+    </tr>
+    }
+</tbody>
                 </table>
             </div>
         </section>

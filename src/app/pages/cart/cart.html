@@ -22,17 +22,17 @@
         <td>${{ item.price }}</td>
         <td>
           <button class="btn-qty" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">
-            <i class="fas fa-minus"></i>
+            ➖
           </button>
           <input type="number" min="1" [value]="item.quantity" (change)="onQuantityInput(item, $event)" style="width: 40px; text-align: center;" />
           <button class="btn-qty" (click)="updateQuantity(item, item.quantity + 1)">
-            <i class="fas fa-plus"></i>
+            ➕
           </button>
         </td>
         <td>{{ item.product?.details || '-' }}</td>
         <td>
           <button class="btn-remove" (click)="removeItem(item)">
-            <i class="fas fa-trash"></i> Eliminar
+            🗑️ Eliminar
           </button>
         </td>
       </tr>
