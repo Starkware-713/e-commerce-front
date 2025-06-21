@@ -225,37 +225,27 @@ tr:hover td {
 
 /* Badges y roles */
 .active-badge {
-  background: #4caf50;
+  background: #43a047;
   color: #fff;
-  padding: 2px 12px;
-  border-radius: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
   font-size: 0.95em;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(76,175,80,0.10);
 }
 
 .inactive-badge {
-  background: #f44336;
+  background: #e53935;
   color: #fff;
-  padding: 2px 12px;
-  border-radius: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
   font-size: 0.95em;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(244,67,54,0.10);
 }
 
 .rol-badge.vendedor {
-  background: #ff9800;
+  background: #1976d2;
   color: #fff;
-  padding: 2px 14px;
-  border-radius: 12px;
-  font-size: 0.97em;
-  font-weight: 700;
-  margin-left: 4px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(255,152,0,0.18);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.95em;
 }
 .edit-rol-btn {
     padding: 4px 10px;
@@ -267,12 +257,25 @@ tr:hover td {
     color: #222;
     transition: 0.2s;
 }
+.btn-rol-update {
+  margin-left: 8px;
+  padding: 4px 12px;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background 0.2s;
+}
+.btn-rol-update:hover {
+  background: #125ea2;
+}
 .rol-select {
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid #aaa;
-    background: #232f3e;
-    color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.95em;
 }
 /* Encabezados de tabla responsivos */
 @media (max-width: 600px) {

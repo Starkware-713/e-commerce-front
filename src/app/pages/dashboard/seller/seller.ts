@@ -195,8 +195,18 @@ export class Seller implements OnInit, OnDestroy {
     category: '',
     image: '',
     description: '',
-    sku: ''
   };
+
+  // Agregado para mostrar el spinner solo en el usuario que se está actualizando
+  updatingUserId: number | null = null;
+
+  // Opciones de categoría válidas para el desplegable
+  readonly categoryOptions = [
+    { value: 'vuelos', label: 'Vuelos' },
+    { value: 'alquiler_autos', label: 'Alquiler de autos' },
+    { value: 'hotel', label: 'Hotel' },
+    { value: 'all_inclusive', label: 'All Inclusive' }
+  ];
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
@@ -225,6 +235,33 @@ export class Seller implements OnInit, OnDestroy {
         this.usersError = 'Error al actualizar el rol';
         alert('Error al actualizar el rol: ' + err.message);
         this.usersLoading = false;
+      }
+    });
+  }
+
+  // Cambia el rol del usuario y actualiza los datos requeridos por la API
+  onRolChange(user: SellerUser, newRol: string) {
+    this.updatingUserId = user.id;
+    this.usersLoading = true;
+    this.usersError = null;
+    // Actualiza el rol y los datos en una sola petición, como requiere la API
+    this.sellerService.updateUserData(user.id, {
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      rol: newRol // Asegura que el rol se envía junto con los datos
+    }).subscribe({
+      next: () => {
+        alert('Rol y datos actualizados correctamente');
+        this.loadUsers();
+        this.usersLoading = false;
+        this.updatingUserId = null;
+      },
+      error: (err) => {
+        this.usersError = 'Error al actualizar los datos del usuario';
+        alert('Error al actualizar los datos: ' + err.message);
+        this.usersLoading = false;
+        this.updatingUserId = null;
       }
     });
   }
@@ -620,24 +657,26 @@ export class Seller implements OnInit, OnDestroy {
   addProduct() {
     if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null) return;
     this.isLoading.next(true);
-    this.productService.createProduct({
+    // Enviar solo los campos requeridos por la API
+    const payload = {
       name: this.newProduct.name,
       description: this.newProduct.description || '',
-      price: this.newProduct.price,
+      price: Number(this.newProduct.price),
       category: this.newProduct.category || '',
-      stock: this.newProduct.stock,
-      image_url: this.newProduct.image || '/assets/images/products/default.png',
+      image_url: this.newProduct.image || '',
       sku: this.newProduct.sku || ''
-    } as any).subscribe({
+      // stock eliminado porque la API no lo acepta
+    };
+    this.productService.createProduct(payload as any).subscribe({
       next: () => {
         this.isLoading.next(false);
         this.showAddProduct = false;
         this.newProduct = { name: '', price: 0, stock: 0, category: '', image: '', description: '', sku: '' };
         this.loadProducts();
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.next(false);
-        alert('Error al agregar producto');
+        alert('Error al agregar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
       }
     });
   }

@@ -1,40 +1,41 @@
 <div class="container">
-        <div class="breadcrumbs">
-            <a href="#">INICIO</a>
-        </div>
+    <div *ngIf="isLoading">Cargando...</div>
+    <div *ngIf="error">{{ error }}</div>
 
+    <!-- Detalle de producto -->
+    <ng-container *ngIf="!isLoading && !error && product">
+        <div class="breadcrumbs">
+            <a routerLink="/">INICIO</a> / <a routerLink="/products">PRODUCTOS</a> / {{ product.name }}
+        </div>
         <div class="product-content">
             <div class="product-images">
-
+                <img *ngIf="product.image_url" [src]="product.image_url" [alt]="product.name" style="max-width:200px;">
             </div>
-
             <div class="product-details">
-                <h1 class="product-title">Paseo por Bariloche</h1>
-                <p class="product-price"></p>
-
-                <div class="payment-options">
-                    <p class="installments">12 Cuotas </p>
-                    <p>Método de pago aceptados:</p>
-                    <div class="payment-icons">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="Mastercard">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1280px-American_Express_logo_%282018%29.svg.png" alt="Amex">
-                    </div>
-                </div>
-                <button class="add-to-cart-btn">Agregar al carrito</button>
-
-                <div class="shipping-calculator">
-                    <form id="shippingForm">
-                        <input type="text" id="postalCode" placeholder="ingrese código de descuento" required>
-                        <button type="submit">Calcular</button>
-                    </form>
-                    <div id="shipping-result"></div>
-                </div>
+                <h1 class="product-title">{{ product.name }}</h1>
+                <p class="product-price">${{ product.price }}</p>
+                <p>{{ product.description }}</p>
+                <p><b>Categoría:</b> {{ product.category }}</p>
+                <p><b>Stock:</b> {{ product.stock }}</p>
+                <button class="add-to-cart-btn" [disabled]="!product.is_active || product.stock < 1">Agregar al carrito</button>
             </div>
         </div>
+    </ng-container>
 
-        <div class="product-description">
-            <h2>Descripción de productos</h2>
+    <!-- Lista de productos -->
+    <ng-container *ngIf="!isLoading && !error && !product">
+        <div class="breadcrumbs">
+            <a routerLink="/">INICIO</a> / PRODUCTOS
         </div>
-    </div>
+        <div class="product-list">
+            <div *ngFor="let prod of products" class="product-card">
+                <img *ngIf="prod.image_url" [src]="prod.image_url" [alt]="prod.name" style="max-width:120px;">
+                <h3>{{ prod.name }}</h3>
+                <p>${{ prod.price }}</p>
+                <p>{{ prod.category }}</p>
+                <a [routerLink]="['/product', prod.id]">Ver detalle</a>
+            </div>
+        </div>
+    </ng-container>
+</div>
 

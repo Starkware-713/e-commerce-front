@@ -136,7 +136,10 @@
                             <input type="number" [(ngModel)]="newProduct.price" name="price" required min="0">
                         </label>
                         <label>Categoría:
-                            <input type="text" [(ngModel)]="newProduct.category" name="category">
+                          <select [(ngModel)]="newProduct.category" name="category" required>
+                            <option [ngValue]="undefined" disabled selected>Selecciona una categoría</option>
+                            <option *ngFor="let cat of categoryOptions" [value]="cat.value">{{ cat.label }}</option>
+                          </select>
                         </label>
                         <label>Cantidad:
                             <input type="number" [(ngModel)]="newProduct.stock" name="stock" required min="0">
@@ -325,10 +328,12 @@
             }
         </td>
 <td>
-  <select [(ngModel)]="user.rol" (change)="onRolChange(user, user.rol)" class="rol-select">
+  <select [(ngModel)]="user.rol" class="rol-select">
     <option value="cliente">Cliente</option>
     <option value="vendedor">Vendedor</option>
   </select>
+  <button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
+  <span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
 </td>
     </tr>
     }

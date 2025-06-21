@@ -120,6 +120,18 @@ export class SellerService {
     );
   }
 
+  // Actualiza los datos del usuario (name, lastname, email)
+  updateUserData(userId: number, data: { name: string; lastname: string; email: string; rol?: string }): Observable<any> {
+    this.checkAuth();
+    return this.http.put<any>(
+      `${this.apiUrl}/user/update/${userId}`,
+      data,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
   // Order Management
   getAllOrders(): Observable<OrderDetail[]> {
     this.checkAuth();
