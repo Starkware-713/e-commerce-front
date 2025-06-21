@@ -265,10 +265,14 @@ tr:hover td {
     border-radius: 4px;
     cursor: pointer;
     color: #222;
-    transition: background 0.2s;
+    transition: 0.2s;
 }
-.edit-rol-btn:hover {
-    background: #ffa500;
+.rol-select {
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #aaa;
+    background: #232f3e;
+    color: #fff;
 }
 /* Encabezados de tabla responsivos */
 @media (max-width: 600px) {

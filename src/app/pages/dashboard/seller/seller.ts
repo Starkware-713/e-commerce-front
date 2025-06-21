@@ -5,7 +5,7 @@ import { OrderService } from '../../../services/order.service';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
 import { SellerService } from '../../../services/seller.service';
 import { BehaviorSubject, Observable, Subject, Subscription, catchError, firstValueFrom, interval, map, of, startWith, takeUntil } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 // Service interfaces (matching the actual service types)
@@ -180,10 +180,11 @@ export class Seller implements OnInit, OnDestroy {
   usersLoading = false;
   usersError: string | null = null;
 
-  onEditRol(user: any) {
-    // Aquí puedes abrir un modal, desplegar un select, o cambiar el rol directamente
-    alert('Funcionalidad para editar el rol de: ' + user.email);
-  }
+onRolChange(user: any, nuevoRol: string) {
+    user.rol = nuevoRol;
+    // Aquí deberías llamar a tu servicio para actualizar el rol en el backend
+    // this.userService.updateRol(user.id, nuevoRol).subscribe(...)
+}
 
   ngOnInit() {
     this.initializeRealTimeUpdates();

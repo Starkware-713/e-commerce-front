@@ -293,9 +293,12 @@
             <span>{{ user.rol || 'N/A' }}</span>
             }
         </td>
-        <td>
-            <button (click)="onEditRol(user)" class="edit-rol-btn">Editar rol</button>
-        </td>
+<td>
+  <select [(ngModel)]="user.rol" (change)="onRolChange(user, user.rol)" class="rol-select">
+    <option value="cliente">Cliente</option>
+    <option value="vendedor">Vendedor</option>
+  </select>
+</td>
     </tr>
     }
     @if (users.length === 0) {

@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,6 +32,12 @@ export class Login {
     this.authService.initializeAPI().subscribe({
       error: (error) => console.error('Error al inicializar la API:', error)
     });
+
+    // Si ya está logueado, redirigir al dashboard
+    if (this.authService.isLoggedIn()) {
+      const dashboardUrl = this.authService.getDashboardUrl();
+      this.router.navigate([dashboardUrl]);
+    }
   }
 
   onSubmit() {
