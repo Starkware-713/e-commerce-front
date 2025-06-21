@@ -113,6 +113,9 @@
                     <input type="text" placeholder="Buscar producto..." #productSearch
                         (input)="getFilteredProducts(productSearch.value)">
                 </div>
+                <div>
+                    <button class="add-product-btn" (click)="onAddProduct()">agregar producto</button>
+                </div>
             </div>
 
             <div class="add-product-tab">
@@ -321,9 +324,12 @@
             <span>{{ user.rol || 'N/A' }}</span>
             }
         </td>
-        <td>
-            <button (click)="onEditRol(user)" class="edit-rol-btn">Editar rol</button>
-        </td>
+<td>
+  <select [(ngModel)]="user.rol" (change)="onRolChange(user, user.rol)" class="rol-select">
+    <option value="cliente">Cliente</option>
+    <option value="vendedor">Vendedor</option>
+  </select>
+</td>
     </tr>
     }
     @if (users.length === 0) {

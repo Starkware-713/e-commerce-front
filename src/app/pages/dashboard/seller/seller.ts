@@ -5,7 +5,7 @@ import { OrderService } from '../../../services/order.service';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
 import { SellerService } from '../../../services/seller.service';
 import { BehaviorSubject, Observable, Subject, Subscription, catchError, firstValueFrom, interval, map, of, startWith, takeUntil } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 // Service interfaces (matching the actual service types)
