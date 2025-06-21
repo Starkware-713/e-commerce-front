@@ -211,25 +211,43 @@ export class AuthService {
           this.checkToken();
         })
       );
-  }  getDashboardUrl(): string {
-    const role = this.currentUser?.rol;
-    if (!role) {
+  }  /**
+   * Decodifica el token JWT almacenado y retorna el objeto decodificado.
+   */
+  private decodeToken(): DecodedToken | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      return jwtDecode(token) as DecodedToken;
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Obtiene el rol directamente del token JWT, normalizado a minúsculas.
+   */
+  getRoleFromToken(): string | undefined {
+    const decoded = this.decodeToken();
+    if (!decoded) return undefined;
+    const role = decoded.rol || decoded.role;
+    return role ? String(role).toLowerCase() : undefined;
+  }
+
+  getDashboardUrl(): string {
+    // Obtiene el rol directamente del token
+    const normalizedRole = this.getRoleFromToken();
+    if (!normalizedRole) {
       console.error('No hay rol definido para el usuario');
       return '/login';
     }
-    
-    console.log('Rol actual:', role);
-    // Convertimos el rol a string y lo normalizamos a minúsculas para la búsqueda
-    const normalizedRole = String(role).toLowerCase();
-    
-    // Buscar la URL del dashboard para el rol
+    console.log('Rol actual:', normalizedRole);
     const dashboardUrl = ROLE_DASHBOARD_MAP[normalizedRole];
-    
     if (!dashboardUrl) {
-      console.error('Rol no reconocido:', role);
+      console.error('Rol no reconocido:', normalizedRole);
       return '/login';
     }
-    
     console.log('URL del dashboard:', dashboardUrl);
     return dashboardUrl;
   }
@@ -257,7 +275,8 @@ export class AuthService {
     return this.currentUser;
   }
   getUserRole(): UserRole | string | undefined {
-    return this.currentUser?.rol;
+    // Siempre obtiene el rol actualizado del token
+    return this.getRoleFromToken();
   }
 
   initializeAPI(): Observable<any> {

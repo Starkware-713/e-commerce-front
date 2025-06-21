@@ -12,23 +12,13 @@ export class DashboardService {
   ) { }
 
   navigateToDashboard(): void {
-    const role = this.authService.getUserRole();
-
-    if (!role) {
+    // Obtiene la URL del dashboard según el rol actual del token
+    const dashboardUrl = this.authService.getDashboardUrl();
+    if (!dashboardUrl || dashboardUrl === '/login') {
       this.router.navigate(['/auth/login']);
       return;
     }
-
-    switch (role) {
-      case UserRole.CLIENT:
-        this.router.navigate(['/dashboard/client']);
-        break;
-      case UserRole.SELLER:
-        this.router.navigate(['/dashboard/seller']);
-        break;
-      default:
-        this.router.navigate(['/auth/login']);
-    }
+    this.router.navigate([dashboardUrl]);
   }
   canAccessDashboard(requiredRole: UserRole): boolean {
     const userRole = this.authService.getUserRole();
