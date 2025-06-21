@@ -47,19 +47,17 @@ export class AuthService {
     this.checkToken();
   }  private checkToken() {
     const token = localStorage.getItem('token');
-    console.log('Checking token:', token);
     
     if (token) {
       try {
         const decodedToken = jwtDecode(token) as DecodedToken;
-        console.log('Decoded token:', decodedToken);
         
         // Verifica si el token ha expirado
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp && decodedToken.exp < currentTime) {
-          console.log('Token expirado');
+          console.warn('Token expirado - Cerrando sesión');
           this.logout();
-          return;
+          throw new Error('Su sesión ha expirado. Por favor, inicie sesión nuevamente');
         }
         
         // Verifica si el token tiene la información necesaria
@@ -203,14 +201,11 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  refreshToken(): Observable<{token: string}> {
-    return this.http.post<{token: string}>(`${this.apiUrl}/auth/refresh`, {})
-      .pipe(
-        tap(response => {
-          localStorage.setItem('token', response.token);
-          this.checkToken();
-        })
-      );
+  /**
+   * Refrescar token (POST /auth/refresh)
+   */
+  refreshToken(refresh_token: string): Observable<{ access_token: string }> {
+    return this.http.post<{ access_token: string }>(`${this.apiUrl}/auth/refresh`, { refresh_token });
   }  /**
    * Decodifica el token JWT almacenado y retorna el objeto decodificado.
    */

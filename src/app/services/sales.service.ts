@@ -69,4 +69,12 @@ export class SalesService {
       headers: this.getHeaders()
     });
   }
+
+  /**
+   * Resumen de ventas (GET /sales/summary/{status}?skip=0&limit=100)
+   */
+  getSalesSummary(status: string, skip = 0, limit = 100): Observable<Sale[]> {
+    this.checkAuth();
+    return this.http.get<Sale[]>(`${this.apiUrl}/sales/summary/${status}?skip=${skip}&limit=${limit}`, { headers: this.getHeaders() });
+  }
 }

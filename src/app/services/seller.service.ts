@@ -85,9 +85,11 @@ export class SellerService {
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/auth/login']);
-      throw new Error('Authentication required');
+      throw new Error('Se requiere autenticación');
     }
   }
+
+
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -214,23 +216,27 @@ export class SellerService {
     );
   }
 
-  // Helper method to handle errors
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An error occurred';
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Ha ocurrido un error';
     
     if (error.status === 401) {
       localStorage.removeItem('token');
-      this.router.navigate(['/auth/login']);
-      errorMessage = 'Session expired. Please login again.';
+      this.router.navigate(['/login']);
+      errorMessage = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente';
+    } else if (error.status === 403) {
+      errorMessage = 'No tiene permisos para realizar esta operación';
+    } else if (error.status === 422) {
+      errorMessage = error.error?.detail || 'Error de validación en los datos enviados';
+    } else if (error.status === 404) {
+      errorMessage = 'El recurso solicitado no fue encontrado';
+    } else if (error.status === 500) {
+      errorMessage = 'Error en el servidor. Por favor, intente más tarde';
     } else if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error del cliente: ${error.error.message}`;
+    }
+
+    return throwError(() => new Error(errorMessage));
       
-      // Additional error details if available
-      if (error.error?.message) {
         errorMessage += `\nDetail: ${error.error.message}`;
       }
     }

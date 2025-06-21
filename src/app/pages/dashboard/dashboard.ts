@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { AuthService, UserRole, User } from '../../services/auth.service';
-import { OrderService, Order } from '../../services/order.service';
+import { OrderService, OrderDetail } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { Client } from './client/client';
 import { Seller } from './seller/seller';
@@ -11,7 +11,7 @@ interface UserProfile {
   email: string;
   firstName?: string;
   lastName?: string;
-  orders?: Order[];
+  orders?: OrderDetail[];
   loading: boolean;
   error: string;
   rol?: UserRole | string;
@@ -63,7 +63,7 @@ export class Dashboard implements OnInit {
 
         // Load user's orders if they exist
         if (this.userRole === UserRole.CLIENT) {
-          this.orderService.getOrders().subscribe({
+          this.orderService.getAllOrdersManagement().subscribe({
             next: (orders) => {
               this.userProfile.orders = orders;
             },
