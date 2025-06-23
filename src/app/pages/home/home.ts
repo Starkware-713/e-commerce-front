@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../services/product.service';
+import { RouterModule } from '@angular/router';
 
 interface Hospedaje {
   nombre: string;
@@ -16,7 +17,7 @@ interface Hospedaje {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -99,6 +100,7 @@ export class Home implements OnInit {
   sugerenciasDestino: string[] = [];
   mostrarSugerenciasDestino: boolean = false;
   listaAeropuertos: string[] = [
+    'Esquel Chubut, Argentina (EQS)',
     'Buenos Aires Aeroparque, Argentina (AEP)',
     'Buenos Aires, Argentina (BUE)',
     'Buenos Aires Ezeiza, Argentina (EZE)',
@@ -322,5 +324,24 @@ export class Home implements OnInit {
   comprarReserva(idx: number) {
     const r = this.reservas[idx];
     alert('¡Compra realizada para el vuelo a ' + r.destino + (r.hospedaje ? ' con hospedaje en ' + r.hospedaje : '') + '!');
+  }
+
+  // --- Carrito de compras ---
+  agregarAlCarrito(product: Product) {
+    // Aquí puedes implementar la lógica real de agregar al carrito
+    alert(`Producto agregado al carrito: ${product.name}`);
+  }
+
+  // Carrusel scroll para productos
+  carouselScroll(direction: 'left' | 'right') {
+    const carousel = document.querySelector('.carousel-list') as HTMLElement;
+    if (!carousel) return;
+    const cardWidth = carousel.querySelector('.carousel-card')?.clientWidth || 300;
+    const scrollAmount = cardWidth * 2; // Desliza 2 productos
+    if (direction === 'left') {
+      carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
   }
 }

@@ -172,4 +172,17 @@ export class Products implements OnInit {
       }
     });
   }
+
+  // Carrusel scroll para productos
+  carouselScroll(direction: 'left' | 'right') {
+    const carousel = document.querySelector('.carousel-list') as HTMLElement;
+    if (!carousel) return;
+    const cardWidth = carousel.querySelector('.carousel-card')?.clientWidth || 300;
+    const scrollAmount = cardWidth * 2; // Desliza 2 productos
+    if (direction === 'left') {
+      carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  }
 }

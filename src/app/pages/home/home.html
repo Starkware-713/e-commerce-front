@@ -16,9 +16,35 @@
     </div>
   }
 
-  <!-- Lista de productos -->
-  
- @else if (!loading && !error) {
+  <!-- Lista de productos en cartas -->
+  @if (products && products.length > 0) {
+    <section class="productos-home">
+      <h2 class="productos-titulo">Productos destacados</h2>
+      <div class="productos-grid">
+        @for (product of products; track product.id) {
+          <div class="producto-card">
+            <img [src]="product.image_url" [alt]="product.name" class="producto-img">
+            <div class="producto-info">
+              <h3 class="producto-nombre">{{ product.name }}</h3>
+              <p class="producto-descripcion">{{ product.description.split(' ').slice(0,18).join(' ') }}<span *ngIf="product.description.split(' ').length > 18">...</span></p>
+              <div class="producto-detalles">
+                <span class="producto-categoria">{{ product.category }}</span>
+                <span class="producto-precio">${{ product.price | number:'1.2-2' }}</span>
+                <span class="producto-stock" [class.soldout]="product.stock === 0">
+                  {{ product.stock > 0 ? (product.stock + ' disponibles') : 'Sin stock' }}
+                </span>
+              </div>
+              <button class="ver-mas-btn" [routerLink]="['/product', product.id]">Ver más</button>
+              <button class="producto-btn" [disabled]="product.stock === 0" (click)="agregarAlCarrito(product)">
+                Agregar al carrito
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  }
+  @else if (!loading && !error) {
     <div class="no-products">
       <p>No hay productos disponibles en este momento.</p>
     </div>
