@@ -25,36 +25,24 @@
   <div class="carousel-image"></div>
   <div class="reserva-container">
     <div class="tabs">
-      <span class="active">✈ VUELOS</span>
-      <span>🧳 CHECK IN</span>
-      <span>⏱ ESTADO DE VUELO</span>
-      <span>🏷 MI RESERVA</span>
+      <span class="active">🌍 BUSCAR PAÍS</span>
     </div>
 
-    <div class="form-vuelos">
-      <div class="tipo-viaje">
-        <label><input type="radio" name="tipo" checked> Ida</label>
-        <label><input type="radio" name="tipo"> Ida y vuelta</label>
-        <label><input type="radio" name="tipo"> Multidestinos</label>
-      </div>
+    <div class="form-pais">
+      <input type="text" [(ngModel)]="paisBusqueda" placeholder="Buscar país..." />
+      <button (click)="buscarPaquetes()">Buscar</button>
+    </div>
 
-      <div class="campos">
-        <input type="text" placeholder="Origen">
-        <input type="text" placeholder="Destino">
-        <input type="date" placeholder="Partida">
-        <input type="date" placeholder="Regreso">
-        <select>
-          <option>1 Pasajero/a, Economy</option>
-          <option>2 Pasajeros/as, Business</option>
-        </select>
+    <div *ngIf="paquetesFiltrados.length > 0" class="paquetes-lista">
+      <h3>Paquetes turísticos en {{ paisBusqueda }}</h3>
+      <div *ngFor="let paquete of paquetesFiltrados" class="paquete-card">
+        <h4>{{ paquete.nombre }}</h4>
+        <p>{{ paquete.descripcion }}</p>
+        <p><strong>Precio:</strong> {{ paquete.precio | currency }}</p>
       </div>
-
-      <div class="opciones">
-        <label><input type="checkbox"> Búsqueda en millas</label>
-        <label><input type="checkbox" checked> Tengo fechas flexibles</label>
-      </div>
-
-      <button>BUSCAR VUELOS</button>
+    </div>
+    <div *ngIf="paquetesFiltrados.length === 0 && paisBusqueda">
+      <p>No se encontraron paquetes para ese país.</p>
     </div>
   </div>
 </div>
