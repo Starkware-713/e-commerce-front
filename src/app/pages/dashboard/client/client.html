@@ -7,6 +7,7 @@
       🛍️
       ⚙️
     </div>
+  }
     <h1>¡Bienvenido, {{ user?.name }}!</h1>
     <div class="cliente-perfil">
       <img src="https://ui-avatars.com/api/?name={{user?.name}}+{{user?.lastname}}&background=random" alt="Foto de perfil" />
@@ -15,41 +16,3 @@
         <p>Email: {{ user?.email }}</p>
         <button class="edit-button">Editar perfil</button>
       </div>
-    </div>
-    @if (ordersError) {
-      <div class="error" style="margin-bottom: 1rem;">{{ ordersError }}</div>
-    } @else{
-      <div class="cliente-historial">
-      <h3>Últimas compras</h3>
-        @if (orders.length === 0 && !ordersError) {
-        <p>No hay compras registradas</p>
-        } @else if (orders.length > 0) {
-        <table>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Fecha</th>
-              <th>Estado</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (order of orders; track order.id) {
-              <tr>
-                <td>{{ order.productName }}</td>
-                <td>{{ order.date | date:'dd/MM/yyyy' }}</td>
-                <td>
-                  <span [class]="'status-' + order.status.toLowerCase()">
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td>${{ order.total.toFixed(2) }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
-    </div>
-  }
-}
-</section>

@@ -1,8 +1,12 @@
 <nav class="navbar-aa">
-  <ul class="navbar-aa-links">
+  <button class="navbar-hamburger" (click)="toggleMenu()" aria-label="Abrir menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <ul class="navbar-aa-links" [class.open]="menuOpen">
     <li><a routerLink="/home" routerLinkActive="active">Inicio</a></li>
     <li><a routerLink="" routerLinkActive="active">Servicios</a></li>
-    <li><a routerLink="/register" routerLinkActive="active">Registro</a></li>
     <li><a routerLink="/home/about" routerLinkActive="active">Información</a></li>
   </ul>
   <div class="navbar-aa-user">
