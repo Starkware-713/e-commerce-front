@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../services/product.service';
 import { RouterModule } from '@angular/router';
+import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 
 interface Hospedaje {
   nombre: string;
@@ -123,7 +125,14 @@ export class Home implements OnInit {
     'Posadas, Argentina (PSS)'
   ];
 
-  constructor(private productService: ProductService) {}
+  addToCartLoadingMap: { [id: number]: boolean } = {};
+  addToCartMessageMap: { [id: number]: string } = {};
+
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loadProducts();
@@ -326,10 +335,60 @@ export class Home implements OnInit {
     alert('¡Compra realizada para el vuelo a ' + r.destino + (r.hospedaje ? ' con hospedaje en ' + r.hospedaje : '') + '!');
   }
 
-  // --- Carrito de compras ---
+  // --- Carrito de compras real ---
   agregarAlCarrito(product: Product) {
-    // Aquí puedes implementar la lógica real de agregar al carrito
-    alert(`Producto agregado al carrito: ${product.name}`);
+    this.addToCartMessageMap[product.id] = '';
+    this.addToCartLoadingMap[product.id] = true;
+    if (!this.authService.isLoggedIn()) {
+      this.addToCartMessageMap[product.id] = 'Debes iniciar sesión para agregar productos al carrito.';
+      this.addToCartLoadingMap[product.id] = false;
+      return;
+    }
+    this.cartService.getCart().subscribe({
+      next: (carts: any) => {
+        let cart = Array.isArray(carts) ? carts.find((c: any) => c.status === 'active' || c.status === 'pending') : null;
+        if (!cart && Array.isArray(carts) && carts.length > 0) cart = carts[0];
+        if (cart) {
+          this.cartService.addProductToCart(cart.id, { quantity: 1, product }).subscribe({
+            next: () => {
+              this.addToCartMessageMap[product.id] = 'Producto agregado al carrito.';
+              this.addToCartLoadingMap[product.id] = false;
+            },
+            error: (err) => {
+              const msg = err?.error?.detail || 'No se pudo agregar al carrito.';
+              this.addToCartMessageMap[product.id] = msg;
+              this.addToCartLoadingMap[product.id] = false;
+            }
+          });
+        } else {
+          const user = this.authService.getCachedUser();
+          if (!user || !user.id) {
+            this.addToCartMessageMap[product.id] = 'No se pudo identificar el usuario.';
+            this.addToCartLoadingMap[product.id] = false;
+            return;
+          }
+          this.cartService.createCart({
+            user_id: user.id,
+            items: [{ quantity: 1, product }]
+          }).subscribe({
+            next: () => {
+              this.addToCartMessageMap[product.id] = 'Carrito creado y producto agregado.';
+              this.addToCartLoadingMap[product.id] = false;
+            },
+            error: (err) => {
+              const msg = err?.error?.detail || 'No se pudo crear el carrito.';
+              this.addToCartMessageMap[product.id] = msg;
+              this.addToCartLoadingMap[product.id] = false;
+            }
+          });
+        }
+      },
+      error: (err) => {
+        const msg = err?.error?.detail || 'No se pudo obtener el carrito.';
+        this.addToCartMessageMap[product.id] = msg;
+        this.addToCartLoadingMap[product.id] = false;
+      }
+    });
   }
 
   // Carrusel scroll para productos
