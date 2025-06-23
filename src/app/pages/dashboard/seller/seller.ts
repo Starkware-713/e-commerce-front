@@ -381,7 +381,22 @@ crearCupon() {
       this.salesSubject.next([]);
     }
   }
-
+    eliminarUsuario(user: SellerUser) {
+  if (confirm(`¿Seguro que deseas eliminar al usuario ${user.email}?`)) {
+    this.usersLoading = true;
+    this.sellerService.deleteUser(user.id).subscribe({
+      next: () => {
+        this.loadUsers();
+        this.usersLoading = false;
+        alert('Usuario eliminado correctamente');
+      },
+      error: (err) => {
+        this.usersLoading = false;
+        alert('Error al eliminar usuario: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+}
   loadUsers() {
     this.usersLoading = true;
     this.usersError = null;
