@@ -55,7 +55,7 @@ El sistema se comunica con la [API Backend](https://e-comerce-backend-kudw.onren
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/Starkware-713/e-commerce-front
 cd e-commerce-front
 ````
 
