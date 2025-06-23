@@ -35,10 +35,4 @@ export class ClientDashboardService {
       headers: this.getHeaders()
     });
   }
-
-  updateUserProfile(data: { name: string; lastname: string; email: string }): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/user/update-profile`, data, {
-      headers: this.getHeaders()
-    });
-  }
 }

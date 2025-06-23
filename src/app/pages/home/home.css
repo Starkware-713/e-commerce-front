@@ -830,7 +830,7 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background 0.18s;
+  transition:  0.18s;
 }
 .suggestions-list li:hover {
   background: #eaf6ff;
@@ -850,7 +850,7 @@ button:hover {
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition:  0.2s;
 }
 
 .buscar-btn:hover {

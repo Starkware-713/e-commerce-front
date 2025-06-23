@@ -336,13 +336,17 @@
             }
         </td>
 <td>
+    
   <select [(ngModel)]="user.rol" class="rol-select">
     <option value="cliente">Cliente</option>
     <option value="vendedor">Vendedor</option>
   </select>
-  <button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
-  <span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
+<button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
+<span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
+<button (click)="eliminarUsuario(user)" class="btn-delete-user" [disabled]="usersLoading">Eliminar</button>
+
 </td>
+
     </tr>
     }
     @if (users.length === 0) {
