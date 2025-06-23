@@ -385,7 +385,122 @@ tr:hover td {
     display: none !important;
   }
 }
+/* --- CUPONES --- */
+.marketing-section {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  padding: 2rem 1.5rem;
+  margin: 2rem 0;
+}
 
+.coupon-form-panel {
+  background: #f7fafc;
+  border-radius: 0.75rem;
+  padding: 1.5rem 1rem 1rem 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+  max-width: 400px;
+}
+
+.coupon-form-panel h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #2b6cb0;
+  font-size: 1.1rem;
+}
+
+.coupon-form-panel label {
+  display: block;
+  margin-bottom: 1rem;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.coupon-form-panel input[type="text"],
+.coupon-form-panel input[type="number"],
+.coupon-form-panel input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 0.25rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.coupon-form-panel .modal-actions {
+  text-align: right;
+}
+
+.coupon-form-panel button[type="submit"] {
+  background: #3182ce;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.coupon-form-panel button[type="submit"]:hover {
+  background: #225ea8;
+}
+
+.cupones-lista {
+  margin-top: 1.5rem;
+}
+
+.cupones-lista h4 {
+  margin-bottom: 0.7rem;
+  color: #2b6cb0;
+  font-size: 1.05rem;
+}
+
+.cupones-lista table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f7fafc;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(44, 62, 80, 0.04);
+}
+
+.cupones-lista th,
+.cupones-lista td {
+  padding: 0.7rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cupones-lista th {
+  background: #2c3e50;
+  color: #fff;
+  font-weight: 600;
+}
+
+.cupones-lista tr:last-child td {
+  border-bottom: none;
+}
+
+.cupones-lista td {
+  background-color: #3576b8;
+  color: #fff;
+
+}
+
+@media (max-width: 700px) {
+  .coupon-form-panel, .cupones-lista table {
+    max-width: 100%;
+    font-size: 0.97rem;
+  }
+  .marketing-section {
+    padding: 1rem 0.2rem;
+  }
+}
 /* Sidebar nav mejorado para mobile */
 .sidebar-nav {
   display: flex;

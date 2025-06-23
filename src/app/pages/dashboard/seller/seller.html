@@ -34,7 +34,7 @@
                 📋 Órdenes
             </button>
             <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing'); toggleSidebarOnMobile()" class="nav-item">
-                📢 Marketing
+                📢 cupones
             </button>
         </nav>
     </aside>
@@ -392,5 +392,55 @@
             </div>
         </section>
         }
+        <!-- cupones -->
+        @if (activeTab === 'marketing') {
+<section class="marketing-section">
+    <div class="section-header">
+        <h2>Gestión de cupones</h2>
+    </div>
+    <div class="coupon-form-panel">
+        <h3>Crear nuevo cupón</h3>
+        <form (ngSubmit)="crearCupon()" #cuponForm="ngForm">
+            <label>
+                Código:
+                <input type="text" [(ngModel)]="nuevoCupon.codigo" name="codigo" required>
+            </label>
+            <label>
+                Descuento (%):
+                <input type="number" [(ngModel)]="nuevoCupon.descuento" name="descuento" required min="1" max="100">
+            </label>
+            <label>
+                Fecha de expiración:
+                <input type="date" [(ngModel)]="nuevoCupon.expiracion" name="expiracion" required>
+            </label>
+            <div class="modal-actions">
+                <button type="submit" [disabled]="cuponForm.invalid">Crear cupón</button>
+            </div>
+        </form>
+    </div>
+    <div class="cupones-lista">
+        <h4>Cupones creados</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descuento</th>
+                    <th>Expira</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cupon of cupones">
+                    <td>{{ cupon.codigo }}</td>
+                    <td>{{ cupon.descuento }}%</td>
+                    <td>{{ cupon.expiracion | date }}</td>
+                </tr>
+                <tr *ngIf="cupones.length === 0">
+                    <td colspan="3">No hay cupones creados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+}
     </main>
 </div>

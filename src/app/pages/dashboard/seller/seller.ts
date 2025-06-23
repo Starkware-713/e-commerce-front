@@ -265,7 +265,14 @@ export class Seller implements OnInit, OnDestroy {
       }
     });
   }
+nuevoCupon = { codigo: '', descuento: 0, expiracion: '' };
+cupones: any[] = [];
 
+crearCupon() {
+  // Aquí deberías llamar a tu servicio para guardar el cupón en la API
+  this.cupones.push({ ...this.nuevoCupon });
+  this.nuevoCupon = { codigo: '', descuento: 0, expiracion: '' };
+}
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();
