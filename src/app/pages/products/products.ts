@@ -100,7 +100,7 @@ export class Products implements OnInit {
         let cart = Array.isArray(carts) ? carts.find((c: any) => c.status === 'active' || c.status === 'pending') : null;
         if (!cart && Array.isArray(carts) && carts.length > 0) cart = carts[0];
         if (cart) {
-          this.cartService.addProductToCart(cart.id, { quantity: 1, product: product }).subscribe({
+          this.cartService.addProductToCart(cart.id, { quantity: 1, product }).subscribe({
             next: () => {
               if (this.product && this.product.id === product.id) {
                 this.addToCartMessage = 'Producto agregado al carrito.';
@@ -136,7 +136,7 @@ export class Products implements OnInit {
           }
           this.cartService.createCart({
             user_id: user.id,
-            items: [{ quantity: 1, product: product }]
+            items: [{ quantity: 1, product }]
           }).subscribe({
             next: () => {
               if (this.product && this.product.id === product.id) {

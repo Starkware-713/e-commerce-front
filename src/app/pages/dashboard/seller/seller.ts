@@ -655,17 +655,17 @@ export class Seller implements OnInit, OnDestroy {
   }
 
   addProduct() {
-    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null) return;
+    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null || !this.newProduct.category) return;
     this.isLoading.next(true);
     // Enviar solo los campos requeridos por la API
     const payload = {
       name: this.newProduct.name,
       description: this.newProduct.description || '',
       price: Number(this.newProduct.price),
-      category: this.newProduct.category || '',
+      category: String(this.newProduct.category), // fuerza a string plano
+      stock: Number(this.newProduct.stock),
       image_url: this.newProduct.image || '',
       sku: this.newProduct.sku || ''
-      // stock eliminado porque la API no lo acepta
     };
     this.productService.createProduct(payload as any).subscribe({
       next: () => {
@@ -673,6 +673,7 @@ export class Seller implements OnInit, OnDestroy {
         this.showAddProduct = false;
         this.newProduct = { name: '', price: 0, stock: 0, category: '', image: '', description: '', sku: '' };
         this.loadProducts();
+        console.log(this.newProduct);
       },
       error: (err) => {
         this.isLoading.next(false);

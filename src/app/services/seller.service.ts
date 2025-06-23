@@ -4,6 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  stock: number;
+  image_url: string;
+  sku: string;
+}
 export interface OrderStats {
   totalOrders: number;
   pendingOrders: number;
@@ -218,7 +227,6 @@ export class SellerService {
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ha ocurrido un error';
-    
     if (error.status === 401) {
       localStorage.removeItem('token');
       this.router.navigate(['/login']);
@@ -234,14 +242,6 @@ export class SellerService {
     } else if (error.error instanceof ErrorEvent) {
       errorMessage = `Error del cliente: ${error.error.message}`;
     }
-
-    return throwError(() => new Error(errorMessage));
-      
-        errorMessage += `\nDetail: ${error.error.message}`;
-      }
-    }
-    
-    console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 
@@ -284,7 +284,6 @@ export class SellerService {
     const orderDate = new Date(date);
     const diffTime = Math.abs(now.getTime() - orderDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
     if (diffDays === 0) return 'Hoy';
     if (diffDays === 1) return 'Ayer';
     if (diffDays < 7) return `${diffDays} Dias`;

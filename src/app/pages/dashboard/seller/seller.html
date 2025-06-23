@@ -130,25 +130,28 @@
                             <input type="text" [(ngModel)]="newProduct.name" name="name" required>
                         </label>
                         <label>Descripción:
-                            <input type="text" [(ngModel)]="newProduct.description" name="description">
+                            <input type="text" [(ngModel)]="newProduct.description" name="description" required>
                         </label>
                         <label>Precio:
-                            <input type="number" [(ngModel)]="newProduct.price" name="price" required min="0">
+                            <input type="number" [(ngModel)]="newProduct.price" name="price" required min="1">
                         </label>
                         <label>Categoría:
                           <select [(ngModel)]="newProduct.category" name="category" required>
-                            <option [ngValue]="undefined" disabled selected>Selecciona una categoría</option>
-                            <option *ngFor="let cat of categoryOptions" [value]="cat.value">{{ cat.label }}</option>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            <option value="vuelos">Vuelos</option>
+                            <option value="alquiler_autos">Alquiler de autos</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="all_inclusive">All Inclusive</option>
                           </select>
                         </label>
                         <label>Cantidad:
                             <input type="number" [(ngModel)]="newProduct.stock" name="stock" required min="0">
                         </label>
                         <label>SKU:
-                            <input type="text" [(ngModel)]="newProduct.sku" name="sku">
+                            <input type="text" [(ngModel)]="newProduct.sku" name="sku" required>
                         </label>
                         <label>Imagen (URL):
-                            <input type="text" [(ngModel)]="newProduct.image" name="image">
+                            <input type="text" [(ngModel)]="newProduct.image" name="image" required>
                         </label>
                         <div class="modal-actions">
                             <button type="submit" [disabled]="addProductForm.invalid">Agregar</button>
