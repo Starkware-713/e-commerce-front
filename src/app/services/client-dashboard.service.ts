@@ -35,4 +35,10 @@ export class ClientDashboardService {
       headers: this.getHeaders()
     });
   }
+  
+
+  updateUserProfile(profileData: any): Observable<any> {
+    // Ajusta la URL según tu API
+    return this.http.put('/api/users/profile', profileData);
+  }
 }
