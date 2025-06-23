@@ -4,6 +4,7 @@ import { ClientDashboardService } from '../../../services/client-dashboard.servi
 import { User } from '../../../services/auth.service';
 import { Order } from '../../../services/client-dashboard.service';
 import { FormsModule } from '@angular/forms';
+import { CartService, Product, CartItemCreate } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-client',
@@ -27,11 +28,22 @@ export class Client implements OnInit {
   profileMessage: string | null = null;
   profileError: string | null = null;
 
-  constructor(private clientService: ClientDashboardService) {}
+  // Carrito
+  cart: any = null;
+  cartItems: any[] = [];
+  cartLoading = true;
+  cartError: string | null = null;
+  cartTotal: number = 0;
+
+  constructor(
+    private clientService: ClientDashboardService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit() {
     this.loadUserData();
     this.loadOrders();
+    this.loadCart();
   }
 
   private loadUserData() {
@@ -68,6 +80,87 @@ export class Client implements OnInit {
           this.ordersError = 'Error al cargar el historial de pedidos';
         }
         console.error('Error loading orders:', error);
+      }
+    });
+  }
+
+  // --- CARRITO ---
+  loadCart() {
+    this.cartLoading = true;
+    this.cartError = null;
+    // Si no hay usuario aún, espera a que se cargue
+    if (!this.user?.id) {
+      setTimeout(() => this.loadCart(), 300);
+      return;
+    }
+    this.cartService.listCarts().subscribe({
+      next: (carts) => {
+        const userId = this.user?.id;
+        let cart = carts.find((c: any) => c.user_id === userId);
+        if (!cart && userId) {
+          this.createCartForUser(userId);
+        } else {
+          this.cart = cart;
+          this.cartItems = cart?.items || [];
+          this.cartTotal = this.cartItems.reduce((sum: number, item: any) => sum + (item.product?.price * item.quantity), 0);
+          this.cartLoading = false;
+        }
+      },
+      error: (err) => {
+        // Si es 403 o 404, intenta crear el carrito igual
+        if ((err.status === 403 || err.status === 404) && this.user?.id) {
+          this.createCartForUser(this.user.id);
+        } else {
+          this.cartError = 'Error al cargar el carrito';
+          this.cartLoading = false;
+        }
+      }
+    });
+  }
+
+  private createCartForUser(userId: number) {
+    this.cartService.createCart({ user_id: userId, items: [] }).subscribe({
+      next: (newCart) => {
+        this.cart = newCart;
+        this.cartItems = [];
+        this.cartTotal = 0;
+        this.cartLoading = false;
+      },
+      error: (err) => {
+        this.cartError = 'No se pudo crear el carrito';
+        this.cartLoading = false;
+      }
+    });
+  }
+
+  addProductToCart(product: Product) {
+    if (!this.cart) return;
+    const item: CartItemCreate = { quantity: 1, product };
+    this.cartLoading = true;
+    this.cartService.addProductToCart(this.cart.id, item).subscribe({
+      next: (updatedCart) => {
+        this.cartItems = updatedCart.items || [];
+        this.cartTotal = this.cartItems.reduce((sum: number, i: any) => sum + (i.product?.price * i.quantity), 0);
+        this.cartLoading = false;
+      },
+      error: (err) => {
+        this.cartError = 'No se pudo agregar el producto';
+        this.cartLoading = false;
+      }
+    });
+  }
+
+  removeProductFromCart(productId: number) {
+    if (!this.cart) return;
+    this.cartLoading = true;
+    this.cartService.deleteProductFromCart(this.cart.id, productId).subscribe({
+      next: (updatedCart) => {
+        // Recargar el carrito
+        this.loadCart();
+      },
+      error: (err) => {
+        this.cartError = 'No se pudo eliminar el producto';
+        this.cartLoading = false;
       }
     });
   }
