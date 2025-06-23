@@ -151,7 +151,7 @@
                             <input type="text" [(ngModel)]="newProduct.sku" name="sku" required>
                         </label>
                         <label>Imagen (URL):
-                            <input type="text" [(ngModel)]="newProduct.image" name="image" required>
+                            <input type="text" [(ngModel)]="newProduct.image_url" name="image_url" required>
                         </label>
                         <div class="modal-actions">
                             <button type="submit" [disabled]="addProductForm.invalid">Agregar</button>
@@ -169,6 +169,7 @@
                         <th class="texto">Precio</th>
                         <th class="texto">Ventas</th>
                         <th class="texto">Estado</th>
+                        <th class="texto">Acciones</th> <!-- Nueva columna -->
                     </tr>
                 </thead>
                 <tbody>
@@ -188,6 +189,10 @@
                             <span [class]="'status-badge ' + product.status.toLowerCase()">
                                 {{ product.status }}
                             </span>
+                        </td>
+                        <td>
+                            <button class="edit-product-btn" (click)="startEditProduct(product)">Editar</button>
+                            <button class="delete-product-btn" (click)="deleteProduct(product.id)">Eliminar</button>
                         </td>
                     </tr>
                     }
@@ -442,5 +447,46 @@
     </div>
 </section>
 }
+        @if (editingProduct) {
+        <div class="edit-product-modal">
+            <h3>Editar producto</h3>
+            <form (ngSubmit)="saveEditProduct()" #editProductFormRef="ngForm">
+                <label>Nombre:
+                    <input type="text" [(ngModel)]="editProductForm.name" name="editName" required>
+                </label>
+                <label>Descripción:
+                    <input type="text" [(ngModel)]="editProductForm.description" name="editDescription" required>
+                </label>
+                <label>Precio:
+                    <input type="number" [(ngModel)]="editProductForm.price" name="editPrice" required min="1">
+                </label>
+                <label>Categoría:
+                  <select [(ngModel)]="editProductForm.category" name="editCategory" required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    <option value="vuelos">Vuelos</option>
+                    <option value="alquiler_autos">Alquiler de autos</option>
+                    <option value="hotel">Hotel</option>
+                    <option value="all_inclusive">All Inclusive</option>
+                  </select>
+                </label>
+                <label>Cantidad:
+                    <input type="number" [(ngModel)]="editProductForm.stock" name="editStock" required min="0">
+                </label>
+                <label>SKU:
+                    <input type="text" [(ngModel)]="editProductForm.sku" name="editSku" required>
+                </label>
+                <label>Imagen (URL):
+                    <input type="text" [(ngModel)]="editProductForm.image_url" name="editImageUrl" required>
+                </label>
+                <label>Activo:
+                    <input type="checkbox" [(ngModel)]="editProductForm.is_active" name="editIsActive">
+                </label>
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="editProductFormRef.invalid">Guardar</button>
+                    <button type="button" (click)="cancelEditProduct()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        }
     </main>
 </div>

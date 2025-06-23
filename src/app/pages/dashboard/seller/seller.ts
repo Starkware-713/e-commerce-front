@@ -50,6 +50,10 @@ export interface Product {
   image: string;
   category?: string;
   lastUpdated?: Date;
+  description?: string;
+  image_url?: string;
+  sku?: string;
+  is_active?: boolean;
 }
 
 export interface Order {
@@ -188,13 +192,14 @@ export class Seller implements OnInit, OnDestroy {
 
   // Estado y lógica para agregar productos
   showAddProduct = false;
-  newProduct: Partial<Product> & { description?: string; sku?: string } = {
+  newProduct: Partial<Product> & { description?: string; sku?: string; image_url?: string } = {
     name: '',
     price: 0,
     stock: 0,
     category: '',
-    image: '',
+    image_url: '',
     description: '',
+    sku: ''
   };
 
   // Agregado para mostrar el spinner solo en el usuario que se está actualizando
@@ -207,6 +212,10 @@ export class Seller implements OnInit, OnDestroy {
     { value: 'hotel', label: 'Hotel' },
     { value: 'all_inclusive', label: 'All Inclusive' }
   ];
+
+  // Nueva propiedad y lógica para editar productos
+  editingProduct: Product | null = null;
+  editProductForm: any = {};
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
@@ -662,25 +671,26 @@ crearCupon() {
   }
 
   addProduct() {
-    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null || !this.newProduct.category) return;
+    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null || !this.newProduct.category || !this.newProduct.image_url || !this.newProduct.sku) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
     this.isLoading.next(true);
-    // Enviar solo los campos requeridos por la API
     const payload = {
       name: this.newProduct.name,
       description: this.newProduct.description || '',
       price: Number(this.newProduct.price),
-      category: String(this.newProduct.category), // fuerza a string plano
+      category: String(this.newProduct.category),
       stock: Number(this.newProduct.stock),
-      image_url: this.newProduct.image || '',
-      sku: this.newProduct.sku || ''
+      image_url: this.newProduct.image_url,
+      sku: this.newProduct.sku
     };
     this.productService.createProduct(payload as any).subscribe({
       next: () => {
         this.isLoading.next(false);
         this.showAddProduct = false;
-        this.newProduct = { name: '', price: 0, stock: 0, category: '', image: '', description: '', sku: '' };
+        this.newProduct = { name: '', price: 0, stock: 0, category: '', image_url: '', description: '', sku: '' };
         this.loadProducts();
-        console.log(this.newProduct);
       },
       error: (err) => {
         this.isLoading.next(false);
@@ -744,6 +754,68 @@ crearCupon() {
     ).subscribe(orders => {
       this.orders$.next(orders);
       this.isLoading.next(false);
+    });
+  }
+
+  deleteProduct(productId: string) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+    this.isLoading.next(true);
+    this.productService.deleteProduct(Number(productId)).subscribe({
+      next: () => {
+        this.isLoading.next(false);
+        this.loadProducts();
+      },
+      error: (err) => {
+        this.isLoading.next(false);
+        alert('Error al eliminar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  startEditProduct(product: Product) {
+    this.editingProduct = { ...product };
+    this.editProductForm = {
+      name: product.name,
+      description: product.description || '',
+      price: product.price,
+      category: product.category || '',
+      stock: product.stock,
+      image_url: product.image_url || '',
+      sku: product.sku || '',
+      is_active: product.status === 'active'
+    };
+    this.showAddProduct = false;
+  }
+
+  cancelEditProduct() {
+    this.editingProduct = null;
+    this.editProductForm = {};
+  }
+
+  saveEditProduct() {
+    if (!this.editingProduct) return;
+    const payload = {
+      name: this.editProductForm.name,
+      description: this.editProductForm.description,
+      price: Number(this.editProductForm.price),
+      category: String(this.editProductForm.category),
+      stock: Number(this.editProductForm.stock),
+      image_url: this.editProductForm.image_url,
+      sku: this.editProductForm.sku,
+      is_active: !!this.editProductForm.is_active
+    };
+    this.isLoading.next(true);
+    this.productService.updateProduct(Number(this.editingProduct.id), payload).subscribe({
+      next: () => {
+        this.isLoading.next(false);
+        this.editingProduct = null;
+        this.editProductForm = {};
+        this.loadProducts();
+      },
+      error: (err) => {
+        this.isLoading.next(false);
+        alert('Error al editar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
     });
   }
 }
