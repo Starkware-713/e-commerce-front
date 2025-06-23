@@ -90,18 +90,19 @@ export class Client implements OnInit {
     this.profileError = null;
   }
 
-  saveProfile() {
-    this.profileMessage = null;
-    this.profileError = null;
-    this.clientService.updateUserProfile(this.profileForm).subscribe({
-      next: (user) => {
-        this.user = user;
-        this.editingProfile = false;
-        this.profileMessage = 'Perfil actualizado correctamente.';
-      },
-      error: (err) => {
-        this.profileError = err?.error?.detail || 'No se pudo actualizar el perfil.';
-      }
-    });
-  }
+saveProfile() {
+  this.profileMessage = null;
+  this.profileError = null;
+  this.clientService.updateUserProfile(this.profileForm).subscribe({
+    next: (user: any) => {
+      this.user = user;
+      this.editingProfile = false;
+      this.profileMessage = 'Perfil actualizado correctamente.';
+    },
+    error: (err: any) => { // <-- agrega ": any"
+      console.error('Error al actualizar perfil:', err);
+      this.profileError = err?.error?.detail || 'No se pudo actualizar el perfil.';
+    }
+  });
+}
 }

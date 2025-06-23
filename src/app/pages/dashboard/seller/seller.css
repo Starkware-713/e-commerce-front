@@ -73,7 +73,42 @@ body {
   background-color: #3498db;
   color: white;
 }
+/* Botón editar producto */
+.edit-product-btn {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 6px;
+  font-size: 14px;
+  transition:  0.2s;
+}
+.edit-product-btn:hover {
+  background-color: #1565c0;
+}
 
+/* Botón eliminar producto */
+.delete-product-btn {
+  background-color: #e53935;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.delete-product-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Opcional: espacio entre botones en la celda de acciones */
+.data-grid td .edit-product-btn,
+.data-grid td .delete-product-btn {
+  margin-bottom: 4px;
+}
 /* === Main content === */
 .main-content {
   padding: 2rem;
