@@ -4,6 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  stock: number;
+  image_url: string;
+  sku: string;
+}
 export interface OrderStats {
   totalOrders: number;
   pendingOrders: number;
@@ -85,9 +94,11 @@ export class SellerService {
     const token = localStorage.getItem('token');
     if (!token) {
       this.router.navigate(['/auth/login']);
-      throw new Error('Authentication required');
+      throw new Error('Se requiere autenticación');
     }
   }
+
+
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -104,6 +115,30 @@ export class SellerService {
   getUserById(userId: string): Observable<User> {
     this.checkAuth();
     return this.http.get<User>(`${this.apiUrl}/user/${userId}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Cambiar el rol de un usuario
+  updateUserRole(userId: number, newRole: string): Observable<any> {
+    this.checkAuth();
+    return this.http.put<any>(
+      `${this.apiUrl}/user/update/${userId}`,
+      { rol: newRole },
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  // Actualiza los datos del usuario (name, lastname, email)
+  updateUserData(userId: number, data: { name: string; lastname: string; email: string; rol?: string }): Observable<any> {
+    this.checkAuth();
+    return this.http.put<any>(
+      `${this.apiUrl}/user/update/${userId}`,
+      data,
+      { headers: this.getHeaders() }
+    ).pipe(
       catchError(this.handleError.bind(this))
     );
   }
@@ -190,28 +225,23 @@ export class SellerService {
     );
   }
 
-  // Helper method to handle errors
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An error occurred';
-    
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Ha ocurrido un error';
     if (error.status === 401) {
       localStorage.removeItem('token');
-      this.router.navigate(['/auth/login']);
-      errorMessage = 'Session expired. Please login again.';
+      this.router.navigate(['/login']);
+      errorMessage = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente';
+    } else if (error.status === 403) {
+      errorMessage = 'No tiene permisos para realizar esta operación';
+    } else if (error.status === 422) {
+      errorMessage = error.error?.detail || 'Error de validación en los datos enviados';
+    } else if (error.status === 404) {
+      errorMessage = 'El recurso solicitado no fue encontrado';
+    } else if (error.status === 500) {
+      errorMessage = 'Error en el servidor. Por favor, intente más tarde';
     } else if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      
-      // Additional error details if available
-      if (error.error?.message) {
-        errorMessage += `\nDetail: ${error.error.message}`;
-      }
+      errorMessage = `Error del cliente: ${error.error.message}`;
     }
-    
-    console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 
@@ -254,7 +284,6 @@ export class SellerService {
     const orderDate = new Date(date);
     const diffTime = Math.abs(now.getTime() - orderDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
     if (diffDays === 0) return 'Hoy';
     if (diffDays === 1) return 'Ayer';
     if (diffDays < 7) return `${diffDays} Dias`;

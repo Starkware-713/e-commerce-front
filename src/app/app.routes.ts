@@ -13,6 +13,7 @@ import { Client } from './pages/dashboard/client/client';
 import { Seller } from './pages/dashboard/seller/seller';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
+
 export const routes: Routes = [    
     {path: '', redirectTo: '/home', pathMatch: 'full'},    
     {path: 'home', component: Home},
@@ -40,5 +41,6 @@ export const routes: Routes = [
     {path: 'terms', component: Terms},
     {path: '404', component: NotFound},
     {path: '403', component: Forrbiden},
+    {path: 'product/:id', component: Products},
     {path: '**', redirectTo: '/404'}
 ];

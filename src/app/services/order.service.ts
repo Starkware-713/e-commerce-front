@@ -4,16 +4,30 @@ import { Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 
-export interface Order {
-  id?: string;
-  items: CartItem[];
-  total: number;
+// Interfaces según OpenAPI
+export interface OrderSummary {
+  id: number;
+  order_number: string;
   status: string;
+  total_amount: number;
+  created_at: string;
+  items_count: number;
 }
 
-export interface CartItem {
-  productId: string;
-  quantity: number;
+export interface OrderDetail {
+  id: number;
+  order_number: string;
+  user: any;
+  items: any[];
+  status: string;
+  total_amount: number;
+  shipping_address?: string | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+  payment_status?: string | null;
+  tracking_number?: string | null;
+  estimated_delivery?: string | null;
 }
 
 @Injectable({
@@ -38,52 +52,102 @@ export class OrderService {
     }
   }
 
-  createOrder(order: Order): Observable<Order> {
+  /**
+   * Crear orden (POST /orders/create?cart_id=...)
+   */
+  createOrder(cartId: number): Observable<OrderDetail> {
     this.checkAuth();
-    return this.http.post<Order>(`${this.apiUrl}/orders`, order, { headers: this.getHeaders() })
-      .pipe(
-        catchError(error => {
-          if (error.message === 'Authentication required') {
-            return throwError(() => new Error('Please log in to access this feature'));
-          }
-          return throwError(() => error);
-        })
-      );
+    return this.http.post<OrderDetail>(`${this.apiUrl}/orders/create?cart_id=${cartId}`, {}, { headers: this.getHeaders() });
   }
 
-  getOrders(): Observable<Order[]> {
+  /**
+   * Listar órdenes (GET /orders/?skip=0&limit=100&status=...)
+   */
+  getOrders(params?: {
+    skip?: number;
+    limit?: number;
+    status?: string;
+    start_date?: string;
+    end_date?: string;
+    sort?: 'date_asc' | 'date_desc' | 'total_asc' | 'total_desc';
+  }): Observable<OrderSummary[]> {
     this.checkAuth();
-    return this.http.get<Order[]>(`${this.apiUrl}/orders`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(error => {
-          if (error.message === 'Authentication required') {
-            return throwError(() => new Error('Please log in to access this feature'));
-          }
-          return throwError(() => error);
-        })
-      );
+    let query = '';
+    if (params) {
+      const entries = Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '');
+      if (entries.length > 0) {
+        query = '?' + entries.map(([k, v]) => `${k}=${encodeURIComponent(v as any)}`).join('&');
+      }
+    }
+    return this.http.get<OrderSummary[]>(`${this.apiUrl}/orders/${query}`, { headers: this.getHeaders() });
   }
 
-  getOrder(id: string): Observable<Order> {
+  /**
+   * Ver detalle de orden (GET /orders/{order_id})
+   */
+  getOrderById(orderId: number): Observable<OrderDetail> {
     this.checkAuth();
-    return this.http.get<Order>(`${this.apiUrl}/orders/${id}`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(error => {
-          if (error.message === 'Authentication required') {
-            return throwError(() => new Error('Please log in to access this feature'));
-          }
-          return throwError(() => error);
-        })
-      );
+    return this.http.get<OrderDetail>(`${this.apiUrl}/orders/${orderId}`, { headers: this.getHeaders() });
   }
 
-  updateOrderStatus(orderId: string, status: string): Observable<Order> {
+  /**
+   * Ver todas las órdenes (GET /orders/management?skip=0&limit=100&status=...)
+   */
+  getAllOrdersManagement(params?: {
+    skip?: number;
+    limit?: number;
+    status?: string;
+  }): Observable<OrderDetail[]> {
     this.checkAuth();
-    return this.http.put<Order>(`${this.apiUrl}/orders/${orderId}/status`, { status }, { headers: this.getHeaders() });
+    let query = '';
+    if (params) {
+      const entries = Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '');
+      if (entries.length > 0) {
+        query = '?' + entries.map(([k, v]) => `${k}=${encodeURIComponent(v as any)}`).join('&');
+      }
+    }
+    return this.http.get<OrderDetail[]>(`${this.apiUrl}/orders/management/${query}`, { headers: this.getHeaders() });
   }
 
-  cancelOrder(orderId: string): Observable<Order> {
+  /**
+   * Marcar como entregada (POST /orders/management/{order_id}/deliver)
+   */
+  deliverOrderManagement(orderId: number): Observable<any> {
     this.checkAuth();
-    return this.http.put<Order>(`${this.apiUrl}/orders/${orderId}/cancel`, {}, { headers: this.getHeaders() });
+    return this.http.post(`${this.apiUrl}/orders/management/${orderId}/deliver`, {}, { headers: this.getHeaders() });
+  }
+
+  /**
+   * Cancelar orden (POST /orders/management/{order_id}/cancel)
+   */
+  cancelOrderManagement(orderId: number): Observable<any> {
+    this.checkAuth();
+    return this.http.post(`${this.apiUrl}/orders/management/${orderId}/cancel`, {}, { headers: this.getHeaders() });
+  }
+
+  /**
+   * Estadísticas de órdenes (GET /orders/stats/summary)
+   */
+  getOrderStats(): Observable<any> {
+    this.checkAuth();
+    return this.http.get(`${this.apiUrl}/orders/stats/summary`, { headers: this.getHeaders() });
+  }
+
+  // Alias para compatibilidad: getAllOrders (devuelve OrderDetail[])
+  getAllOrders(params?: {
+    skip?: number;
+    limit?: number;
+    status?: string;
+    start_date?: string;
+    end_date?: string;
+    sort?: 'date_asc' | 'date_desc' | 'total_asc' | 'total_desc';
+  }): Observable<OrderDetail[]> {
+    // getAllOrders debe devolver detalles completos, así que usamos getAllOrdersManagement
+    return this.getAllOrdersManagement(params);
+  }
+
+  // Alias para compatibilidad: getPendingOrdersForSeller (devuelve OrderDetail[])
+  getPendingOrdersForSeller(): Observable<OrderDetail[]> {
+    return this.getAllOrdersManagement({ status: 'pending' });
   }
 }

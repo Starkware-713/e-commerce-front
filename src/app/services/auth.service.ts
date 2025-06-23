@@ -47,19 +47,17 @@ export class AuthService {
     this.checkToken();
   }  private checkToken() {
     const token = localStorage.getItem('token');
-    console.log('Checking token:', token);
     
     if (token) {
       try {
         const decodedToken = jwtDecode(token) as DecodedToken;
-        console.log('Decoded token:', decodedToken);
         
         // Verifica si el token ha expirado
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp && decodedToken.exp < currentTime) {
-          console.log('Token expirado');
+          console.warn('Token expirado - Cerrando sesión');
           this.logout();
-          return;
+          throw new Error('Su sesión ha expirado. Por favor, inicie sesión nuevamente');
         }
         
         // Verifica si el token tiene la información necesaria
@@ -203,33 +201,48 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  refreshToken(): Observable<{token: string}> {
-    return this.http.post<{token: string}>(`${this.apiUrl}/auth/refresh`, {})
-      .pipe(
-        tap(response => {
-          localStorage.setItem('token', response.token);
-          this.checkToken();
-        })
-      );
-  }  getDashboardUrl(): string {
-    const role = this.currentUser?.rol;
-    if (!role) {
+  /**
+   * Refrescar token (POST /auth/refresh)
+   */
+  refreshToken(refresh_token: string): Observable<{ access_token: string }> {
+    return this.http.post<{ access_token: string }>(`${this.apiUrl}/auth/refresh`, { refresh_token });
+  }  /**
+   * Decodifica el token JWT almacenado y retorna el objeto decodificado.
+   */
+  private decodeToken(): DecodedToken | null {
+    const token = this.getToken();
+    if (!token) return null;
+    try {
+      return jwtDecode(token) as DecodedToken;
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Obtiene el rol directamente del token JWT, normalizado a minúsculas.
+   */
+  getRoleFromToken(): string | undefined {
+    const decoded = this.decodeToken();
+    if (!decoded) return undefined;
+    const role = decoded.rol || decoded.role;
+    return role ? String(role).toLowerCase() : undefined;
+  }
+
+  getDashboardUrl(): string {
+    // Obtiene el rol directamente del token
+    const normalizedRole = this.getRoleFromToken();
+    if (!normalizedRole) {
       console.error('No hay rol definido para el usuario');
       return '/login';
     }
-    
-    console.log('Rol actual:', role);
-    // Convertimos el rol a string y lo normalizamos a minúsculas para la búsqueda
-    const normalizedRole = String(role).toLowerCase();
-    
-    // Buscar la URL del dashboard para el rol
+    console.log('Rol actual:', normalizedRole);
     const dashboardUrl = ROLE_DASHBOARD_MAP[normalizedRole];
-    
     if (!dashboardUrl) {
-      console.error('Rol no reconocido:', role);
+      console.error('Rol no reconocido:', normalizedRole);
       return '/login';
     }
-    
     console.log('URL del dashboard:', dashboardUrl);
     return dashboardUrl;
   }
@@ -257,7 +270,8 @@ export class AuthService {
     return this.currentUser;
   }
   getUserRole(): UserRole | string | undefined {
-    return this.currentUser?.rol;
+    // Siempre obtiene el rol actualizado del token
+    return this.getRoleFromToken();
   }
 
   initializeAPI(): Observable<any> {
