@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
 import { User } from '../../../services/auth.service';
 import { Order } from '../../../services/client-dashboard.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-client',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './client.html',
   styleUrl: './client.css'
 })
@@ -17,6 +18,14 @@ export class Client implements OnInit {
   loading = true;
   error: string | null = null;
   ordersError: string | null = null; // campo para errores de órdenes
+  editingProfile = false;
+  profileForm = {
+    name: '',
+    lastname: '',
+    email: ''
+  };
+  profileMessage: string | null = null;
+  profileError: string | null = null;
 
   constructor(private clientService: ClientDashboardService) {}
 
@@ -29,6 +38,11 @@ export class Client implements OnInit {
     this.clientService.getUserProfile().subscribe({
       next: (user) => {
         this.user = user;
+        this.profileForm = {
+          name: user.name || '',
+          lastname: user.lastname || '',
+          email: user.email || ''
+        };
         this.loading = false;
       },
       error: (error) => {
@@ -54,6 +68,39 @@ export class Client implements OnInit {
           this.ordersError = 'Error al cargar el historial de pedidos';
         }
         console.error('Error loading orders:', error);
+      }
+    });
+  }
+
+  startEditProfile() {
+    if (!this.user) return;
+    this.editingProfile = true;
+    this.profileForm = {
+      name: this.user.name || '',
+      lastname: this.user.lastname || '',
+      email: this.user.email || ''
+    };
+    this.profileMessage = null;
+    this.profileError = null;
+  }
+
+  cancelEditProfile() {
+    this.editingProfile = false;
+    this.profileMessage = null;
+    this.profileError = null;
+  }
+
+  saveProfile() {
+    this.profileMessage = null;
+    this.profileError = null;
+    this.clientService.updateUserProfile(this.profileForm).subscribe({
+      next: (user) => {
+        this.user = user;
+        this.editingProfile = false;
+        this.profileMessage = 'Perfil actualizado correctamente.';
+      },
+      error: (err) => {
+        this.profileError = err?.error?.detail || 'No se pudo actualizar el perfil.';
       }
     });
   }
