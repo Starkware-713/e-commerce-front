@@ -774,7 +774,21 @@ tr:hover td {
   cursor: pointer;
   transition:  0.2s;
 }
-
+.btn-delete-user {
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: background 0.2s;
+}
+.btn-delete-user:hover {
+  background: #9b2c2c;
+}
 .add-product-panel button[type="submit"]:hover {
   background: #225ea8;
 }

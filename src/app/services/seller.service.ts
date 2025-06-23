@@ -178,7 +178,9 @@ export class SellerService {
       catchError(this.handleError.bind(this))
     );
   }
-
+deleteUser(userId: number) {
+  return this.http.delete(`${this.apiUrl}/users/${userId}`);
+}
   // Order Statistics
   getOrderStats(): Observable<OrderStats> {
     this.checkAuth();
