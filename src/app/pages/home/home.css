@@ -1,6 +1,10 @@
+/* Fondo blanco general */
+body, .home-container, html {
+  background: #f7f8fa !important;
+}
+
 .home-container {
   padding: 4rem 2rem;
-  max-width: 1200px;
   margin: 0 auto;
   text-align: center;
   color: #2d3748;
@@ -77,100 +81,205 @@
   }
 }
 
+/* --- RESERVA PROFESIONAL Y CENTRADA --- */
 .carousel-home {
   position: relative;
-  height: 90vh;
-  width: 100%;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  min-height: 480px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .carousel-image {
-  background-image: url('https://images.unsplash.com/photo-1534850336045-c6c6d287f89e');
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
   background-size: cover;
   background-position: center;
-  height: 100%;
-  filter: brightness(0.65);
+  z-index: 1;
 }
 
-/* Caja blanca con el formulario */
-.reserva-container {
+.carousel-image::after {
+  content: '';
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-  background: white;
-  padding: 35px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-  max-width: 1100px;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(120deg, rgba(0, 80, 180, 0.25) 0%, rgba(0, 180, 255, 0.25) 100%);
+  z-index: 2;
 }
 
-/* Tabs superiores */
+/* --- RESERVA: Caja principal --- */
+.reserva-container {
+  position: relative;
+  z-index: 3;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.98);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Tabs superiores --- */
 .tabs {
   display: flex;
-  gap: 30px;
-  border-bottom: 2px solid #ccc;
-  margin-bottom: 25px;
-  font-weight: bold;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
-
 .tabs span {
-  padding-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #005baa;
+  padding: 0.5rem 1.2rem;
+  border-radius: 1.2rem 1.2rem 0 0;
+  background: #eaf6ff;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tabs span.active, .tabs span:hover {
+  background: #005baa;
+  color: #fff;
 }
 
-.tabs .active {
-  color: #007bff;
-  border-bottom: 2px solid #007bff;
-}
-
-/* Opciones tipo de viaje */
+/* --- Tipo de viaje --- */
 .tipo-viaje {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.2rem;
+  width: 100%;
+}
+.tipo-viaje label {
+  font-size: 1.05rem;
+  color: #333;
+  letter-spacing: 0.2px;
+}
+.tipo-viaje input[type="radio"] {
+  accent-color: #1a65b8;
+  margin-right: 0.5em;
 }
 
-/* Campos de origen, destino, fechas y pasajeros */
+/* --- Campos de formulario --- */
 .campos {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+}
+.campos input, .campos select {
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.8rem;
+  border: 1px solid #b3d4fc;
+  font-size: 1rem;
+  min-width: 220px;
+  background: #fafdff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  outline: none;
+  transition: border 0.2s;
+}
+.campos input:focus, .campos select:focus {
+  border: 1.5px solid #005baa;
 }
 
-.campos input,
-.campos select {
-  padding: 10px;
-  flex: 1 1 180px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-}
-
-/* Checkbox flexibles */
+/* --- Opciones extra --- */
 .opciones {
   display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
-  font-size: 14px;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
-/* Botón */
+/* --- Botones --- */
 button {
-  background-color: #1a65b8;
-  color: white;
-  padding: 12px 30px;
+  background: #005baa;
+  color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 0.8rem;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  width: 100%;
-  font-weight: bold;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+}
+button:hover {
+  background: #0077d6;
 }
 
-button:hover {
-  background-color: #004a99;
+.reserva-item {
+  background: #fafdff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .carousel-home {
+    min-height: 600px;
+  }
+  .reserva-container {
+    max-width: 98vw;
+    padding: 1.2rem 0.5rem;
+  }
+  .form-vuelos {
+    max-width: 98vw;
+  }
+  .campos {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 600px) {
+  .reserva-container {
+    padding: 10px 2vw 10px 2vw;
+    border-radius: 10px;
+    max-width: 99vw;
+  }
+  .reserva-item {
+    padding: 0.8rem 0.5rem;
+  }
+  .carousel-image {
+    height: 180px;
+    min-height: 120px;
+    border-radius: 0 0 18px 18px;
+  }
+}
+
+/* Eliminar borde azul de inputs y selects al focus */
+.campos input:focus,
+.campos select:focus {
+  outline: none;
+  border: 1.5px solid #1a65b822 !important;
+  box-shadow: 0 0 0 2px #e3e8ee55;
+}
+
+/* Eliminar borde azul de autocomplete */
+.autocomplete-group input:focus {
+  outline: none;
+  border: 1.5px solid #1a65b822 !important;
+  box-shadow: 0 0 0 2px #e3e8ee55;
 }
 
 /* Estilos para la sección de hospedajes */
@@ -279,6 +388,32 @@ button:hover {
   margin-left: 10px;
 }
 
+.hospedaje-seleccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 1.2rem 0;
+  background: #f7fafc;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.07);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hospedaje-seleccion label {
+  font-weight: 600;
+  color: #2b6cb0;
+}
+.hospedaje-seleccion select,
+.hospedaje-seleccion input {
+  padding: 0.6rem 1rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid #b3d4fc;
+  font-size: 1rem;
+  background: #fff;
+}
+
 /* Estilos para la sección de productos */
 .products-grid {
   display: grid;
@@ -349,13 +484,187 @@ button:hover {
 }
 
 @media (max-width: 900px) {
+  .reserva-container {
+    padding: 18px 8px 14px 8px;
+    max-width: 98vw;
+    border-radius: 14px;
+  }
+  .tabs {
+    gap: 1.2rem;
+    font-size: 1rem;
+  }
+  .tipo-viaje {
+    gap: 0.7rem;
+  }
+  .campos {
+    gap: 0.5rem;
+  }
+  .opciones {
+    gap: 0.7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .reserva-container {
+    padding: 10px 2vw 10px 2vw;
+    border-radius: 10px;
+    max-width: 99vw;
+  }
+  .reserva-item {
+    padding: 0.8rem 0.5rem;
+  }
+  .carousel-image {
+    height: 180px;
+    min-height: 120px;
+    border-radius: 0 0 18px 18px;
+  }
+  .hospedaje-seleccion {
+    max-width: 98vw;
+    padding: 0.7rem;
+  }
   .hospedajes-list {
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
   .hospedaje-card {
-    width: 90vw;
+    width: 95vw;
     min-width: 0;
-    max-width: 100%;
+    max-width: 99vw;
+    padding: 16px 6px;
   }
+  .tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .tipo-viaje, .campos, .opciones {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .buscar-btn, button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.7rem 0;
+  }
+}
+
+.campos input:focus,
+.campos select:focus {
+  outline: none;
+  border: 1.5px solid #1a65b822 !important;
+  box-shadow: 0 0 0 2px #e3e8ee55;
+}
+
+
+.autocomplete-group input:focus {
+  outline: none;
+  border: 1.5px solid #1a65b822 !important;
+  box-shadow: 0 0 0 2px #e3e8ee55;
+}
+
+/* Estilos para la sección de búsqueda de vuelos */
+
+.flight-search-container {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  margin: 2rem auto 3rem auto;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flight-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.flight-search-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  position: relative;
+}
+
+.flight-search-field label {
+  font-size: 0.95rem;
+  color: #2b6cb0;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.flight-search-field input,
+.flight-search-field select {
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.7rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f7f8fa;
+}
+
+.flight-search-field input:focus,
+.flight-search-field select:focus {
+  border-color: #2b6cb0;
+}
+
+/* --- Autocompletado moderno para reserva principal --- */
+.autocomplete-group {
+  position: relative;
+  width: 220px;
+}
+.suggestions-list {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #b3d4fc;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 10;
+  max-height: 180px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.2rem 0;
+  list-style: none;
+}
+.suggestions-list li {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.18s;
+}
+.suggestions-list li:hover {
+  background: #eaf6ff;
+}
+
+.search-btn-field {
+  display: flex;
+  align-items: flex-end;
+}
+
+.buscar-btn {
+  background: #2b6cb0;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1.7rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.buscar-btn:hover {
+  background: #2c5282;
 }

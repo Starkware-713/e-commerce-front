@@ -80,12 +80,46 @@ export class Home implements OnInit {
 
   reservas: any[] = [];
   reservarHospedaje: boolean = false;
+  hospedajeSeleccionado: Hospedaje | null = null;
+  diasHospedaje: number = 1;
   hospedajesFiltrados: Hospedaje[] = [];
-  paises: string[] = ['Argentina', 'Brasil', 'Chile', 'Uruguay'];
+  paises: string[] = [
+    'Argentina', 'Brasil', 'Chile', 'Uruguay', 'Paraguay', 'Bolivia', 'Perú', 'Ecuador', 'Colombia', 'Venezuela',
+    'México', 'Estados Unidos', 'Canadá', 'España', 'Italia', 'Francia', 'Alemania', 'Reino Unido', 'Portugal',
+    'Australia', 'Nueva Zelanda', 'Japón', 'China', 'India', 'Sudáfrica', 'Egipto', 'Turquía', 'Rusia', 'Corea del Sur'
+  ];
   showOrigenList = false;
   showDestinoList = false;
   paisesFiltradosOrigen: string[] = [];
   paisesFiltradosDestino: string[] = [];
+
+  // --- Autocompletado Origen/Destino UNIFICADO ---
+  sugerenciasOrigen: string[] = [];
+  mostrarSugerenciasOrigen: boolean = false;
+  sugerenciasDestino: string[] = [];
+  mostrarSugerenciasDestino: boolean = false;
+  listaAeropuertos: string[] = [
+    'Buenos Aires Aeroparque, Argentina (AEP)',
+    'Buenos Aires, Argentina (BUE)',
+    'Buenos Aires Ezeiza, Argentina (EZE)',
+    'San Martin de los Andes, Argentina (CPC)',
+    'Bariloche, Argentina (BRC)',
+    'Córdoba, Argentina (COR)',
+    'Mendoza, Argentina (MDZ)',
+    'Salta, Argentina (SLA)',
+    'Rosario, Argentina (ROS)',
+    'Ushuaia, Argentina (USH)',
+    'El Calafate, Argentina (FTE)',
+    'Iguazú, Argentina (IGR)',
+    'Neuquén, Argentina (NQN)',
+    'Mar del Plata, Argentina (MDQ)',
+    'Trelew, Argentina (REL)',
+    'Comodoro Rivadavia, Argentina (CRD)',
+    'Formosa, Argentina (FMA)',
+    'Jujuy, Argentina (JUJ)',
+    'La Rioja, Argentina (IRJ)',
+    'Posadas, Argentina (PSS)'
+  ];
 
   constructor(private productService: ProductService) {}
 
@@ -93,6 +127,24 @@ export class Home implements OnInit {
     this.loadProducts();
     this.paisesFiltradosOrigen = this.paises;
     this.paisesFiltradosDestino = this.paises;
+    // Mostrar hospedajes si el checkbox está marcado
+    // (esto es para inicializar si ya estaba marcado)
+    if (this.reservarHospedaje) {
+      this.hospedajesDisponibles = this.hospedajes;
+    }
+  }
+
+  // Detectar cambios en el checkbox de hospedaje
+  ngDoCheck() {
+    if (this.reservarHospedaje) {
+      this.hospedajesDisponibles = this.hospedajes;
+      if (!this.hospedajeSeleccionado && this.hospedajesDisponibles.length > 0) {
+        this.hospedajeSeleccionado = this.hospedajesDisponibles[0];
+      }
+    } else {
+      this.hospedajesDisponibles = [];
+      this.hospedajeSeleccionado = null;
+    }
   }
 
   private loadProducts() {
@@ -124,21 +176,15 @@ export class Home implements OnInit {
     this.error = null;
   }
 
+  // Eliminar lógica de hospedajes y precios en reservas
   buscarVuelos() {
     if (!this.origen || !this.destino || !this.partida) {
       this.error = 'Por favor, completa Origen, Destino y Fecha de partida.';
       return;
     }
     this.error = null;
-    // Filtrar hospedajes según el país de origen si se selecciona
-    if (this.reservarHospedaje) {
-      this.hospedajesDisponibles = this.hospedajes.filter(h =>
-        h.destino.toLowerCase().includes(this.destino.trim().toLowerCase())
-      );
-    } else {
-      this.hospedajesDisponibles = [];
-    }
-    this.mostrarHospedajes = this.reservarHospedaje && this.hospedajesDisponibles.length > 0;
+    // Calcular precio base (ejemplo simple)
+    const precioBase = 200 + (this.pasajeros - 1) * 150 + (this.clase === 'Business' ? 180 : 0);
     // Agregar reserva
     const nuevaReserva = {
       origen: this.origen,
@@ -147,7 +193,7 @@ export class Home implements OnInit {
       regreso: this.regreso,
       pasajeros: this.pasajeros,
       clase: this.clase,
-      hospedaje: this.reservarHospedaje ? this.hospedajesDisponibles[0]?.nombre : null
+      precio: precioBase
     };
     this.reservas.push(nuevaReserva);
     this.reservaRealizada = nuevaReserva;
@@ -172,6 +218,8 @@ export class Home implements OnInit {
     this.reservarHospedaje = false;
     this.mostrarHospedajes = false;
     this.hospedajesDisponibles = [];
+    this.hospedajeSeleccionado = null;
+    this.diasHospedaje = 1;
     this.error = null;
   }
 
@@ -207,22 +255,72 @@ export class Home implements OnInit {
     }
   }
 
-  selectPais(pais: string, tipo: 'origen' | 'destino') {
-    if (tipo === 'origen') {
-      this.origen = pais;
-      this.showOrigenList = false;
-      this.filterPaises('origen');
-    } else {
-      this.destino = pais;
-      this.showDestinoList = false;
-      this.filterPaises('destino');
-    }
-  }
-
   hideList(tipo: 'origen' | 'destino') {
     setTimeout(() => {
       if (tipo === 'origen') this.showOrigenList = false;
       else this.showDestinoList = false;
     }, 150);
+  }
+
+  selectPais(pais: string, tipo: 'origen' | 'destino') {
+    if (tipo === 'origen') {
+      this.origen = pais;
+      this.showOrigenList = false;
+      this.paisesFiltradosOrigen = this.paises;
+    } else {
+      this.destino = pais;
+      this.showDestinoList = false;
+      this.paisesFiltradosDestino = this.paises;
+    }
+  }
+
+  filtrarOrigen() {
+    const val = this.origen.toLowerCase();
+    this.sugerenciasOrigen = this.listaAeropuertos.filter(ciudad => ciudad.toLowerCase().includes(val));
+    this.mostrarSugerenciasOrigen = true;
+  }
+
+  seleccionarOrigen(sugerencia: string) {
+    this.origen = sugerencia;
+    this.mostrarSugerenciasOrigen = false;
+  }
+
+  ocultarSugerenciasOrigen() {
+    setTimeout(() => this.mostrarSugerenciasOrigen = false, 150);
+  }
+
+  filtrarDestino() {
+    const val = this.destino.toLowerCase();
+    this.sugerenciasDestino = this.listaAeropuertos.filter(ciudad => ciudad.toLowerCase().includes(val));
+    this.mostrarSugerenciasDestino = true;
+  }
+
+  seleccionarDestino(sugerencia: string) {
+    this.destino = sugerencia;
+    this.mostrarSugerenciasDestino = false;
+  }
+
+  ocultarSugerenciasDestino() {
+    setTimeout(() => this.mostrarSugerenciasDestino = false, 150);
+  }
+
+  // Editar reserva: carga los datos en el formulario para editar
+  editarReserva(idx: number) {
+    const r = this.reservas[idx];
+    this.tabSeleccionado = 0;
+    this.origen = r.origen;
+    this.destino = r.destino;
+    this.partida = r.partida;
+    this.regreso = r.regreso;
+    this.pasajeros = r.pasajeros;
+    this.clase = r.clase;
+    // Eliminar la reserva para que al guardar no se duplique
+    this.reservas.splice(idx, 1);
+  }
+
+  // Comprar reserva: muestra confirmación
+  comprarReserva(idx: number) {
+    const r = this.reservas[idx];
+    alert('¡Compra realizada para el vuelo a ' + r.destino + (r.hospedaje ? ' con hospedaje en ' + r.hospedaje : '') + '!');
   }
 }
