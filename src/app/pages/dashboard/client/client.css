@@ -1,34 +1,31 @@
-.cliente-dashboard {
-  max-width: 1100px;
+.cliente-container {
+  max-width: 900px;
   margin: 40px auto;
-  background: #f8fbff;
-  border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  background: #f0f8ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   padding: 32px 24px;
 }
 
-.cliente-header {
+.cliente-container h1 {
+  color: #0056b3;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 2.2rem;
+}
+
+.cliente-perfil {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 2rem;
+  background: #fff;
+  padding: 18px 24px;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
   margin-bottom: 32px;
 }
 
-.cliente-profile {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  background: #fff;
-  padding: 20px 28px;
-  border-radius: 12px;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
-  min-width: 270px;
-  flex: 1 1 320px;
-}
-
-.cliente-profile img {
+.cliente-perfil img {
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -36,12 +33,12 @@
   object-fit: cover;
 }
 
-.cliente-profile h2 {
+.cliente-perfil h2 {
   margin: 0 0 8px 0;
   color: #007bff;
 }
 
-.cliente-profile button {
+.cliente-perfil button {
   background: #007bff;
   color: #fff;
   border: none;
@@ -52,37 +49,49 @@
   margin-top: 10px;
   transition: background 0.2s;
 }
-.cliente-profile button:hover {
-  background: #0056b3;
-}
 
-.cliente-summary {
-  display: flex;
-  gap: 1.5rem;
-  flex: 2 1 400px;
-  justify-content: flex-end;
-  align-items: stretch;
-}
-
-.summary-card {
-  background: #e6f0fa;
-  border-radius: 10px;
-  padding: 18px 28px;
-  min-width: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-}
-.summary-title {
-  color: #0056b3;
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-}
-.summary-value {
+.loading {
+  text-align: center;
+  padding: 2rem;
   color: #007bff;
-  font-size: 1.7rem;
-  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.error {
+  background: #ffe6e6;
+  color: #d63031;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.status-entregado {
+  background: #2ecc71;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-pendiente {
+  background: #f1c40f;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-cancelado {
+  background: #e74c3c;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.cliente-perfil button:hover {
+  background: #0056b3;
 }
 
 .cliente-historial {
@@ -98,13 +107,13 @@
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
 }
 
 .cliente-historial th, .cliente-historial td {
-  padding: 14px 10px;
+  padding: 12px 10px;
   text-align: left;
   border-bottom: 1px solid #e6f0fa;
 }
@@ -118,60 +127,10 @@
   border-bottom: none;
 }
 
-.estado {
-  padding: 4px 14px;
-  border-radius: 12px;
-  font-weight: 500;
-  font-size: 0.98rem;
-}
-.estado.entregado {
-  background: #d4f7d4;
-  color: #2e7d32;
-}
-.estado.pendiente {
-  background: #fff3cd;
-  color: #b8860b;
-}
-
-.no-compras {
-  text-align: center;
-  color: #888;
-  margin-top: 18px;
-}
-
-/* CLIENT DASHBOARD RESPONSIVE */
-@media (max-width: 900px) {
-  .cliente-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.5rem;
-  }
-  .cliente-summary {
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 600px) {
-  .cliente-dashboard {
-    padding: 12px 2vw;
-  }
-  .cliente-profile {
+@media (max-width: 700px) {
+  .cliente-perfil {
     flex-direction: column;
     align-items: flex-start;
-    min-width: unset;
-    width: 100%;
-  }
-  .cliente-summary {
-    flex-direction: column;
     gap: 1rem;
-    width: 100%;
-  }
-  .summary-card {
-    width: 100%;
-    min-width: unset;
-    align-items: flex-start;
-  }
-  .cliente-historial table, .cliente-historial th, .cliente-historial td {
-    font-size: 0.98rem;
   }
 }

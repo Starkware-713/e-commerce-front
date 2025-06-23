@@ -1,1 +1,396 @@
-<p>seller works!</p>
+<div class="dashboard-container responsive-container">
+    <button class="sidebar-toggle" aria-label="Abrir/cerrar menú" (click)="toggleSidebar()">
+        ☰
+    </button>
+    @if (sidebarOpen) {
+    <div class="sidebar-backdrop" (click)="toggleSidebar()"></div>
+    }
+    <aside class="sidebar responsive-sidebar" [class.open]="sidebarOpen">
+        <div class="sidebar-header">
+            <h2>🤵‍♂️ Jefe de ventas</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <button [class.active]="activeTab === 'dashboard'" (click)="changeTab('dashboard'); toggleSidebarOnMobile()" class="nav-item">
+                📈 Dashboard
+            </button>
+            <button [class.active]="activeTab === 'products'" (click)="changeTab('products'); toggleSidebarOnMobile()" class="nav-item">
+                📦 Productos
+            </button>
+            <div *ngIf="activeTab === 'products'" class="add-product-sidebar-tab">
+                <button class="add-product-tab-btn" (click)="showAddProduct = !showAddProduct" type="button">
+                  <span class="add-product-icon">➕</span> <span>{{ showAddProduct ? 'Cerrar' : 'Agregar producto' }}</span>
+                </button>
+            </div>
+            <button [class.active]="activeTab === 'sales'" (click)="changeTab('sales'); toggleSidebarOnMobile()" class="nav-item">
+                🛒 Ventas
+            </button>
+            <button [class.active]="activeTab === 'customers'" (click)="changeTab('customers'); toggleSidebarOnMobile()" class="nav-item">
+                👥 Clientes
+            </button>
+            <button [class.active]="activeTab === 'users'" (click)="changeTab('users'); toggleSidebarOnMobile()" class="nav-item">
+                🧑‍💼 Usuarios
+            </button>
+            <button [class.active]="activeTab === 'orders'" (click)="changeTab('orders'); toggleSidebarOnMobile()" class="nav-item">
+                📋 Órdenes
+            </button>
+            <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing'); toggleSidebarOnMobile()" class="nav-item">
+                📢 Marketing
+            </button>
+        </nav>
+    </aside>
+
+    <main class="main-content responsive-main">
+        <!-- Dashboard Overview -->
+        @if (activeTab === 'dashboard') {
+        <section class="dashboard-overview">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon revenue">🪙</div>
+                    <div class="stat-info">
+                        <h3>Total ventas</h3>
+                        @if (statistics$ | async; as stats) {
+                        <p class="stat-value">${{ stats.totalSales | number:'1.0-0' }}</p>
+                        <p class="stat-change" [class.positive]="stats.salesGrowth > 0">
+                            {{ stats.salesGrowth | number:'1.1-1' }}%
+                        </p>
+                        }
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon products">📦</div>
+                    <div class="stat-info">
+                        <h3>Productos activos</h3>
+                        <p class="stat-value">{{ (statistics$ | async)?.activeProducts }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon customers">👥</div>
+                    <div class="stat-info">
+                        <h3>Total clientes</h3>
+                        <p class="stat-value">{{ (statistics$ | async)?.registeredCustomers }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orders">📋</div>
+                    <div class="stat-info">
+                        <h3>Ordenes pendientes</h3>
+                        <p class="stat-value">{{ (statistics$ | async)?.pendingOrders }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Tendencia de ventas</h3>
+                    <!-- Add your preferred charting component here -->
+                    <div class="chart-placeholder">Grafico de ventas</div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Productos en tendencia</h3>
+                    <div class="top-products-list">
+                        @for (product of chartData.topProducts; track product.id) {
+                        <div class="top-product-item">
+                            <span class="product-name">{{ product.name }}</span>
+                            <span class="product-sales">${{ product.sales | number:'1.0-0' }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        }
+
+        <!-- Products Section -->
+        @if (activeTab === 'products') {
+        <section class="products-section">
+            <div class="section-header">
+                <h2>Administracion de productos </h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar producto..." #productSearch
+                        (input)="getFilteredProducts(productSearch.value)">
+                </div>
+                <div>
+                    <button class="add-product-btn" (click)="onAddProduct()">agregar producto</button>
+                </div>
+            </div>
+
+            <div class="add-product-tab">
+                <button class="add-product-btn" (click)="showAddProduct = !showAddProduct" type="button">
+                  <span class="add-product-icon">➕</span> <span>{{ showAddProduct ? 'Cerrar' : 'Agregar producto' }}</span>
+                </button>
+                @if (showAddProduct) {
+                <div class="add-product-panel">
+                    <h3>Agregar nuevo producto</h3>
+                    <form (ngSubmit)="addProduct()" #addProductForm="ngForm">
+                        <label>Nombre:
+                            <input type="text" [(ngModel)]="newProduct.name" name="name" required>
+                        </label>
+                        <label>Descripción:
+                            <input type="text" [(ngModel)]="newProduct.description" name="description" required>
+                        </label>
+                        <label>Precio:
+                            <input type="number" [(ngModel)]="newProduct.price" name="price" required min="1">
+                        </label>
+                        <label>Categoría:
+                          <select [(ngModel)]="newProduct.category" name="category" required>
+                            <option value="" disabled selected>Selecciona una categoría</option>
+                            <option value="vuelos">Vuelos</option>
+                            <option value="alquiler_autos">Alquiler de autos</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="all_inclusive">All Inclusive</option>
+                          </select>
+                        </label>
+                        <label>Cantidad:
+                            <input type="number" [(ngModel)]="newProduct.stock" name="stock" required min="0">
+                        </label>
+                        <label>SKU:
+                            <input type="text" [(ngModel)]="newProduct.sku" name="sku" required>
+                        </label>
+                        <label>Imagen (URL):
+                            <input type="text" [(ngModel)]="newProduct.image" name="image" required>
+                        </label>
+                        <div class="modal-actions">
+                            <button type="submit" [disabled]="addProductForm.invalid">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+                }
+            </div>
+
+            <div class="data-grid">
+                <thead>
+                    <tr>
+                        <th class="texto">Productos</th>
+                        <th class="texto">Cantidad</th>
+                        <th class="texto">Precio</th>
+                        <th class="texto">Ventas</th>
+                        <th class="texto">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (products$ | async; as products) {
+                    @for (product of products; track product.id) {
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <img [src]="product.image" [alt]="product.name">
+                                <span>{{ product.name }}</span>
+                            </div>
+                        </td>
+                        <td>{{ product.stock }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{{ product.sales }}</td>
+                        <td>
+                            <span [class]="'status-badge ' + product.status.toLowerCase()">
+                                {{ product.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </div>
+        </section>
+        }
+
+        <!-- Sales Section -->
+        @if (activeTab === 'sales') {
+        <section class="sales-sect">
+            <div class="section-header">
+                <h2>Administracion de ventas</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar venta..." #saleSearch
+                        (input)="getFilteredSales(saleSearch.value)">
+                </div>
+            </div>
+            <div class="data-grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="texto">Venta ID</th>
+                            <th class="texto">Cliente</th>
+                            <th class="texto">Total</th>
+                            <th class="texto">Fecha</th>
+                            <th class="texto">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (sales$ | async; as sales) {
+                        @for (sale of sales; track sale.id) {
+                        <tr>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.customerName }}</td>
+                            <td>${{ sale.total | number:'1.2-2' }}</td>
+                            <td>{{ sale.date | date:'mediumDate' }}</td>
+                            <td>
+                                <span [class]="'status-badge ' + sale.status.toLowerCase()">
+                                    {{ sale.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        }
+
+        <!-- Customers Section -->
+        @if (activeTab === 'customers') {
+        <section class="customers-section">
+            <div class="section-header">
+                <h2>Administracion de clientes</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Search customers..." #customerSearch
+                        (input)="getFilteredCustomers(customerSearch.value)">
+                </div>
+            </div>
+
+            <div class="data-grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="texto">Cliente</th>
+                            <th class="texto">Email</th>
+                            <th class="texto">Orden</th>
+                            <th class="texto">Total costos</th>
+                            <th class="texto">Ultimo pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (customers$ | async; as customers) {
+                        @for (customer of customers; track customer.id) {
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <span class="customer-avatar">{{ customer.name[0] }}</span>
+                                    <span>{{ customer.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.orderCount || 0 }}</td>
+                            <td>${{ (customer.totalSpent || 0) | number:'1.2-2' }}</td>
+                            <td>{{ customer.lastOrderDate ? (customer.lastOrderDate | date:'mediumDate') : '' }}</td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        }
+
+        <!-- Users Section -->
+        @if (activeTab === 'users') {
+        <section class="users-section">
+            <div class="section-header">
+                <h2>Administración de usuarios</h2>
+            </div>
+            @if (usersLoading){
+            Cargando Usuarios
+            }
+            @if (usersError){
+            <div class="error-message">Error al cargar los usuarios: {{ usersError }}</div>
+            }
+            <div class="data-grid">
+                <table>
+                   <thead>
+    <tr>
+        <th>Email</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>ID</th>
+        <th>Activo</th>
+        <th>Rol</th>
+        <th>Acciones</th> <!-- Nueva columna -->
+    </tr>
+</thead>
+<tbody>
+    @for( user of users; track user.id) {
+    <tr [class.vendedor-row]="user.rol === 'vendedor'">
+        <td>{{ user.email || 'N/A' }}</td>
+        <td>{{ user.name || 'N/A' }}</td>
+        <td>{{ user.lastname || 'N/A' }}</td>
+        <td>{{ user.id || 'N/A' }}</td>
+        <td>
+            <span [class.active-badge]="user.is_active" [class.inactive-badge]="!user.is_active">
+                {{ user.is_active ? 'Sí' : 'No' }}
+            </span>
+        </td>
+        <td>
+            @if(user.rol === 'vendedor'){
+            <span class="rol-badge vendedor">Vendedor</span>
+            }
+            @if(user.rol !== 'vendedor'){
+            <span>{{ user.rol || 'N/A' }}</span>
+            }
+        </td>
+<td>
+  <select [(ngModel)]="user.rol" class="rol-select">
+    <option value="cliente">Cliente</option>
+    <option value="vendedor">Vendedor</option>
+  </select>
+  <button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
+  <span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
+</td>
+    </tr>
+    }
+    @if (users.length === 0) {
+    <tr>
+        <td colspan="7" class="no-data">No hay usuarios disponibles</td>
+    </tr>
+    }
+</tbody>
+                </table>
+            </div>
+        </section>
+        }
+
+        <!-- Orders Section -->
+        @if (activeTab === 'orders') {
+        <section class="orders-section">
+            <div class="section-header">
+                <h2>Administración de órdenes</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar orden..." #orderSearch (input)="getFilteredOrders(orderSearch.value)">
+                </div>
+            </div>
+            <div class="data-grid">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="texto">ID Orden</th>
+                            <th class="texto">Cliente</th>
+                            <th class="texto">Total</th>
+                            <th class="texto">Fecha</th>
+                            <th class="texto">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (orders$ | async; as orders) {
+                        @for (order of orders; track order.id) {
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.customerName }}</td>
+                            <td>${{ order.total | number:'1.2-2' }}</td>
+                            <td>{{ order.date | date:'mediumDate' }}</td>
+                            <td>
+                                <span [class]="'status-badge ' + order.status.toLowerCase()">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        }
+    </main>
+</div>

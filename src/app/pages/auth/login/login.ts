@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,6 +32,12 @@ export class Login {
     this.authService.initializeAPI().subscribe({
       error: (error) => console.error('Error al inicializar la API:', error)
     });
+
+    // Si ya está logueado, redirigir al dashboard
+    if (this.authService.isLoggedIn()) {
+      const dashboardUrl = this.authService.getDashboardUrl();
+      this.router.navigate([dashboardUrl]);
+    }
   }
 
   onSubmit() {
@@ -45,9 +52,9 @@ export class Login {
 
       console.log('Intentando iniciar sesión con:', credentials);
 
-      this.authService.login(credentials).subscribe({
-        next: (response) => {
-          console.log('Login exitoso:', response);
+      this.authService.loginAndFetchProfile(credentials).subscribe({
+        next: (user) => {
+          console.log('Login y perfil exitosos:', user);
           const dashboardUrl = this.authService.getDashboardUrl();
           console.log('Redirigiendo a:', dashboardUrl);
           this.router.navigate([dashboardUrl]);
@@ -55,11 +62,11 @@ export class Login {
         error: (error) => {
           console.error('Error en el login:', error);
           if (error.status === 401) {
-            this.errorMessage = 'Email o contraseña incorrectos';
+            this.errorMessage = error.error?.detail || 'Email o contraseña incorrectos';
           } else if (error.status === 0) {
             this.errorMessage = 'No se puede conectar con el servidor';
           } else {
-            this.errorMessage = 'Error al iniciar sesión: ' + (error.error?.message || 'Error desconocido');
+            this.errorMessage = error.message || 'Error desconocido al iniciar sesión';
           }
           this.submitted = false;
         }

@@ -1,1 +1,56 @@
-<p>products works!</p>
+<div class="container">
+    <div *ngIf="isLoading">Cargando...</div>
+    <div *ngIf="error">{{ error }}</div>
+
+    <!-- Detalle de producto -->
+    <ng-container *ngIf="!isLoading && !error && product">
+        <div class="breadcrumbs">
+            <a routerLink="/">INICIO</a> / <a routerLink="/products">PRODUCTOS</a> / {{ product.name }}
+        </div>
+        <div class="product-content">
+            <div class="product-images">
+                <img *ngIf="product.image_url; else noImage" [src]="product.image_url" [alt]="product.name" style="max-width:200px;">
+                <ng-template #noImage>
+                  <div class="no-image">Sin imagen</div>
+                </ng-template>
+            </div>
+            <div class="product-details">
+                <h1 class="product-title">{{ product.name }}</h1>
+                <p class="product-price">${{ product.price }}</p>
+                <p>{{ product.description }}</p>
+                <p><b>Categoría:</b> {{ product.category }}</p>
+                <p><b>Stock:</b> {{ product.stock }}</p>
+                <button class="add-to-cart-btn" [disabled]="!product.is_active || product.stock < 1 || addToCartLoading" (click)="addToCart(product)">
+                  <span *ngIf="addToCartLoading">Agregando...</span>
+                  <span *ngIf="!addToCartLoading">Agregar al carrito</span>
+                </button>
+                <div *ngIf="addToCartMessage" class="cart-message">{{ addToCartMessage }}</div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- Lista de productos -->
+    <ng-container *ngIf="!isLoading && !error && !product">
+        <div class="breadcrumbs">
+            <a routerLink="/">INICIO</a> / PRODUCTOS
+        </div>
+        <div class="product-list">
+            <div *ngFor="let prod of products" class="product-card">
+                <img *ngIf="prod.image_url; else noImageList" [src]="prod.image_url" [alt]="prod.name" style="max-width:120px;">
+                <ng-template #noImageList>
+                  <div class="no-image">Sin imagen</div>
+                </ng-template>
+                <h3>{{ prod.name }}</h3>
+                <p>${{ prod.price }}</p>
+                <p>{{ prod.category }}</p>
+                <a [routerLink]="['/product', prod.id]">Ver detalle</a>
+                <button class="add-to-cart-btn" [disabled]="!prod.is_active || prod.stock < 1 || addToCartLoadingMap[prod.id]" (click)="addToCart(prod)">
+                  <span *ngIf="addToCartLoadingMap[prod.id]">Agregando...</span>
+                  <span *ngIf="!addToCartLoadingMap[prod.id]">Agregar al carrito</span>
+                </button>
+                <div *ngIf="addToCartMessageMap[prod.id]" class="cart-message">{{ addToCartMessageMap[prod.id] }}</div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+

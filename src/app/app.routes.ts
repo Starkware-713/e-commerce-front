@@ -11,16 +11,19 @@ import { Forrbiden } from './pages/errors/forrbiden/forrbiden';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Client } from './pages/dashboard/client/client';
 import { Seller } from './pages/dashboard/seller/seller';
-import { SellerBoss } from './pages/dashboard/seller-boss/seller-boss';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
 
-export const routes: Routes = [    {path: '', redirectTo: '/home', pathMatch: 'full'},    {path: 'home', component: Home},
+export const routes: Routes = [    
+    {path: '', redirectTo: '/home', pathMatch: 'full'},    
+    {path: 'home', component: Home},
     {path: 'products', component: Products},
     {path: 'cart', component: Cart},
     {path: 'register', component: Register},
+    {path: 'Products', component: Products},
     {path: 'login', component: Login},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
+    
         {
             path: 'client',
             component: Client,
@@ -32,17 +35,12 @@ export const routes: Routes = [    {path: '', redirectTo: '/home', pathMatch: 'f
             component: Seller,
             canActivate: [DashboardGuard],
             data: { role: UserRole.SELLER }
-        },
-        {
-            path: 'seller-boss',
-            component: SellerBoss,
-            canActivate: [DashboardGuard],
-            data: { role: UserRole.SELLER_BOSS }
         }
     ]},
     {path: 'privacy', component: Privacy},
     {path: 'terms', component: Terms},
     {path: '404', component: NotFound},
     {path: '403', component: Forrbiden},
+    {path: 'product/:id', component: Products},
     {path: '**', redirectTo: '/404'}
 ];

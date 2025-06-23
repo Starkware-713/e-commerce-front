@@ -1,12 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Compra {
-  producto: string;
-  fecha: string;
-  estado: 'Entregado' | 'Pendiente';
-  monto: number;
-}
+import { ClientDashboardService } from '../../../services/client-dashboard.service';
+import { User } from '../../../services/auth.service';
+import { Order } from '../../../services/client-dashboard.service';
 
 @Component({
   selector: 'app-client',
@@ -15,29 +11,50 @@ interface Compra {
   templateUrl: './client.html',
   styleUrl: './client.css'
 })
-export class Client {
-  user = {
-    name: 'Juan Pérez',
-    email: 'juan.perez@gmail.com',
-    memberSince: '2023',
-    profileImage: 'https://randomuser.me/api/portraits/men/32.jpg'
-  };
+export class Client implements OnInit {
+  user: User | null = null;
+  orders: Order[] = [];
+  loading = true;
+  error: string | null = null;
+  ordersError: string | null = null; // campo para errores de órdenes
 
-  compras: Compra[] = [
-    { producto: 'Vuelo a Córdoba', fecha: '10/06/2025', estado: 'Entregado', monto: 80000 },
-    { producto: 'Paquete a Bariloche', fecha: '05/05/2025', estado: 'Pendiente', monto: 120000 }
-  ];
+  constructor(private clientService: ClientDashboardService) {}
 
-  get comprasPendientes(): number {
-    return this.compras.filter(c => c.estado === 'Pendiente').length;
+  ngOnInit() {
+    this.loadUserData();
+    this.loadOrders();
   }
 
-  get totalGastado(): number {
-    return this.compras.filter(c => c.estado === 'Entregado').reduce((acc, c) => acc + c.monto, 0);
+  private loadUserData() {
+    this.clientService.getUserProfile().subscribe({
+      next: (user) => {
+        this.user = user;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = 'Error al cargar los datos del usuario';
+        this.loading = false;
+        console.error('Error loading user data:', error);
+      }
+    });
   }
 
-  editProfile() {
-    // Lógica para editar perfil
-    alert('Funcionalidad de edición de perfil próximamente.');
+  private loadOrders() {
+    this.clientService.getUserOrders().subscribe({
+      next: (orders) => {
+        this.orders = orders;
+        this.ordersError = null;
+      },
+      error: (error) => {
+        // Manejo específico para 404 con mensaje "No hay órdenes para el usuario"
+        if (error.status === 404 && error.error?.detail === 'No hay órdenes para el usuario') {
+          this.orders = [];
+          this.ordersError = 'No hay órdenes para el usuario';
+        } else {
+          this.ordersError = 'Error al cargar el historial de pedidos';
+        }
+        console.error('Error loading orders:', error);
+      }
+    });
   }
 }

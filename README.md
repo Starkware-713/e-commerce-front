@@ -1,59 +1,165 @@
-# ECommerceEtp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+# 🛍️ ECommerceEtp - Frontend
 
-## Development server
+> 🌐 Plataforma de comercio electrónico desarrollada con **Angular**, pensada para compradores y vendedores. Forma parte del proyecto completo presentado para la **Olimpíada Nacional INET 2025** en el área de Programación.
 
-To start a local development server, run:
+---
+
+## 📚 Tabla de Contenidos
+
+- [📦 Descripción del Proyecto](#-descripción-del-proyecto)
+- [🚀 Características Principales](#-características-principales)
+- [🔧 Requisitos Técnicos](#-requisitos-técnicos)
+- [🛠️ Instalación y Uso](#️-instalación-y-uso)
+- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
+- [🧭 Navegación de Páginas](#-navegación-de-páginas)
+- [👤 Usuarios y Roles](#-usuarios-y-roles)
+- [🧰 Comandos Útiles](#-comandos-útiles)
+- [📚 Recursos Adicionales](#-recursos-adicionales)
+- [📌 Estado del Proyecto](#-estado-del-proyecto)
+- [🙌 Créditos](#-créditos)
+- [📝 Licencia](#-licencia)
+
+---
+
+## 📦 Descripción del Proyecto
+
+**ECommerceEtp** es una tienda online con interfaz moderna y responsiva. Los usuarios pueden explorar productos, gestionar su carrito, registrarse, iniciar sesión y concretar compras. Los vendedores pueden administrar su catálogo de productos y visualizar sus ventas.
+
+El sistema se comunica con la [API Backend](https://e-comerce-backend-kudw.onrender.com) desarrollada con FastAPI y documentada con Swagger.
+
+---
+
+## 🚀 Características Principales
+
+- 🎨 Interfaz intuitiva desarrollada en Angular
+- 🔐 Autenticación con tokens JWT
+- 🛍️ Navegación de productos y búsquedas
+- 🛒 Carrito persistente y actualizado en tiempo real
+- 💼 Paneles diferenciados para compradores y vendedores
+- 💬 Manejo de errores y notificaciones amigables
+- 🌐 Adaptado para pantallas móviles
+
+---
+
+## 🔧 Requisitos Técnicos
+
+- Node.js 18+
+- Angular CLI (`@angular/cli`)
+- Navegador moderno (Chrome, Firefox, Edge)
+
+---
+
+## 🛠️ Instalación y Uso
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/Starkware-713/e-commerce-front
+cd e-commerce-front
+````
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Iniciar servidor de desarrollo
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 4. Ver la aplicación
 
-## Code scaffolding
+Abre [http://localhost:4200](http://localhost:4200) en tu navegador.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📁 Estructura del Proyecto
 
 ```bash
-ng generate --help
+e-commerce-front/
+├── public/                # Archivos públicos
+├── src/
+│   ├── index.html         # HTML principal
+│   ├── main.ts            # Entrada de la app
+│   ├── styles.css         # Estilos globales
+│   └── app/
+│       ├── app.module.ts      # Módulo raíz
+│       ├── app.routes.ts      # Rutas principales
+│       ├── pages/             # Vistas principales
+│       │   ├── auth/          # Login, registro
+│       │   ├── cart/          # Carrito de compras
+│       │   ├── contact/       # Formulario de contacto
+│       │   ├── dashboard/     # Panel de usuario
+│       │   ├── errors/        # Páginas de error
+│       │   ├── home/          # Página principal
+│       │   ├── privacy/       # Política de privacidad
+│       │   ├── products/      # Catálogo de productos
+│       │   ├── terms/         # Términos y condiciones
+│       ├── services/          # Servicios para API y lógica de negocio
+│       └── shared/            # Componentes reutilizables (navbar, footer, etc.)
 ```
 
-## Building
+---
 
-To build the project run:
+## 🧭 Navegación de Páginas
 
-```bash
-ng build
-```
+* **🏠 Inicio:** Productos destacados y navegación principal
+* **🛍️ Productos:** Catálogo con filtros y búsqueda
+* **🛒 Carrito:** Vista y modificación de productos seleccionados
+* **🔐 Login/Registro:** Acceso y creación de cuentas
+* **📊 Dashboard:**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+  * Compradores: historial de compras
+  * Vendedores: gestión de productos y ventas
+* **❌ Errores:** Páginas de error 403/404
+* **📜 Privacidad y Términos:** Información legal
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 👤 Usuarios y Roles
 
-```bash
-ng test
-```
+* **Compradores:** Pueden registrarse, buscar productos, comprar y gestionar su carrito.
+* **Vendedores:** Tienen acceso a un panel personalizado para publicar productos y revisar ventas.
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 🧰 Comandos Útiles
 
-```bash
-ng e2e
-```
+| Comando                        | Descripción                           |
+| ------------------------------ | ------------------------------------- |
+| `npm install`                  | Instala dependencias                  |
+| `ng serve`                     | Inicia el servidor de desarrollo      |
+| `ng build`                     | Compila la aplicación para producción |
+| `ng generate component nombre` | Crea un nuevo componente              |
+| `ng test`                      | Ejecuta tests unitarios               |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 📚 Recursos Adicionales
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+* [📘 Angular CLI Documentation](https://angular.dev/tools/cli)
+* [🧪 Karma Test Runner](https://karma-runner.github.io)
+
+---
+
+## 📌 Estado del Proyecto
+
+🟢 Proyecto funcional en constante mejora. Versión actual: `1.0.0`
+
+---
+
+## 🙌 Créditos
+
+Desarrollado por **Bruno Almonacid**, **Joaquin Narvay**  y **Walter Carrasco** estudiantes del 7mo año de ETP en la **Escuela N.º 713 'Juan Abdala Chayep'**, Esquel, Chubut.
+Complementa el backend en FastAPI para la **Olimpíada Nacional INET 2025** – Área Programación()
+
+---
+
+## 📝 Licencia
+
+Este proyecto tiene fines educativos y se entrega como parte de una evaluación académica. Puede ser reutilizado con fines pedagógicos citando su autoría original.
+

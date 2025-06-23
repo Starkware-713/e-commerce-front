@@ -1,66 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="client.css">
-</head>
-<body>
-    <section class="cliente-dashboard">
-  <div class="cliente-header">
-    <div class="cliente-profile">
-      <img [src]="user.profileImage" alt="Foto de perfil" />
+<section class="cliente-container">
+  @if (loading) {
+    <div class="loading">Cargando...</div>
+  } @else {
+    <div class="dashboard-icons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+      👤
+      🛍️
+      ⚙️
+    </div>
+  }
+    <h1>¡Bienvenido, {{ user?.name }}!</h1>
+    <div class="cliente-perfil">
+      <img src="https://ui-avatars.com/api/?name={{user?.name}}+{{user?.lastname}}&background=random" alt="Foto de perfil" />
       <div>
-        <h2>{{ user.name }}</h2>
-        <p>Email: {{ user.email }}</p>
-        <p>Miembro desde: {{ user.memberSince }}</p>
-        <button (click)="editProfile()">Editar perfil</button>
+        <h2>{{ user?.name }} {{ user?.lastname }}</h2>
+        <p>Email: {{ user?.email }}</p>
+        <button class="edit-button">Editar perfil</button>
       </div>
-    </div>
-    <div class="cliente-summary">
-      <div class="summary-card">
-        <span class="summary-title">Compras</span>
-        <span class="summary-value">{{ compras.length }}</span>
-      </div>
-      <div class="summary-card">
-        <span class="summary-title">Pendientes</span>
-        <span class="summary-value">{{ comprasPendientes }}</span>
-      </div>
-      <div class="summary-card">
-        <span class="summary-title">Total Gastado</span>
-        <span class="summary-value">${{ totalGastado | number:'1.0-0' }}</span>
-      </div>
-    </div>
-  </div>
-  <div class="cliente-historial">
-    <h3>Últimas compras</h3>
-    <table *ngIf="compras.length > 0">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Fecha</th>
-          <th>Estado</th>
-          <th>Monto</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let compra of compras">
-          <td>{{ compra.producto }}</td>
-          <td>{{ compra.fecha }}</td>
-          <td>
-            <span class="estado" [ngClass]="{'entregado': compra.estado === 'Entregado', 'pendiente': compra.estado === 'Pendiente'}">
-              {{ compra.estado }}
-            </span>
-          </td>
-          <td>${{ compra.monto | number:'1.0-0' }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div *ngIf="compras.length === 0" class="no-compras">
-      <p>No tienes compras registradas aún.</p>
-    </div>
-  </div>
-</section>
-</body>
-</html>

@@ -197,7 +197,85 @@ body, .home-container, html {
   border: 1.5px solid #005baa;
 }
 
-/* --- Opciones extra --- */
+.form-pais {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-pais input[type="text"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 220px;
+}
+
+.form-pais button {
+  background-color: #1a65b8;
+  color: white;
+  padding: 10px 26px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition:  0.2s;
+}
+
+.form-pais button:hover {
+  background-color: #004a99;
+}
+
+.paquetes-lista {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.paquete-card {
+  background: #f7fafc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,123,255,0.08);
+  padding: 18px 28px;
+  margin-bottom: 14px;
+  width: 100%;
+  max-width: 400px;
+  text-align: left;
+  transition: transform 0.2s;
+}
+
+.paquete-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(0,123,255,0.13);
+}
+
+.paquete-card h4 {
+  margin: 0 0 6px 0;
+  color: #007bff;
+  font-size: 1.15rem;
+}
+
+.paquete-card p {
+  margin: 0 0 4px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-pais {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .paquete-card {
+    max-width: 95vw;
+    padding: 14px 10px;
+  }
+}
+/* Checkbox flexibles */
 .opciones {
   display: flex;
   gap: 2rem;
@@ -386,32 +464,6 @@ button:hover {
   padding: 3px 10px;
   border-radius: 8px;
   margin-left: 10px;
-}
-
-.hospedaje-seleccion {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  margin: 1.2rem 0;
-  background: #f7fafc;
-  border-radius: 1rem;
-  padding: 1.2rem;
-  box-shadow: 0 2px 8px rgba(0,123,255,0.07);
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.hospedaje-seleccion label {
-  font-weight: 600;
-  color: #2b6cb0;
-}
-.hospedaje-seleccion select,
-.hospedaje-seleccion input {
-  padding: 0.6rem 1rem;
-  border-radius: 0.7rem;
-  border: 1.5px solid #b3d4fc;
-  font-size: 1rem;
-  background: #fff;
 }
 
 /* Estilos para la sección de productos */

@@ -1,5 +1,5 @@
 .dashboard-container {
-    padding: 2rem 1rem;
+    padding: 2rem;
     min-height: calc(100vh - 64px);
     background-color: #f5f5f5;
 }
@@ -112,23 +112,4 @@
     color: #666;
     padding: 2rem;
     font-style: italic;
-}
-
-/* DASHBOARD RESPONSIVE */
-@media (max-width: 900px) {
-    .dashboard-container {
-        padding: 1rem 0.2rem;
-    }
-    .user-profile, .role-based-content {
-        padding: 1rem;
-    }
-}
-
-@media (max-width: 600px) {
-    .dashboard-container {
-        padding: 0.5rem 0.1rem;
-    }
-    .user-profile, .role-based-content {
-        padding: 0.5rem;
-    }
 }
