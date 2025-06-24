@@ -4,7 +4,8 @@
   <ng-container *ngIf="loading">Cargando...</ng-container>
   <ng-container *ngIf="error">{{ error }}</ng-container>
 
-  <table class="cart-table" *ngIf="!loading && !error && cartItems.length">
+  @if (!loading && !error && cartItems.length) {
+  <table class="cart-table">
     <thead>
       <tr>
         <th>Imagen</th>
@@ -17,16 +18,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of cartItems">
+      @for (item of cartItems; track item) {
+      <tr>
         <td>
-          <img *ngIf="item.product?.image_url" [src]="item.product.image_url" alt="{{item.product.name}}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" />
+          <img *ngIf="item.product?.image_url" [src]="item.product.image_url" alt="{{item.product.name}}"
+            style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" />
         </td>
         <td>{{ item.product?.name }}</td>
         <td>{{ item.product?.category }}</td>
         <td>${{ item.product?.price?.toFixed(2) }}</td>
         <td>
-          <button class="btn-qty" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">➖</button>
-          <input type="number" min="1" [value]="item.quantity" (change)="onQuantityInput(item, $event)" style="width: 40px; text-align: center;" />
+          <button class="btn-qty" (click)="updateQuantity(item, item.quantity - 1)"
+            [disabled]="item.quantity <= 1">➖</button>
+          <input type="number" min="1" [value]="item.quantity" (change)="onQuantityInput(item, $event)"
+            style="width: 40px; text-align: center;" />
           <button class="btn-qty" (click)="updateQuantity(item, item.quantity + 1)">➕</button>
         </td>
         <td>${{ (item.product?.price * item.quantity)?.toFixed(2) }}</td>
@@ -34,19 +39,22 @@
           <button class="btn-remove" (click)="removeItem(item)">🗑️ Eliminar</button>
         </td>
       </tr>
+      }
     </tbody>
   </table>
-  <div class="cart-footer" *ngIf="!loading && !error && cartItems.length">
+  <div class="cart-footer">
     <div class="total">Total: ${{ total.toFixed(2) }}</div>
-    <button class="btn-create-order" (click)="checkout()">Pagar con Mercado Pago</button>
+    <button class="btn-create-order" (click)="checkout()">Proceder con el Pago</button>
   </div>
-  <div class="empty-cart" *ngIf="!loading && !error && !cartItems.length">
-    El carrito está vacío.
-  </div>
-
-  <div class="coupon-section" *ngIf="!loading && !error && cartItems.length">
+  <div class="coupon-section">
     <input type="text" [(ngModel)]="couponCode" placeholder="Código de cupón" class="coupon-input" />
     <button class="btn-coupon" (click)="applyCoupon()">Aplicar cupón</button>
-    <div class="coupon-message" *ngIf="couponMessage">{{ couponMessage }}</div>
+    @if (couponMessage) {
+    <div class="coupon-message">{{ couponMessage }}</div>
+    }
   </div>
+  }
+  @if (!loading && !error && !cartItems.length) {
+  <div class="empty-cart">El carrito está vacío.</div>
+  }
 </div>
