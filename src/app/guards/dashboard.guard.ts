@@ -30,5 +30,5 @@ export class DashboardGuard implements CanActivate {
     // If user doesn't have the required role, redirect to their appropriate dashboard
     this.dashboardService.navigateToDashboard();
     return false;
-  }
+  } 
 }
