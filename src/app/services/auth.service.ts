@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, switchMap, catchError } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 
@@ -42,6 +42,8 @@ export class AuthService {
   private apiUrl = 'https://e-comerce-backend-kudw.onrender.com';
   private isAuthenticated = false;
   private currentUser: Partial<User> | null = null;
+  private authStateSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
+  authState$ = this.authStateSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.checkToken();
@@ -91,11 +93,15 @@ export class AuthService {
           email: email,
           rol: role
         };
+        this.authStateSubject.next(true);
         console.log('Usuario autenticado:', this.currentUser);
       } catch (error) {
         console.error('Error al decodificar el token:', error);
         this.logout();
+        this.authStateSubject.next(false);
       }
+    } else {
+      this.authStateSubject.next(false);
     }
   }
 
@@ -151,6 +157,7 @@ export class AuthService {
               };
               
               this.isAuthenticated = true;
+              this.authStateSubject.next(true);
               console.log('Usuario actualizado desde respuesta:', this.currentUser);
             } else {
               console.error('No se encontró token en la respuesta:', response);
@@ -158,6 +165,7 @@ export class AuthService {
           },
           error: error => {
             console.error('Error en el login:', error);
+            this.authStateSubject.next(false);
             if (error.status === 401) {
               const errorDetail = error.error?.detail || 'Email o contraseña incorrectos';
               throw new Error(errorDetail);
@@ -199,6 +207,7 @@ export class AuthService {
     this.isAuthenticated = false;
     this.currentUser = null;
     localStorage.removeItem('token');
+    this.authStateSubject.next(false);
   }
 
   /**
