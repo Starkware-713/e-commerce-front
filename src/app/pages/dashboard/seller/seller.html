@@ -113,9 +113,7 @@
                     <input type="text" placeholder="Buscar producto..." #productSearch
                         (input)="getFilteredProducts(productSearch.value)">
                 </div>
-                <div>
-                    <button class="add-product-btn" (click)="onAddProduct()">agregar producto</button>
-                </div>
+
             </div>
 
             <div class="add-product-tab">
@@ -191,6 +189,7 @@
                             </span>
                         </td>
                         <td>
+                            
                             <button class="edit-product-btn" (click)="startEditProduct(product)">Editar</button>
                             <button class="delete-product-btn" (click)="deleteProduct(product.id)">Eliminar</button>
                         </td>
@@ -487,7 +486,7 @@
                 </label>
                 <div class="modal-actions">
                     <button type="submit" [disabled]="editProductFormRef.invalid">Guardar</button>
-                    <button type="button" (click)="cancelEditProduct()">Cancelar</button>
+                    <button type="button" (click)="cancelEditProduct()">cerrar</button>
                 </div>
             </form>
         </div>

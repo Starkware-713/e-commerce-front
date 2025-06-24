@@ -42,3 +42,4 @@ export class ClientDashboardService {
     return this.http.put('/api/users/profile', profileData);
   }
 }
+
