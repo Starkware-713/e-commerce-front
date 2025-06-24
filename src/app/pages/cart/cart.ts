@@ -16,15 +16,23 @@ export class Cart implements OnInit {
   total: number = 0;
   loading = true;
   error: string | null = null;
+  cartId: number | null = null;
 
   constructor(private cartService: CartService, private clientDashboard: ClientDashboardService, private router: Router) {}
 
   ngOnInit() {
     this.cartService.getCart().subscribe({
-      next: (cart) => {
-        // Ajusta según la estructura real de la respuesta
-        this.cartItems = cart.items || [];
-        this.total = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      next: (carts) => {
+        // Se espera un array de carritos, tomamos el primero
+        const cart = Array.isArray(carts) && carts.length > 0 ? carts[0] : null;
+        if (cart) {
+          this.cartId = cart.id;
+          this.cartItems = cart.items || [];
+          this.total = this.cartItems.reduce((sum, item) => sum + ((item.product?.price || 0) * item.quantity), 0);
+        } else {
+          this.cartItems = [];
+          this.total = 0;
+        }
         this.loading = false;
       },
       error: (err) => {
@@ -35,19 +43,19 @@ export class Cart implements OnInit {
   }
 
   removeItem(item: any) {
-    // Se asume que el objeto cart tiene un id y cada item tiene productId
-    const cartId = item.cartId || (this.cartItems.length && this.cartItems[0].cartId) || item.cart_id || item.cart || (item.cart && item.cart.id);
-    const productId = item.productId || (item.product && item.product.id);
-    if (!cartId || !productId) {
-      this.error = 'No se pudo identificar el carrito o producto.';
+    // Usar cartId y el id del item
+    const cartId = this.cartId;
+    const itemId = item.id;
+    if (!cartId || !itemId) {
+      this.error = 'No se pudo identificar el carrito o el item.';
       return;
     }
     this.loading = true;
-    this.cartService.removeProductFromCart(cartId, productId).subscribe({
+    this.cartService.removeProductFromCart(cartId, itemId).subscribe({
       next: () => {
-        // Elimina el producto localmente y recalcula el total
-        this.cartItems = this.cartItems.filter(i => (i.productId || (i.product && i.product.id)) !== productId);
-        this.total = this.cartItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        // Elimina el item localmente y recalcula el total
+        this.cartItems = this.cartItems.filter(i => i.id !== itemId);
+        this.total = this.cartItems.reduce((sum, i) => sum + ((i.product?.price || 0) * i.quantity), 0);
         this.loading = false;
       },
       error: (err) => {
@@ -59,17 +67,17 @@ export class Cart implements OnInit {
 
   updateQuantity(item: any, newQuantity: number) {
     if (newQuantity < 1) return;
-    const cartId = item.cartId || (this.cartItems.length && this.cartItems[0].cartId) || item.cart_id || item.cart || (item.cart && item.cart.id);
-    const productId = item.productId || (item.product && item.product.id);
+    const cartId = this.cartId;
+    const productId = item.product?.id;
     if (!cartId || !productId) {
-      this.error = 'No se pudo identificar el carrito o producto.';
+      this.error = 'No se pudo identificar el carrito o el producto.';
       return;
     }
     this.loading = true;
-    this.cartService.updateItemQuantity({ productId, quantity: newQuantity }).subscribe({
+    this.cartService.updateItemQuantity({ cartId, productId, quantity: newQuantity }).subscribe({
       next: () => {
         item.quantity = newQuantity;
-        this.total = this.cartItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        this.total = this.cartItems.reduce((sum, i) => sum + ((i.product?.price || 0) * i.quantity), 0);
         this.loading = false;
       },
       error: (err) => {
@@ -91,8 +99,7 @@ export class Cart implements OnInit {
   checkout() {
     this.loading = true;
     this.error = null;
-    // Se asume que el cartId está en el primer item o puedes obtenerlo de otra forma
-    const cartId = this.cartItems.length && (this.cartItems[0].cartId || this.cartItems[0].cart_id || this.cartItems[0].cart || (this.cartItems[0].cart && this.cartItems[0].cart.id));
+    const cartId = this.cartId;
     if (!cartId) {
       this.error = 'No se pudo identificar el carrito.';
       this.loading = false;
@@ -108,7 +115,6 @@ export class Cart implements OnInit {
         }
         this.clientDashboard.createPaymentPreference(orderId).subscribe({
           next: (res) => {
-            // Mercado Pago responde con init_point o sandbox_init_point
             const mpUrl = res.init_point || res.sandbox_init_point;
             if (mpUrl) {
               window.location.href = mpUrl;

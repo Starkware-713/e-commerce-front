@@ -23,10 +23,17 @@ interface DecodedToken {
   sub?: string;
   userId?: string | number;
   id?: string | number;
-  email: string;
+  email?: string;
   rol?: string;
   role?: string;
   exp: number;
+  // Permitir campos alternativos y anidados
+  user?: {
+    id?: string | number;
+    email?: string;
+  };
+  user_id?: string | number;
+  user_email?: string;
 }
 
 // Mapeo de roles a rutas de dashboard
@@ -63,38 +70,36 @@ export class AuthService {
         }
         
         // Verifica si el token tiene la información necesaria
-        const userId = decodedToken.sub || decodedToken.userId || decodedToken.id;
-        const email = decodedToken.email;
+        const userId = decodedToken.sub || decodedToken.userId || decodedToken.id || decodedToken.user_id;
+        const email = decodedToken.email || decodedToken.user_email;
         const role = decodedToken.rol || decodedToken.role;
         
         if (!userId || !email) {
-          console.error('Token inválido: falta información de usuario');
-          this.logout();
-          return;
-        }
-
-        // Validar que el rol sea uno de los permitidos si existe
-        if (role) {
-          const normalizedRole = String(role).toLowerCase();
-          const isValidRole = Object.keys(ROLE_DASHBOARD_MAP).some(validRole => 
-            validRole.toLowerCase() === normalizedRole
-          );
-
-          if (!isValidRole) {
-            console.error('Token inválido: rol no reconocido:', role);
+          // Permitir autenticación si el token tiene un objeto user con id y email
+          if (decodedToken.user && decodedToken.user.id && decodedToken.user.email) {
+            this.isAuthenticated = true;
+            this.currentUser = {
+              id: Number(decodedToken.user.id),
+              email: decodedToken.user.email,
+              rol: role
+            };
+            this.authStateSubject.next(true);
+            console.log('Usuario autenticado (desde user object):', this.currentUser);
+          } else {
+            console.error('Token inválido: falta información de usuario');
             this.logout();
             return;
           }
+        } else {
+          this.isAuthenticated = true;
+          this.currentUser = {
+            id: Number(userId),
+            email: email,
+            rol: role
+          };
+          this.authStateSubject.next(true);
+          console.log('Usuario autenticado:', this.currentUser);
         }
-
-        this.isAuthenticated = true;
-        this.currentUser = {
-          id: Number(userId),
-          email: email,
-          rol: role
-        };
-        this.authStateSubject.next(true);
-        console.log('Usuario autenticado:', this.currentUser);
       } catch (error) {
         console.error('Error al decodificar el token:', error);
         this.logout();

@@ -7,45 +7,40 @@
   <table class="cart-table" *ngIf="!loading && !error && cartItems.length">
     <thead>
       <tr>
+        <th>Imagen</th>
         <th>Nombre</th>
         <th>Categoría</th>
         <th>Precio Unitario</th>
         <th>Cantidad</th>
-        <th>Datos Adicionales</th>
+        <th>Subtotal</th>
         <th>Acción</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of cartItems">
-        <td>{{ item.product?.name || item.name }}</td>
-        <td>{{ item.product?.category || item.category }}</td>
-        <td>${{ item.price }}</td>
         <td>
-          <button class="btn-qty" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">
-            ➖
-          </button>
-          <input type="number" min="1" [value]="item.quantity" (change)="onQuantityInput(item, $event)" style="width: 40px; text-align: center;" />
-          <button class="btn-qty" (click)="updateQuantity(item, item.quantity + 1)">
-            ➕
-          </button>
+          <img *ngIf="item.product?.image_url" [src]="item.product.image_url" alt="{{item.product.name}}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" />
         </td>
-        <td>{{ item.product?.details || '-' }}</td>
+        <td>{{ item.product?.name }}</td>
+        <td>{{ item.product?.category }}</td>
+        <td>${{ item.product?.price?.toFixed(2) }}</td>
         <td>
-          <button class="btn-remove" (click)="removeItem(item)">
-            🗑️ Eliminar
-          </button>
+          <button class="btn-qty" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1">➖</button>
+          <input type="number" min="1" [value]="item.quantity" (change)="onQuantityInput(item, $event)" style="width: 40px; text-align: center;" />
+          <button class="btn-qty" (click)="updateQuantity(item, item.quantity + 1)">➕</button>
+        </td>
+        <td>${{ (item.product?.price * item.quantity)?.toFixed(2) }}</td>
+        <td>
+          <button class="btn-remove" (click)="removeItem(item)">🗑️ Eliminar</button>
         </td>
       </tr>
     </tbody>
   </table>
-  @if (!loading && !error && cartItems.length){
-    <div class="cart-footer">
+  <div class="cart-footer" *ngIf="!loading && !error && cartItems.length">
     <div class="total">Total: ${{ total.toFixed(2) }}</div>
     <button class="btn-create-order" (click)="checkout()">Pagar con Mercado Pago</button>
   </div>
-  }
-  
-  @if(!loading && !error && !cartItems.length){
-    <div  class="empty-cart">El carrito está vacío.</div>
-  }
+  <div class="empty-cart" *ngIf="!loading && !error && !cartItems.length">
+    El carrito está vacío.
+  </div>
 </div>
