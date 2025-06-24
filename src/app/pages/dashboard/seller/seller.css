@@ -73,7 +73,7 @@ body {
   background-color: #3498db;
   color: white;
 }
-/* Botón editar producto */
+ /* Botón editar producto */
 .edit-product-btn {
   background-color: #1976d2;
   color: #fff;
@@ -83,7 +83,8 @@ body {
   cursor: pointer;
   margin-right: 6px;
   font-size: 14px;
-  transition:  0.2s;
+  transition: 0.2s;
+  white-space: nowrap;
 }
 .edit-product-btn:hover {
   background-color: #1565c0;
@@ -99,16 +100,35 @@ body {
   cursor: pointer;
   font-size: 14px;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 .delete-product-btn:hover {
   background-color: #b71c1c;
 }
 
-/* Opcional: espacio entre botones en la celda de acciones */
+/* Espacio entre botones en la celda de acciones */
 .data-grid td .edit-product-btn,
 .data-grid td .delete-product-btn {
   margin-bottom: 4px;
 }
+
+/* Responsivo: botones apilados y más grandes en móviles */
+@media (max-width: 600px) {
+  .data-grid td {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .edit-product-btn,
+  .delete-product-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 0;
+    margin-right: 0;
+  }
+}
+
+
 /* === Main content === */
 .main-content {
   padding: 2rem;
