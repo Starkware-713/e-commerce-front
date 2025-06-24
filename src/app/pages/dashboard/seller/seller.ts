@@ -402,8 +402,11 @@ crearCupon() {
     this.usersError = null;
     this.sellerService.getUsers().subscribe({
       next: (users: any) => {
-        // Mostrar todos los usuarios sin filtrar
-        this.users = Array.isArray(users) ? users : [];
+        // Filtrar solo usuarios con rol 'cliente' o 'comprador'
+        this.users = Array.isArray(users)
+          ? users.filter((u: any) =>
+              u.rol?.toLowerCase() === 'cliente' || u.rol?.toLowerCase() === 'comprador')
+          : [];
         this.usersLoading = false;
       },
       error: (err) => {
