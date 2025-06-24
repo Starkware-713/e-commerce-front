@@ -41,7 +41,7 @@
   @if (!loading && !error && cartItems.length){
     <div class="cart-footer">
     <div class="total">Total: ${{ total.toFixed(2) }}</div>
-    <button class="btn-create-order">Crear Pedido</button>
+    <button class="btn-create-order" (click)="checkout()">Pagar con Mercado Pago</button>
   </div>
   }
   

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
+import { ClientDashboardService } from '../../services/client-dashboard.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +17,7 @@ export class Cart implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private clientDashboard: ClientDashboardService, private router: Router) {}
 
   ngOnInit() {
     this.cartService.getCart().subscribe({
@@ -84,5 +86,47 @@ export class Cart implements OnInit {
     } else {
       event.target.value = item.quantity;
     }
+  }
+
+  checkout() {
+    this.loading = true;
+    this.error = null;
+    // Se asume que el cartId está en el primer item o puedes obtenerlo de otra forma
+    const cartId = this.cartItems.length && (this.cartItems[0].cartId || this.cartItems[0].cart_id || this.cartItems[0].cart || (this.cartItems[0].cart && this.cartItems[0].cart.id));
+    if (!cartId) {
+      this.error = 'No se pudo identificar el carrito.';
+      this.loading = false;
+      return;
+    }
+    this.cartService.checkoutCart(cartId).subscribe({
+      next: (order) => {
+        const orderId = order.id || order.order_id;
+        if (!orderId) {
+          this.error = 'No se pudo obtener el ID de la orden.';
+          this.loading = false;
+          return;
+        }
+        this.clientDashboard.createPaymentPreference(orderId).subscribe({
+          next: (res) => {
+            // Mercado Pago responde con init_point o sandbox_init_point
+            const mpUrl = res.init_point || res.sandbox_init_point;
+            if (mpUrl) {
+              window.location.href = mpUrl;
+            } else {
+              this.error = 'No se pudo obtener el enlace de pago.';
+              this.loading = false;
+            }
+          },
+          error: (err) => {
+            this.error = err.message || 'Error al crear la preferencia de pago';
+            this.loading = false;
+          }
+        });
+      },
+      error: (err) => {
+        this.error = err.message || 'Error al crear la orden';
+        this.loading = false;
+      }
+    });
   }
 }
