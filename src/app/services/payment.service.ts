@@ -49,4 +49,23 @@ export class PaymentService {
     this.checkAuth();
     return this.http.get<any[]>(`${this.apiUrl}/payments/history`, { headers: this.getHeaders() });
   }
+
+  /**
+   * Crea una preferencia de pago enviando el order_id
+   */
+  createPaymentPreference(orderId: number | string): Observable<any> {
+    this.checkAuth();
+    return this.http.put(
+      `${this.apiUrl}/payment/create-preference`,
+      { order_id: orderId },
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(error => {
+        if (error.message === 'Authentication required') {
+          return throwError(() => new Error('Please log in to access this feature'));
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }
