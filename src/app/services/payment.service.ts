@@ -68,4 +68,23 @@ export class PaymentService {
       })
     );
   }
+
+  /**
+   * Envía un correo de procesamiento de compra
+   */
+  sendProcessingPurchaseEmail(userEmail: string, userName: string): Observable<any> {
+    this.checkAuth();
+    return this.http.post(
+      `${this.apiUrl}/email/processing-purchase`,
+      { user_email: userEmail, user_name: userName },
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(error => {
+        if (error.message === 'Authentication required') {
+          return throwError(() => new Error('Please log in to access this feature'));
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }

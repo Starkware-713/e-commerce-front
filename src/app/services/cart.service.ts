@@ -111,11 +111,25 @@ export class CartService {
   }
 
   /**
-   * Eliminar producto del carrito (DELETE /carts/{cart_id}/product/{product_id})
+   * Eliminar producto del carrito (DELETE /carts/{cart_id}/product/{product_id}) mejorado con manejo de errores
    */
   deleteProductFromCart(cartId: number, productId: number): Observable<any> {
     this.checkAuth();
-    return this.http.delete(`${this.apiUrl}/carts/${cartId}/product/${productId}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.apiUrl}/carts/${cartId}/product/${productId}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Por favor inicia sesión para acceder a esta función'));
+          }
+          if (error.status === 404) {
+            return throwError(() => new Error('Producto o carrito no encontrado.'));
+          }
+          if (error.status === 403) {
+            return throwError(() => new Error('No tienes permisos para eliminar este producto del carrito.'));
+          }
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -158,5 +172,21 @@ export class CartService {
       throw new Error('cartId es requerido para actualizar la cantidad de un producto en el carrito');
     }
     return this.updateProductQuantity(item.cartId, item.productId, item.quantity);
+  }
+
+  /**
+   * Eliminar producto del catálogo (DELETE /products/{product_id})
+   */
+  deleteProduct(productId: number): Observable<any> {
+    this.checkAuth();
+    return this.http.delete(`${this.apiUrl}/products/${productId}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(error => {
+          if (error.message === 'Authentication required') {
+            return throwError(() => new Error('Please log in to access this feature'));
+          }
+          return throwError(() => error);
+        })
+      );
   }
 }
