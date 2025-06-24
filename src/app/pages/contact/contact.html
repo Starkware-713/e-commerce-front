@@ -1,1 +1,24 @@
-<p>contact works!</p>
+<!-- Página de Contacto -->
+<section class="contact-container">
+  <h1>Contacto</h1>
+  <div class="contact-info">
+    <h2>e-commerce ETP</h2>
+    <p><strong>Email:</strong> <a href="mailto:ecommerce.etp.713&#64;gmail.com">ecommerce.etp.713&#64;gmail.com</a></p>
+    <p>Somos estudiantes de la escuela Juan Abdala Chayep N°713, de Esquel, Chubut. Estamos en el último año de la carrera del ETP.</p>
+  </div>
+  <form class="contact-form" (submit)="onSubmit($event)">
+    <div class="form-group">
+      <label for="name">Tu nombre</label>
+      <input type="text" id="name" name="name" placeholder="Escribe tu nombre" required />
+    </div>
+    <div class="form-group">
+      <label for="email">Tu correo electrónico</label>
+      <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required />
+    </div>
+    <div class="form-group">
+      <label for="message">Mensaje</label>
+      <textarea id="message" name="message" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+    </div>
+    <button type="submit">Enviar</button>
+  </form>
+</section>

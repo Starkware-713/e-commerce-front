@@ -4,6 +4,7 @@ import { ProductService } from '../../../services/product.service';
 import { OrderService } from '../../../services/order.service';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
 import { SellerService } from '../../../services/seller.service';
+import { IaService } from '../../../services/ia.service';
 import { BehaviorSubject, Observable, Subject, Subscription, catchError, firstValueFrom, interval, map, of, startWith, takeUntil } from 'rxjs';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -137,7 +138,8 @@ export class Seller implements OnInit, OnDestroy {
   // Inyectar SellerService correctamente por propiedad
   constructor(
     // ...otros servicios...
-    private sellerService: SellerService
+    private sellerService: SellerService,
+    private iaService: IaService
   ) {}
 
   // State
@@ -713,6 +715,37 @@ crearCupon() {
       error: (err) => {
         this.isLoading.next(false);
         alert('Error al agregar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  // Lógica para mejorar el título usando IA
+  improveTitle() {
+    if (!this.newProduct.name) return;
+    this.iaService.getBetterTitle(this.newProduct.name).subscribe({
+      next: (resp) => {
+        const value = resp.better_title || resp.title;
+        if (value) {
+          this.newProduct.name = value.replace(/^"|"$/g, '');
+        }
+      },
+      error: (err) => {
+        alert('No se pudo mejorar el título: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  // Lógica para mejorar la descripción usando IA
+  improveDescription() {
+    if (!this.newProduct.description) return;
+    this.iaService.getBetterDescription(this.newProduct.description).subscribe({
+      next: (resp) => {
+        if (resp && resp.better_description) {
+          this.newProduct.description = resp.better_description.replace(/^"|"$/g, '');
+        }
+      },
+      error: (err) => {
+        alert('No se pudo mejorar la descripción: ' + (err?.error?.message || err.message || 'Error desconocido'));
       }
     });
   }

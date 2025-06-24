@@ -68,6 +68,40 @@ body {
     background: #b91c1c;
   }
   
+  .coupon-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+  .coupon-input {
+    padding: 8px 12px;
+    border: 1px solid #bdbdbd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 180px;
+  }
+  .btn-coupon {
+    padding: 8px 16px;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .btn-coupon:hover {
+    background: #059669;
+  }
+  .coupon-message {
+    margin-left: 10px;
+    color: #2563eb;
+    font-size: 0.98rem;
+    font-weight: 500;
+  }
+  
   @media (max-width: 700px) {
     .cart-container {
       padding: 0.5rem 0.2rem;
