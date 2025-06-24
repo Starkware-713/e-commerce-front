@@ -127,13 +127,17 @@
                         <label>Nombre:
                           <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <input type="text" [(ngModel)]="newProduct.name" name="name" required>
-                            <button type="button" (click)="improveTitle()" title="Mejorar título" style="padding: 0.3em 0.8em; font-size: 1em;">🪄</button>
+                            <button type="button" class="add-product-magic-btn" (click)="improveTitle()" title="Mejorar título">
+                              <span class="add-product-icon">🪄</span>
+                            </button>
                           </div>
                         </label>
                         <label>Descripción:
                           <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <input type="text" [(ngModel)]="newProduct.description" name="description" required>
-                            <button type="button" (click)="improveDescription()" title="Mejorar descripción" style="padding: 0.3em 0.8em; font-size: 1em;">💡</button>
+                            <button type="button" class="add-product-magic-btn" (click)="improveDescription()" title="Mejorar descripción">
+                              <span class="add-product-icon">💡</span>
+                            </button>
                           </div>
                         </label>
                         <label>Precio:
