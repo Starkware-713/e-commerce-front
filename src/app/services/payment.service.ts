@@ -87,4 +87,29 @@ export class PaymentService {
       })
     );
   }
+
+  /**
+   * Aplica un cupón de descuento al carrito
+   */
+  applyCoupon(cartId: number, code: string): Observable<any> {
+    this.checkAuth();
+    return this.http.post(
+      `${this.apiUrl}/carts/${cartId}/apply-coupon`,
+      { code },
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(error => {
+        if (error.message === 'Authentication required') {
+          return throwError(() => new Error('Please log in to access this feature'));
+        }
+        if (error.status === 404) {
+          return throwError(() => new Error('Carrito no encontrado.'));
+        }
+        if (error.status === 400) {
+          return throwError(() => new Error('Cupón inválido o expirado.'));
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }

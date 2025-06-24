@@ -43,4 +43,10 @@
   <div class="empty-cart" *ngIf="!loading && !error && !cartItems.length">
     El carrito está vacío.
   </div>
+
+  <div class="coupon-section" *ngIf="!loading && !error && cartItems.length">
+    <input type="text" [(ngModel)]="couponCode" placeholder="Código de cupón" class="coupon-input" />
+    <button class="btn-coupon" (click)="applyCoupon()">Aplicar cupón</button>
+    <div class="coupon-message" *ngIf="couponMessage">{{ couponMessage }}</div>
+  </div>
 </div>

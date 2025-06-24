@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { ClientDashboardService } from '../../services/client-dashboard.service';
 import { Router } from '@angular/router';
+import { PaymentService } from '../../services/payment.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
@@ -17,8 +19,15 @@ export class Cart implements OnInit {
   loading = true;
   error: string | null = null;
   cartId: number | null = null;
+  couponCode: string = '';
+  couponMessage: string = '';
 
-  constructor(private cartService: CartService, private clientDashboard: ClientDashboardService, private router: Router) {}
+  constructor(
+    private cartService: CartService,
+    private clientDashboard: ClientDashboardService,
+    private router: Router,
+    private paymentService: PaymentService
+  ) {}
 
   ngOnInit() {
     this.cartService.getCart().subscribe({
@@ -131,6 +140,26 @@ export class Cart implements OnInit {
       },
       error: (err) => {
         this.error = err.message || 'Error al crear la orden';
+        this.loading = false;
+      }
+    });
+  }
+
+  applyCoupon() {
+    if (!this.couponCode || !this.cartId) {
+      this.couponMessage = 'Ingresa un código de cupón válido.';
+      return;
+    }
+    this.loading = true;
+    this.paymentService.applyCoupon(this.cartId, this.couponCode).subscribe({
+      next: (res) => {
+        this.couponMessage = '¡Cupón aplicado correctamente!';
+        this.loading = false;
+        // Opcional: actualizar el total si el backend lo devuelve
+        if (res.total) this.total = res.total;
+      },
+      error: (err) => {
+        this.couponMessage = err.message || 'No se pudo aplicar el cupón.';
         this.loading = false;
       }
     });
