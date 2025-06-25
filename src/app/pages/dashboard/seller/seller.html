@@ -34,7 +34,7 @@
                 📋 Órdenes
             </button>
             <button [class.active]="activeTab === 'marketing'" (click)="changeTab('marketing'); toggleSidebarOnMobile()" class="nav-item">
-                📢 Marketing
+                📢 cupones
             </button>
         </nav>
     </aside>
@@ -113,9 +113,7 @@
                     <input type="text" placeholder="Buscar producto..." #productSearch
                         (input)="getFilteredProducts(productSearch.value)">
                 </div>
-                <div>
-                    <button class="add-product-btn" (click)="onAddProduct()">agregar producto</button>
-                </div>
+
             </div>
 
             <div class="add-product-tab">
@@ -127,10 +125,20 @@
                     <h3>Agregar nuevo producto</h3>
                     <form (ngSubmit)="addProduct()" #addProductForm="ngForm">
                         <label>Nombre:
+                          <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <input type="text" [(ngModel)]="newProduct.name" name="name" required>
+                            <button type="button" class="add-product-magic-btn" (click)="improveTitle()" title="Mejorar título">
+                              <span class="add-product-icon">🪄</span>
+                            </button>
+                          </div>
                         </label>
                         <label>Descripción:
+                          <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <input type="text" [(ngModel)]="newProduct.description" name="description" required>
+                            <button type="button" class="add-product-magic-btn" (click)="improveDescription()" title="Mejorar descripción">
+                              <span class="add-product-icon">💡</span>
+                            </button>
+                          </div>
                         </label>
                         <label>Precio:
                             <input type="number" [(ngModel)]="newProduct.price" name="price" required min="1">
@@ -151,7 +159,7 @@
                             <input type="text" [(ngModel)]="newProduct.sku" name="sku" required>
                         </label>
                         <label>Imagen (URL):
-                            <input type="text" [(ngModel)]="newProduct.image" name="image" required>
+                            <input type="text" [(ngModel)]="newProduct.image_url" name="image_url" required>
                         </label>
                         <div class="modal-actions">
                             <button type="submit" [disabled]="addProductForm.invalid">Agregar</button>
@@ -169,6 +177,7 @@
                         <th class="texto">Precio</th>
                         <th class="texto">Ventas</th>
                         <th class="texto">Estado</th>
+                        <th class="texto">Acciones</th> <!-- Nueva columna -->
                     </tr>
                 </thead>
                 <tbody>
@@ -188,6 +197,11 @@
                             <span [class]="'status-badge ' + product.status.toLowerCase()">
                                 {{ product.status }}
                             </span>
+                        </td>
+                        <td>
+                            
+                            <button class="edit-product-btn" (click)="startEditProduct(product)">Editar</button>
+                            <button class="delete-product-btn" (click)="deleteProduct(product.id)">Eliminar</button>
                         </td>
                     </tr>
                     }
@@ -331,13 +345,17 @@
             }
         </td>
 <td>
+    
   <select [(ngModel)]="user.rol" class="rol-select">
     <option value="cliente">Cliente</option>
     <option value="vendedor">Vendedor</option>
   </select>
-  <button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
-  <span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
+<button (click)="onRolChange(user, user.rol)" class="btn-rol-update" [disabled]="usersLoading">Actualizar rol</button>
+<span *ngIf="usersLoading && user.id === updatingUserId" class="loading-spinner"></span>
+<button (click)="eliminarUsuario(user)" class="btn-delete-user" [disabled]="usersLoading">Eliminar</button>
+
 </td>
+
     </tr>
     }
     @if (users.length === 0) {
@@ -391,6 +409,97 @@
                 </table>
             </div>
         </section>
+        }
+        <!-- cupones -->
+        @if (activeTab === 'marketing') {
+<section class="marketing-section">
+    <div class="section-header">
+        <h2>Gestión de cupones</h2>
+    </div>
+    <div class="coupon-form-panel">
+        <h3>Crear nuevo cupón</h3>
+        <form (ngSubmit)="crearCupon()" #cuponForm="ngForm">
+            <label>
+                Código:
+                <input type="text" [(ngModel)]="nuevoCupon.codigo" name="codigo" required>
+            </label>
+            <label>
+                Descuento (%):
+                <input type="number" [(ngModel)]="nuevoCupon.descuento" name="descuento" required min="1" max="100">
+            </label>
+            <label>
+                Fecha de expiración:
+                <input type="date" [(ngModel)]="nuevoCupon.expiracion" name="expiracion" required>
+            </label>
+            <div class="modal-actions">
+                <button type="submit" [disabled]="cuponForm.invalid">Crear cupón</button>
+            </div>
+        </form>
+    </div>
+    <div class="cupones-lista">
+        <h4>Cupones creados</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descuento</th>
+                    <th>Expira</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cupon of cupones">
+                    <td>{{ cupon.codigo }}</td>
+                    <td>{{ cupon.descuento }}%</td>
+                    <td>{{ cupon.expiracion | date }}</td>
+                </tr>
+                <tr *ngIf="cupones.length === 0">
+                    <td colspan="3">No hay cupones creados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+}
+        @if (editingProduct) {
+        <div class="edit-product-modal">
+            <h3>Editar producto</h3>
+            <form (ngSubmit)="saveEditProduct()" #editProductFormRef="ngForm">
+                <label>Nombre:
+                    <input type="text" [(ngModel)]="editProductForm.name" name="editName" required>
+                </label>
+                <label>Descripción:
+                    <input type="text" [(ngModel)]="editProductForm.description" name="editDescription" required>
+                </label>
+                <label>Precio:
+                    <input type="number" [(ngModel)]="editProductForm.price" name="editPrice" required min="1">
+                </label>
+                <label>Categoría:
+                  <select [(ngModel)]="editProductForm.category" name="editCategory" required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    <option value="vuelos">Vuelos</option>
+                    <option value="alquiler_autos">Alquiler de autos</option>
+                    <option value="hotel">Hotel</option>
+                    <option value="all_inclusive">All Inclusive</option>
+                  </select>
+                </label>
+                <label>Cantidad:
+                    <input type="number" [(ngModel)]="editProductForm.stock" name="editStock" required min="0">
+                </label>
+                <label>SKU:
+                    <input type="text" [(ngModel)]="editProductForm.sku" name="editSku" required>
+                </label>
+                <label>Imagen (URL):
+                    <input type="text" [(ngModel)]="editProductForm.image_url" name="editImageUrl" required>
+                </label>
+                <label>Activo:
+                    <input type="checkbox" [(ngModel)]="editProductForm.is_active" name="editIsActive">
+                </label>
+                <div class="modal-actions">
+                    <button type="submit" [disabled]="editProductFormRef.invalid">Guardar</button>
+                    <button type="button" (click)="cancelEditProduct()">cerrar</button>
+                </div>
+            </form>
+        </div>
         }
     </main>
 </div>

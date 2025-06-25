@@ -1,0 +1,72 @@
+<div class="quienes-somos-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="container">
+      <h1 class="main-title">¿Quiénes Somos?</h1>
+      <div class="school-info">
+        <h2 class="school-name">Escuela 713 "Juan Abdala Chayep"</h2>
+        <p class="school-location">Esquel, Chubut</p>
+      </div>
+      <p class="description">
+        Somos estudiantes de 7mo año apasionados por la tecnología y el desarrollo de software. 
+        Cursamos en la Escuela 713 "Juan Abdala Chayep" en Esquel, Chubut, donde estamos 
+        adquiriendo conocimientos sólidos en programación y tecnologías modernas.
+      </p>
+    </div>
+  </div>
+
+  <!-- Team Section -->
+  <div class="team-section">
+    <div class="container">
+      <h2 class="section-title">Nuestro Equipo</h2>
+      <div class="cards-grid">
+        @for (estudiante of estudiantes; track estudiante.id){
+            <div class="student-card">
+          <div class="card-image">
+            <img src="{{ estudiante.foto }}" alt="{{ estudiante.nombre }}" />
+            <div class="card-overlay">
+              <div class="social-links">
+                @if(estudiante.linkedin){
+                <a href="{{ estudiante.linkedin }}" target="_blank" class="social-link">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                }
+                @if(estudiante.github){
+                <a href="{{ estudiante.github }}" target="_blank" class="social-link">
+                  <i class="fab fa-github"></i>
+                </a>
+                }
+                @if(estudiante.instagram){
+                    <a href="{{ estudiante.instagram }}" target="_blank" class="social-link">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3 class="student-name">{{ estudiante.nombre }}</h3>
+            <span class="student-age">{{ estudiante.edad }} años</span>
+            <div class="specialty-badge">{{ estudiante.especialidad }}</div>
+            <p class="student-description">{{ estudiante.descripcion }}</p>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer-section">
+    <div class="container">
+      <div class="school-details">
+        <h3>Nuestra Institución</h3>
+        <p>
+          La Escuela 713 "Juan Abdala Chayep" es una institución educativa comprometida 
+          con la formación integral de sus estudiantes, brindando herramientas tecnológicas 
+          y conocimientos actualizados para enfrentar los desafíos del futuro.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,18 +1,74 @@
 <section class="cliente-container">
-  @if (loading) {
+  <div *ngIf="loading">
     <div class="loading">Cargando...</div>
-  } @else {
+  </div>
+  <div *ngIf="!loading">
     <div class="dashboard-icons" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
       👤
       🛍️
       ⚙️
     </div>
-  }
     <h1>¡Bienvenido, {{ user?.name }}!</h1>
     <div class="cliente-perfil">
       <img src="https://ui-avatars.com/api/?name={{user?.name}}+{{user?.lastname}}&background=random" alt="Foto de perfil" />
       <div>
-        <h2>{{ user?.name }} {{ user?.lastname }}</h2>
-        <p>Email: {{ user?.email }}</p>
-        <button class="edit-button">Editar perfil</button>
+        <div *ngIf="!editingProfile">
+          <h2>{{ user?.name }} {{ user?.lastname }}</h2>
+          <p>Email: {{ user?.email }}</p>
+          <button class="edit-button" (click)="startEditProfile()">Editar perfil</button>
+          <div *ngIf="profileMessage" class="success-message">{{ profileMessage }}</div>
+          <div *ngIf="profileError" class="error-message">{{ profileError }}</div>
+        </div>
+        <form *ngIf="editingProfile" (ngSubmit)="saveProfile()" class="edit-profile-form">
+          <label>Nombre:
+            <input type="text" [(ngModel)]="profileForm.name" name="name" required />
+          </label>
+          <label>Apellido:
+            <input type="text" [(ngModel)]="profileForm.lastname" name="lastname" required />
+          </label>
+          <label>Email:
+            <input type="email" [(ngModel)]="profileForm.email" name="email" required />
+          </label>
+          <div class="edit-profile-actions">
+            <button type="submit" class="save-btn">Guardar</button>
+            <button type="button" class="cancel-btn" (click)="cancelEditProfile()">Cancelar</button>
+          </div>
+          <div *ngIf="profileMessage" class="success-message">{{ profileMessage }}</div>
+          <div *ngIf="profileError" class="error-message">{{ profileError }}</div>
+        </form>
       </div>
+    </div>
+    <!-- Carrito de compras -->
+    <div class="cliente-carrito">
+      <h2>🛒 Tu carrito</h2>
+      <div *ngIf="cartLoading">Cargando carrito...</div>
+      <div *ngIf="cartError" class="error">{{ cartError }}</div>
+      <table *ngIf="!cartLoading && !cartError && cartItems.length">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>{{ item.product?.name }}</td>
+            <td>{{ item.product?.category }}</td>
+            <td>${{ item.product?.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>
+              <button (click)="removeProductFromCart(item.product?.id)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!cartLoading && !cartError && !cartItems.length" class="empty-cart">El carrito está vacío.</div>
+      <div *ngIf="!cartLoading && !cartError && cartItems.length" class="cart-total">
+        <strong>Total: ${{ cartTotal }}</strong>
+      </div>
+    </div>
+  </div>
+</section>

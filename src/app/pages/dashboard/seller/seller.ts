@@ -4,6 +4,7 @@ import { ProductService } from '../../../services/product.service';
 import { OrderService } from '../../../services/order.service';
 import { ClientDashboardService } from '../../../services/client-dashboard.service';
 import { SellerService } from '../../../services/seller.service';
+import { IaService } from '../../../services/ia.service';
 import { BehaviorSubject, Observable, Subject, Subscription, catchError, firstValueFrom, interval, map, of, startWith, takeUntil } from 'rxjs';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -50,6 +51,10 @@ export interface Product {
   image: string;
   category?: string;
   lastUpdated?: Date;
+  description?: string;
+  image_url?: string;
+  sku?: string;
+  is_active?: boolean;
 }
 
 export interface Order {
@@ -133,7 +138,8 @@ export class Seller implements OnInit, OnDestroy {
   // Inyectar SellerService correctamente por propiedad
   constructor(
     // ...otros servicios...
-    private sellerService: SellerService
+    private sellerService: SellerService,
+    private iaService: IaService
   ) {}
 
   // State
@@ -188,13 +194,14 @@ export class Seller implements OnInit, OnDestroy {
 
   // Estado y lógica para agregar productos
   showAddProduct = false;
-  newProduct: Partial<Product> & { description?: string; sku?: string } = {
+  newProduct: Partial<Product> & { description?: string; sku?: string; image_url?: string } = {
     name: '',
     price: 0,
     stock: 0,
     category: '',
-    image: '',
+    image_url: '',
     description: '',
+    sku: ''
   };
 
   // Agregado para mostrar el spinner solo en el usuario que se está actualizando
@@ -207,6 +214,10 @@ export class Seller implements OnInit, OnDestroy {
     { value: 'hotel', label: 'Hotel' },
     { value: 'all_inclusive', label: 'All Inclusive' }
   ];
+
+  // Nueva propiedad y lógica para editar productos
+  editingProduct: Product | null = null;
+  editProductForm: any = {};
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
@@ -265,7 +276,14 @@ export class Seller implements OnInit, OnDestroy {
       }
     });
   }
+nuevoCupon = { codigo: '', descuento: 0, expiracion: '' };
+cupones: any[] = [];
 
+crearCupon() {
+  // Aquí deberías llamar a tu servicio para guardar el cupón en la API
+  this.cupones.push({ ...this.nuevoCupon });
+  this.nuevoCupon = { codigo: '', descuento: 0, expiracion: '' };
+}
   ngOnInit() {
     this.initializeRealTimeUpdates();
     this.loadDashboardData();
@@ -365,14 +383,32 @@ export class Seller implements OnInit, OnDestroy {
       this.salesSubject.next([]);
     }
   }
-
+    eliminarUsuario(user: SellerUser) {
+  if (confirm(`¿Seguro que deseas eliminar al usuario ${user.email}?`)) {
+    this.usersLoading = true;
+    this.sellerService.deleteUser(user.id).subscribe({
+      next: () => {
+        this.loadUsers();
+        this.usersLoading = false;
+        alert('Usuario eliminado correctamente');
+      },
+      error: (err) => {
+        this.usersLoading = false;
+        alert('Error al eliminar usuario: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+}
   loadUsers() {
     this.usersLoading = true;
     this.usersError = null;
     this.sellerService.getUsers().subscribe({
       next: (users: any) => {
-        // Mostrar todos los usuarios sin filtrar
-        this.users = Array.isArray(users) ? users : [];
+        // Filtrar solo usuarios con rol 'cliente' o 'comprador'
+        this.users = Array.isArray(users)
+          ? users.filter((u: any) =>
+              u.rol?.toLowerCase() === 'cliente' || u.rol?.toLowerCase() === 'comprador')
+          : [];
         this.usersLoading = false;
       },
       error: (err) => {
@@ -655,29 +691,61 @@ export class Seller implements OnInit, OnDestroy {
   }
 
   addProduct() {
-    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null || !this.newProduct.category) return;
+    if (!this.newProduct.name || this.newProduct.price == null || this.newProduct.stock == null || !this.newProduct.category || !this.newProduct.image_url || !this.newProduct.sku) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
     this.isLoading.next(true);
-    // Enviar solo los campos requeridos por la API
     const payload = {
       name: this.newProduct.name,
       description: this.newProduct.description || '',
       price: Number(this.newProduct.price),
-      category: String(this.newProduct.category), // fuerza a string plano
+      category: String(this.newProduct.category),
       stock: Number(this.newProduct.stock),
-      image_url: this.newProduct.image || '',
-      sku: this.newProduct.sku || ''
+      image_url: this.newProduct.image_url,
+      sku: this.newProduct.sku
     };
     this.productService.createProduct(payload as any).subscribe({
       next: () => {
         this.isLoading.next(false);
         this.showAddProduct = false;
-        this.newProduct = { name: '', price: 0, stock: 0, category: '', image: '', description: '', sku: '' };
+        this.newProduct = { name: '', price: 0, stock: 0, category: '', image_url: '', description: '', sku: '' };
         this.loadProducts();
-        console.log(this.newProduct);
       },
       error: (err) => {
         this.isLoading.next(false);
         alert('Error al agregar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  // Lógica para mejorar el título usando IA
+  improveTitle() {
+    if (!this.newProduct.name) return;
+    this.iaService.getBetterTitle(this.newProduct.name).subscribe({
+      next: (resp) => {
+        const value = resp.better_title || resp.title;
+        if (value) {
+          this.newProduct.name = value.replace(/^"|"$/g, '');
+        }
+      },
+      error: (err) => {
+        alert('No se pudo mejorar el título: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  // Lógica para mejorar la descripción usando IA
+  improveDescription() {
+    if (!this.newProduct.description) return;
+    this.iaService.getBetterDescription(this.newProduct.description).subscribe({
+      next: (resp) => {
+        if (resp && resp.better_description) {
+          this.newProduct.description = resp.better_description.replace(/^"|"$/g, '');
+        }
+      },
+      error: (err) => {
+        alert('No se pudo mejorar la descripción: ' + (err?.error?.message || err.message || 'Error desconocido'));
       }
     });
   }
@@ -737,6 +805,68 @@ export class Seller implements OnInit, OnDestroy {
     ).subscribe(orders => {
       this.orders$.next(orders);
       this.isLoading.next(false);
+    });
+  }
+
+  deleteProduct(productId: string) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
+    this.isLoading.next(true);
+    this.productService.deleteProduct(Number(productId)).subscribe({
+      next: () => {
+        this.isLoading.next(false);
+        this.loadProducts();
+      },
+      error: (err) => {
+        this.isLoading.next(false);
+        alert('Error al eliminar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  startEditProduct(product: Product) {
+    this.editingProduct = { ...product };
+    this.editProductForm = {
+      name: product.name,
+      description: product.description || '',
+      price: product.price,
+      category: product.category || '',
+      stock: product.stock,
+      image_url: product.image_url || '',
+      sku: product.sku || '',
+      is_active: product.status === 'active'
+    };
+    this.showAddProduct = false;
+  }
+
+  cancelEditProduct() {
+    this.editingProduct = null;
+    this.editProductForm = {};
+  }
+
+  saveEditProduct() {
+    if (!this.editingProduct) return;
+    const payload = {
+      name: this.editProductForm.name,
+      description: this.editProductForm.description,
+      price: Number(this.editProductForm.price),
+      category: String(this.editProductForm.category),
+      stock: Number(this.editProductForm.stock),
+      image_url: this.editProductForm.image_url,
+      sku: this.editProductForm.sku,
+      is_active: !!this.editProductForm.is_active
+    };
+    this.isLoading.next(true);
+    this.productService.updateProduct(Number(this.editingProduct.id), payload).subscribe({
+      next: () => {
+        this.isLoading.next(false);
+        this.editingProduct = null;
+        this.editProductForm = {};
+        this.loadProducts();
+      },
+      error: (err) => {
+        this.isLoading.next(false);
+        alert('Error al editar producto: ' + (err?.error?.message || err.message || 'Error desconocido'));
+      }
     });
   }
 }

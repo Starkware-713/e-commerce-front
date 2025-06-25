@@ -154,7 +154,7 @@ e-commerce-front/
 
 ## 🙌 Créditos
 
-Desarrollado por **Bruno Almonacid**, **Joaquin Narvay**  y **Walter Carrasco** estudiantes del 7mo año de ETP en la **Escuela N.º 713 'Juan Abdala Chayep'**, Esquel, Chubut.
+Desarrollado por **Walter Carrasco**, **Bruno Almonacid** y **Joaquin Narvay**  y  estudiantes del 7mo año de ETP en la **Escuela N.º 713 'Juan Abdala Chayep'**, Esquel, Chubut.
 Complementa el backend en FastAPI para la **Olimpíada Nacional INET 2025** – Área Programación()
 
 ---

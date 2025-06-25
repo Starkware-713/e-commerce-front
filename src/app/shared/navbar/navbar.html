@@ -6,13 +6,19 @@
   </button>
   <ul class="navbar-aa-links" [class.open]="menuOpen">
     <li><a routerLink="/home" routerLinkActive="active">Inicio</a></li>
-    <li><a routerLink="" routerLinkActive="active">Servicios</a></li>
-    <li><a routerLink="/home/about" routerLinkActive="active">Información</a></li>
+    <li><a routerLink="/about" routerLinkActive="active">Sobre nosotros</a></li>
   </ul>
   <div class="navbar-aa-user">
-    <a routerLink="/cliente" title="Centro de ayuda">❓</a>
-    <a routerLink="/login" title="Iniciar sesión">👤 Iniciá sesión</a>
+    <ng-container *ngIf="isLoggedIn; else loggedOut">
+      <a routerLink="/cart" title="Carrito" class="cart-link">🛒 Carrito</a>
+      <span class="user-info">👤 {{ user?.email || 'Usuario' }}</span>
+      <button (click)="logout()" class="logout-btn">Cerrar sesión</button>
+    </ng-container>
+    <ng-template #loggedOut>
+      <a routerLink="/login" title="Iniciar sesión">👤 Iniciá sesión</a>
+    </ng-template>
   </div>
 </nav>
+
 
 

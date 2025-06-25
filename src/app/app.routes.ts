@@ -4,8 +4,6 @@ import { Products } from './pages/products/products';
 import { Cart } from './pages/cart/cart';
 import { Register } from './pages/auth/register/register';
 import { Login } from './pages/auth/login/login';
-import { Privacy } from './pages/privacy/privacy';
-import { Terms } from './pages/terms/terms';
 import { NotFound } from './pages/errors/not-found/not-found';
 import { Forrbiden } from './pages/errors/forrbiden/forrbiden';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -13,7 +11,8 @@ import { Client } from './pages/dashboard/client/client';
 import { Seller } from './pages/dashboard/seller/seller';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
-import { SobreNosotros } from './pages/sobrenosotros/sobrenosotros';
+import { Contact } from './pages/contact/contact';
+import { AboutUs } from './pages/about-us/about-us';
 
 export const routes: Routes = [    
     {path: '', redirectTo: '/home', pathMatch: 'full'},    
@@ -23,7 +22,8 @@ export const routes: Routes = [
     {path: 'register', component: Register},
     {path: 'Products', component: Products},
     {path: 'login', component: Login},
-    {path: 'sobrenosotros', component: SobreNosotros},
+    {path: 'contact', component: Contact},
+    {path: 'about', component: AboutUs},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
     
         {
@@ -39,8 +39,6 @@ export const routes: Routes = [
             data: { role: UserRole.SELLER }
         }
     ]},
-    {path: 'privacy', component: Privacy},
-    {path: 'terms', component: Terms},
     {path: '404', component: NotFound},
     {path: '403', component: Forrbiden},
     {path: 'product/:id', component: Products},
