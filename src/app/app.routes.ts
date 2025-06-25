@@ -14,6 +14,7 @@ import { Seller } from './pages/dashboard/seller/seller';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
 import { Contact } from './pages/contact/contact';
+import { AboutUs } from './pages/about-us/about-us';
 
 export const routes: Routes = [    
     {path: '', redirectTo: '/home', pathMatch: 'full'},    
@@ -24,6 +25,7 @@ export const routes: Routes = [
     {path: 'Products', component: Products},
     {path: 'login', component: Login},
     {path: 'contact', component: Contact},
+    {path: 'about', component: AboutUs},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
     
         {
