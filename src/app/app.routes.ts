@@ -13,6 +13,7 @@ import { Client } from './pages/dashboard/client/client';
 import { Seller } from './pages/dashboard/seller/seller';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { UserRole } from './services/auth.service';
+import { SobreNosotros } from './pages/sobrenosotros/sobrenosotros';
 
 export const routes: Routes = [    
     {path: '', redirectTo: '/home', pathMatch: 'full'},    
@@ -22,6 +23,7 @@ export const routes: Routes = [
     {path: 'register', component: Register},
     {path: 'Products', component: Products},
     {path: 'login', component: Login},
+    {path: 'sobrenosotros', component: SobreNosotros},
     {path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard], children: [
     
         {
