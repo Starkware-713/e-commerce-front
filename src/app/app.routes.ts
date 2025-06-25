@@ -4,8 +4,6 @@ import { Products } from './pages/products/products';
 import { Cart } from './pages/cart/cart';
 import { Register } from './pages/auth/register/register';
 import { Login } from './pages/auth/login/login';
-import { Privacy } from './pages/privacy/privacy';
-import { Terms } from './pages/terms/terms';
 import { NotFound } from './pages/errors/not-found/not-found';
 import { Forrbiden } from './pages/errors/forrbiden/forrbiden';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -41,8 +39,6 @@ export const routes: Routes = [
             data: { role: UserRole.SELLER }
         }
     ]},
-    {path: 'privacy', component: Privacy},
-    {path: 'terms', component: Terms},
     {path: '404', component: NotFound},
     {path: '403', component: Forrbiden},
     {path: 'product/:id', component: Products},
