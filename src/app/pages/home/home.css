@@ -12,280 +12,201 @@ body, .home-container, html {
 
 .home-hero {
   margin-bottom: 4rem;
+}
 
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #2b6cb0;
-    margin-bottom: 1rem;
-  }
+.home-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2b6cb0;
+  margin-bottom: 1rem;
+}
 
-  p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: #4a5568;
-  }
+.home-hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #4a5568;
+}
 
-  .home-btn {
-    background-color: #2b6cb0;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+.home-btn {
+  background-color: #2b6cb0;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
 
-    &:hover {
-      background-color: #2c5282;
-    }
-  }
+.home-btn:hover {
+  background-color: #2c5282;
 }
 
 .home-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
+}
 
 .feature-card {
-    background-color: #f7fafc;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
-
-    h3 {
-      font-size: 1.2rem;
-      color: #2b6cb0;
-      margin-bottom: 0.75rem;
-    }
-
-    p {
-      color: #4a5568;
-      font-size: 1rem;
-    }
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-  }
+  background-color: #f7fafc;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 600px) {
-  .home-hero h1 {
-    font-size: 2rem;
-  }
-
-  .home-hero p {
-    font-size: 1rem;
-  }
+.feature-card h3 {
+  font-size: 1.2rem;
+  color: #2b6cb0;
+  margin-bottom: 0.75rem;
 }
 
-/* --- RESERVA PROFESIONAL Y CENTRADA --- */
-.carousel-home {
-  position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  min-height: 480px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  z-index: 1;
+.feature-card p {
+  color: #4a5568;
+  font-size: 1rem;
 }
 
-.carousel-image {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
-  background-size: cover;
-  background-position: center;
-  z-index: 1;
+.feature-card:hover {
+  transform: translateY(-5px);
 }
 
-.carousel-image::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(120deg, rgba(0, 80, 180, 0.25) 0%, rgba(0, 180, 255, 0.25) 100%);
-  z-index: 2;
+/* --- NUEVOS ESTILOS PARA PRODUCTOS HOME --- */
+.productos-home {
+  margin: 3rem auto 2rem auto;
+  max-width: 1300px;
+  padding: 0 20px;
 }
 
-/* --- RESERVA: Caja principal --- */
-.reserva-container {
-  position: relative;
-  z-index: 3;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.98);
-  border-radius: 1.5rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  padding: 2.5rem 2rem 2rem 2rem;
-  max-width: 900px;
-  width: 100%;
+.productos-titulo {
+  color: #0056b3;
+  font-size: 2.2rem;
+  margin-bottom: 2.2rem;
+  text-align: center;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 2.2rem;
+  justify-items: center;
+}
+
+.producto-card {
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 18px rgba(0,123,255,0.10);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 2rem 1.2rem 1.5rem 1.2rem;
+  min-width: 0;
+  max-width: 340px;
+  min-height: 420px;
+  transition: transform 0.18s, box-shadow 0.18s;
+  position: relative;
 }
 
-/* --- Tabs superiores --- */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-.tabs span {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #005baa;
-  padding: 0.5rem 1.2rem;
-  border-radius: 1.2rem 1.2rem 0 0;
-  background: #eaf6ff;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-.tabs span.active, .tabs span:hover {
-  background: #005baa;
-  color: #fff;
+.producto-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(0,123,255,0.18);
 }
 
-/* --- Tipo de viaje --- */
-.tipo-viaje {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+.producto-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 1rem;
+  object-fit: cover;
+  border: 4px solid #b3e0ff;
   margin-bottom: 1.2rem;
-  width: 100%;
-}
-.tipo-viaje label {
-  font-size: 1.05rem;
-  color: #333;
-  letter-spacing: 0.2px;
-}
-.tipo-viaje input[type="radio"] {
-  accent-color: #1a65b8;
-  margin-right: 0.5em;
+  background: #f7fafc;
 }
 
-/* --- Campos de formulario --- */
-.campos {
+.producto-info {
+  width: 100%;
+  text-align: center;
+}
+
+.producto-nombre {
+  font-size: 1.18rem;
+  color: #2b6cb0;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.producto-descripcion {
+  color: #4a5568;
+  font-size: 1rem;
+  margin-bottom: 1.1rem;
+  min-height: 48px;
+}
+
+.producto-detalles {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  width: 100%;
-}
-.campos input, .campos select {
-  padding: 0.7rem 1.2rem;
-  border-radius: 0.8rem;
-  border: 1px solid #b3d4fc;
-  font-size: 1rem;
-  min-width: 220px;
-  background: #fafdff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  outline: none;
-  transition: border 0.2s;
-}
-.campos input:focus, .campos select:focus {
-  border: 1.5px solid #005baa;
-}
-
-.form-pais {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: 0.7rem;
   justify-content: center;
   align-items: center;
+  margin-bottom: 1.1rem;
 }
 
-.form-pais input[type="text"] {
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  width: 220px;
+.producto-categoria {
+  background: #eaf6ff;
+  color: #005baa;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 1rem;
+  font-weight: 600;
 }
 
-.form-pais button {
-  background-color: #1a65b8;
-  color: white;
-  padding: 10px 26px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: bold;
-  transition:  0.2s;
-}
-
-.form-pais button:hover {
-  background-color: #004a99;
-}
-
-.paquetes-lista {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.paquete-card {
-  background: #f7fafc;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,123,255,0.08);
-  padding: 18px 28px;
-  margin-bottom: 14px;
-  width: 100%;
-  max-width: 400px;
-  text-align: left;
-  transition: transform 0.2s;
-}
-
-.paquete-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 6px 18px rgba(0,123,255,0.13);
-}
-
-.paquete-card h4 {
-  margin: 0 0 6px 0;
-  color: #007bff;
+.producto-precio {
+  color: #48bb78;
   font-size: 1.15rem;
+  font-weight: 700;
+  background: #e6f9ed;
+  padding: 0.3rem 0.9rem;
+  border-radius: 1rem;
 }
 
-.paquete-card p {
-  margin: 0 0 4px 0;
-  color: #333;
-  font-size: 1rem;
+.producto-stock {
+  font-size: 0.97rem;
+  color: #005baa;
+  background: #eaf6ff;
+  padding: 0.3rem 0.9rem;
+  border-radius: 1rem;
+  font-weight: 600;
 }
 
-@media (max-width: 600px) {
-  .form-pais {
-    flex-direction: column;
-    gap: 8px;
-  }
-  .paquete-card {
-    max-width: 95vw;
-    padding: 14px 10px;
-  }
-}
-/* Checkbox flexibles */
-.opciones {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-bottom: 1rem;
+.producto-stock.soldout {
+  color: #c53030;
+  background: #fed7d7;
 }
 
-/* --- Botones --- */
-button {
+.ver-mas-btn {
+  margin-top: 0.7rem;
+  background: #eaf6ff;
+  color: #005baa;
+  border: none;
+  border-radius: 0.8rem;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.ver-mas-btn:hover {
   background: #005baa;
+  color: #fff;
+  transform: scale(1.04);
+}
+
+.producto-btn {
+  margin-top: 0.7rem;
+  background: linear-gradient(90deg, #2b6cb0 60%, #48bb78 100%);
   color: #fff;
   border: none;
   border-radius: 0.8rem;
@@ -293,214 +214,19 @@ button {
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.2s;
-}
-button:hover {
-  background: #0077d6;
+  transition: background 0.2s, transform 0.15s;
 }
 
-.reserva-item {
-  background: #fafdff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 1.5rem 2rem;
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-/* --- Responsive --- */
-@media (max-width: 900px) {
-  .carousel-home {
-    min-height: 600px;
-  }
-  .reserva-container {
-    max-width: 98vw;
-    padding: 1.2rem 0.5rem;
-  }
-  .form-vuelos {
-    max-width: 98vw;
-  }
-  .campos {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-@media (max-width: 600px) {
-  .reserva-container {
-    padding: 10px 2vw 10px 2vw;
-    border-radius: 10px;
-    max-width: 99vw;
-  }
-  .reserva-item {
-    padding: 0.8rem 0.5rem;
-  }
-  .carousel-image {
-    height: 180px;
-    min-height: 120px;
-    border-radius: 0 0 18px 18px;
-  }
-}
-
-/* Eliminar borde azul de inputs y selects al focus */
-.campos input:focus,
-.campos select:focus {
-  outline: none;
-  border: 1.5px solid #1a65b822 !important;
-  box-shadow: 0 0 0 2px #e3e8ee55;
-}
-
-/* Eliminar borde azul de autocomplete */
-.autocomplete-group input:focus {
-  outline: none;
-  border: 1.5px solid #1a65b822 !important;
-  box-shadow: 0 0 0 2px #e3e8ee55;
-}
-
-/* Estilos para la sección de hospedajes */
-
-
-.hospedajes-container {
-  margin: 48px auto 0 auto;
-  max-width: 1300px;
-  padding: 0 20px;
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: center; 
-  gap: 20px;
-}
-
-.tituloHosp {
-  color: #0056b3;
-  margin-bottom: 32px;
-  font-size: 2.4rem;
-  text-align: center;
-  letter-spacing: 1px;
-  padding: 20px;
-}
-
-.hospedajes-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  justify-items: center;
-}
-
-.hospedaje-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(0,123,255,0.10);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  max-width: 320px;
-  min-height: 420px;
-  padding: 24px 18px;
-  margin-bottom: 0;
-  transition: transform 0.2s, box-shadow 0.2s;
-  
-}
-
-.hospedaje-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 8px 24px rgba(0,123,255,0.18);
-}
-
-.hospedaje-card img {
-  width: 120px;
-  height: 120px;
-  border-radius: 14px;
-  object-fit: cover;
-  border: 4px solid #b3e0ff;
-  margin-bottom: 18px;
-}
-
-.hospedaje-card h3 {
-  margin: 0 0 6px 0;
-  color: #007bff;
-  font-size: 1.25rem;
-  text-align: center;
-}
-
-.hospedaje-ubicacion {
-  margin: 0 0 8px 0;
-  color: #555;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.hospedaje-desc {
-  color: #333;
-  font-size: 1.05rem;
-  margin-bottom: 14px;
-  text-align: center;
-}
-
-.hospedaje-estrellas {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  margin-top: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.estrella {
-  color: #ffc107;
-  font-size: 1.3em;
-  margin-right: 2px;
-}
-
-.hospedaje-fecha {
-  font-size: 0.97em;
-  color: #0056b3;
-  background: #e6f0fa;
-  padding: 3px 10px;
-  border-radius: 8px;
-  margin-left: 10px;
-}
-
-/* Estilos para la sección de productos */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  padding: 2rem 0;
-}
-
-.product-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-}
-
-.product-card h3 {
-  margin: 0.5rem 0;
-  color: #2d3748;
-}
-
-.product-card .price {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #48bb78;
-  margin: 0.5rem 0;
-}
-
-.product-card .stock {
+.producto-btn:disabled {
+  background: #cbd5e1;
   color: #718096;
-  font-size: 0.875rem;
+  cursor: not-allowed;
+}
+
+.producto-btn:not(:disabled):hover {
+  background: linear-gradient(90deg, #005baa 60%, #38a169 100%);
+  transform: scale(1.04);
 }
 
 .loading-spinner {
@@ -523,336 +249,32 @@ button:hover {
   color: #718096;
 }
 
-@media (max-width: 1200px) {
-  .hospedajes-list {
-     grid-template-columns: repeat(2, 1fr);
-    gap: 1.2rem;
+@media (max-width: 600px) {
+  .home-hero h1 {
+    font-size: 2rem;
   }
-  .hospedaje-card {
-    width: 45vw;
-    min-width: 220px;
-    max-width: 350px;
-  }
-}
 
-@media (max-width: 900px) {
-  .reserva-container {
-    padding: 18px 8px 14px 8px;
-    max-width: 98vw;
-    border-radius: 14px;
-  }
-  .tabs {
-    gap: 1.2rem;
+  .home-hero p {
     font-size: 1rem;
   }
-  .tipo-viaje {
-    gap: 0.7rem;
-  }
-  .campos {
-    gap: 0.5rem;
-  }
-  .opciones {
-    gap: 0.7rem;
-  }
-}
 
-@media (max-width: 600px) {
-  .reserva-container {
-    padding: 10px 2vw 10px 2vw;
-    border-radius: 10px;
-    max-width: 99vw;
-  }
-  .reserva-item {
-    padding: 0.8rem 0.5rem;
-  }
-  .carousel-image {
-    height: 180px;
-    min-height: 120px;
-    border-radius: 0 0 18px 18px;
-  }
-  .hospedaje-seleccion {
-    max-width: 98vw;
-    padding: 0.7rem;
-  }
-  .hospedajes-list {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .hospedaje-card {
-    width: 95vw;
-    min-width: 0;
-    max-width: 99vw;
-    padding: 16px 6px;
-  }
-  .tabs {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-  }
-  .tipo-viaje, .campos, .opciones {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: stretch;
-  }
-  .buscar-btn, button {
-    width: 100%;
-    font-size: 1rem;
-    padding: 0.7rem 0;
-  }
-}
-
-/* --- NUEVOS ESTILOS PARA PRODUCTOS HOME --- */
-.productos-home {
-  margin: 3rem auto 2rem auto;
-  max-width: 1300px;
-  padding: 0 20px;
-}
-.productos-titulo {
-  color: #0056b3;
-  font-size: 2.2rem;
-  margin-bottom: 2.2rem;
-  text-align: center;
-  letter-spacing: 1px;
-  font-weight: 700;
-}
-.productos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 2.2rem;
-  justify-items: center;
-}
-.producto-card {
-  background: #fff;
-  border-radius: 1.2rem;
-  box-shadow: 0 4px 18px rgba(0,123,255,0.10);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1.2rem 1.5rem 1.2rem;
-  min-width: 0;
-  max-width: 340px;
-  min-height: 420px;
-  transition: transform 0.18s, box-shadow 0.18s;
-  position: relative;
-}
-.producto-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 8px 24px rgba(0,123,255,0.18);
-}
-.producto-img {
-  width: 140px;
-  height: 140px;
-  border-radius: 1rem;
-  object-fit: cover;
-  border: 4px solid #b3e0ff;
-  margin-bottom: 1.2rem;
-  background: #f7fafc;
-}
-.producto-info {
-  width: 100%;
-  text-align: center;
-}
-.producto-nombre {
-  font-size: 1.18rem;
-  color: #2b6cb0;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-.producto-descripcion {
-  color: #4a5568;
-  font-size: 1rem;
-  margin-bottom: 1.1rem;
-  min-height: 48px;
-}
-.producto-detalles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.1rem;
-}
-.producto-categoria {
-  background: #eaf6ff;
-  color: #005baa;
-  font-size: 0.95rem;
-  padding: 0.3rem 0.9rem;
-  border-radius: 1rem;
-  font-weight: 600;
-}
-.producto-precio {
-  color: #48bb78;
-  font-size: 1.15rem;
-  font-weight: 700;
-  background: #e6f9ed;
-  padding: 0.3rem 0.9rem;
-  border-radius: 1rem;
-}
-.producto-stock {
-  font-size: 0.97rem;
-  color: #005baa;
-  background: #eaf6ff;
-  padding: 0.3rem 0.9rem;
-  border-radius: 1rem;
-  font-weight: 600;
-}
-.producto-stock.soldout {
-  color: #c53030;
-  background: #fed7d7;
-}
-.producto-btn {
-  margin-top: 0.7rem;
-  background: linear-gradient(90deg, #2b6cb0 60%, #48bb78 100%);
-  color: #fff;
-  border: none;
-  border-radius: 0.8rem;
-  padding: 0.8rem 2.2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.2s, transform 0.15s;
-}
-.producto-btn:disabled {
-  background: #cbd5e1;
-  color: #718096;
-  cursor: not-allowed;
-}
-.producto-btn:not(:disabled):hover {
-  background: linear-gradient(90deg, #005baa 60%, #38a169 100%);
-  transform: scale(1.04);
-}
-@media (max-width: 900px) {
-  .productos-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.2rem;
-  }
-  .producto-card {
-    max-width: 98vw;
-    padding: 1.2rem 0.5rem 1rem 0.5rem;
-  }
-}
-@media (max-width: 600px) {
   .productos-titulo {
     font-size: 1.3rem;
     margin-bottom: 1.2rem;
   }
+
   .productos-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
   .producto-card {
     max-width: 99vw;
     padding: 1rem 0.3rem 0.7rem 0.3rem;
   }
+
   .producto-img {
     width: 100px;
     height: 100px;
   }
-}
-
-/* Estilos para la sección de búsqueda de vuelos */
-
-.flight-search-container {
-  background: #fff;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-  padding: 2rem 2.5rem 1.5rem 2.5rem;
-  margin: 2rem auto 3rem auto;
-  max-width: 1100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.flight-search-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  width: 100%;
-  justify-content: center;
-}
-
-.flight-search-field {
-  display: flex;
-  flex-direction: column;
-  min-width: 180px;
-  position: relative;
-}
-
-.flight-search-field label {
-  font-size: 0.95rem;
-  color: #2b6cb0;
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-}
-
-.flight-search-field input,
-.flight-search-field select {
-  padding: 0.6rem 1rem;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 0.7rem;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s;
-  background: #f7f8fa;
-}
-
-.flight-search-field input:focus,
-.flight-search-field select:focus {
-  border-color: #2b6cb0;
-}
-
-/* --- Autocompletado moderno para reserva principal --- */
-.autocomplete-group {
-  position: relative;
-  width: 220px;
-}
-.suggestions-list {
-  position: absolute;
-  top: 110%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid #b3d4fc;
-  border-radius: 0.8rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  z-index: 10;
-  max-height: 180px;
-  overflow-y: auto;
-  margin: 0;
-  padding: 0.2rem 0;
-  list-style: none;
-}
-.suggestions-list li {
-  padding: 0.7rem 1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition:  0.18s;
-}
-.suggestions-list li:hover {
-  background: #eaf6ff;
-}
-
-.search-btn-field {
-  display: flex;
-  align-items: flex-end;
-}
-
-.buscar-btn {
-  background: #2b6cb0;
-  color: #fff;
-  border: none;
-  border-radius: 0.7rem;
-  padding: 0.7rem 1.7rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:  0.2s;
-}
-
-.buscar-btn:hover {
-  background: #2c5282;
 }
